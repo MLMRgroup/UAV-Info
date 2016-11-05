@@ -6,8 +6,18 @@
         xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0" 
         xmlns:local="clr-namespace:UAV_Info"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="无人机数据分析" Height="600" Width="700" WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <Grid.Background>
+            <ImageBrush Stretch="Uniform" ImageSource="bg.png" Opacity="0.3"/>
+        </Grid.Background>
+        <TabPanel x:Name="tabPanel" Height="30" Margin="10,0" VerticalAlignment="Top" Background="#FFF3F2F2">
+            <Menu x:Name="menu_1" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="110">
+                <MenuItem Header="导入姿态文件" Height="30" Width="110"></MenuItem>
+            </Menu>
+            <Menu x:Name="menu_2" Margin="0,0,-100,0" d:LayoutOverrides="HorizontalAlignment">
+                <MenuItem Header="导入轨迹文件" Height="30" Width="110"></MenuItem>
+            </Menu>
+        </TabPanel>
     </Grid>
 </Window>
