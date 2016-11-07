@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using Microsoft.Win32;
 namespace UAV_Info
 {
     /// <summary>
@@ -23,6 +23,22 @@ namespace UAV_Info
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void importAngleData(object sender, RoutedEventArgs args) {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true) {
+
+            }
+    }
+
+        private void importTraceData(object sender, RoutedEventArgs args)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+            {
+
+            }
         }
     }
 }

@@ -6,18 +6,69 @@
         xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0" 
         xmlns:local="clr-namespace:UAV_Info"
         mc:Ignorable="d"
-        Title="无人机数据分析" Height="600" Width="700" WindowStartupLocation="CenterScreen">
+        Title="无人机数据分析" Height="700" Width="800" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.Background>
             <ImageBrush Stretch="Uniform" ImageSource="bg.png" Opacity="0.3"/>
         </Grid.Background>
         <TabPanel x:Name="tabPanel" Height="30" Margin="10,0" VerticalAlignment="Top" Background="#FFF3F2F2">
             <Menu x:Name="menu_1" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="110">
-                <MenuItem Header="导入姿态文件" Height="30" Width="110"></MenuItem>
+                <MenuItem Header="导入姿态文件" Height="30" Width="110" Click="importAngleData"></MenuItem>
             </Menu>
             <Menu x:Name="menu_2" Margin="0,0,-100,0" d:LayoutOverrides="HorizontalAlignment">
-                <MenuItem Header="导入轨迹文件" Height="30" Width="110"></MenuItem>
+                <MenuItem Header="导入轨迹文件" Height="30" Width="110" Click="importTraceData"></MenuItem>
             </Menu>
         </TabPanel>
+        <d3:ChartPlotter Width="330" Height="180"  HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top">
+            <d3:ChartPlotter.HorizontalAxis >
+                <d3:HorizontalDateTimeAxis Name="dateAxis"/>
+            </d3:ChartPlotter.HorizontalAxis>
+            <d3:ChartPlotter.VerticalAxis>
+                <d3:VerticalIntegerAxis Name="countAxis"/>
+            </d3:ChartPlotter.VerticalAxis>
+
+            <d3:Header FontFamily="Arial" Content="姿态数据"/>
+            <d3:VerticalAxisTitle FontFamily="Arial" Content="角度"/>
+            <d3:HorizontalAxisTitle FontFamily="Arial" Content=""/>
+        </d3:ChartPlotter>
+        <d3:ChartPlotter Height="180" Margin="0,35,32,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="305">
+            <d3:ChartPlotter.HorizontalAxis >
+                <d3:HorizontalDateTimeAxis x:Name="dateAxis1"/>
+            </d3:ChartPlotter.HorizontalAxis>
+            <d3:ChartPlotter.VerticalAxis>
+                <d3:VerticalIntegerAxis x:Name="countAxis1"/>
+            </d3:ChartPlotter.VerticalAxis>
+
+            <d3:Header FontFamily="Arial" Content="校准后的姿态数据"/>
+            <d3:VerticalAxisTitle FontFamily="Arial" Content="角度"/>
+            <d3:HorizontalAxisTitle FontFamily="Arial" Content=""/>
+        </d3:ChartPlotter>
+        <d3:ChartPlotter Margin="10,0,0,59" HorizontalAlignment="Left" Width="315" Height="195" VerticalAlignment="Bottom">
+            <d3:ChartPlotter.HorizontalAxis >
+                <d3:HorizontalDateTimeAxis x:Name="dateAxis2"/>
+            </d3:ChartPlotter.HorizontalAxis>
+            <d3:ChartPlotter.VerticalAxis>
+                <d3:VerticalIntegerAxis x:Name="countAxis2"/>
+            </d3:ChartPlotter.VerticalAxis>
+
+            <d3:Header FontFamily="Arial" Content=""/>
+            <d3:VerticalAxisTitle FontFamily="Arial" Content=""/>
+            <d3:HorizontalAxisTitle FontFamily="Arial" Content="二维地图轨迹"/>
+        </d3:ChartPlotter>
+        <Label x:Name="label" Content="俯仰角" HorizontalAlignment="Right" Height="30" Margin="0,0,277,204" VerticalAlignment="Bottom" Width="60"/>
+        <Label x:Name="label_Copy" Content="滚转角" HorizontalAlignment="Right" Height="30" Margin="0,0,277,156.187" VerticalAlignment="Bottom" Width="60"/>
+        <Label x:Name="label_Copy1" Content="偏航角" HorizontalAlignment="Right" Height="30" Margin="0,0,277,111.187" VerticalAlignment="Bottom" Width="60"/>
+        <Label x:Name="label_Copy2" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,227,204" VerticalAlignment="Bottom" Width="50"/>
+        <Label x:Name="label_Copy3" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,227,156.187" VerticalAlignment="Bottom" Width="50"/>
+        <Label x:Name="label_Copy4" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,227,111.187" VerticalAlignment="Bottom" Width="50"/>
+        <Label x:Name="label_Copy5" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,92,204" VerticalAlignment="Bottom" Width="50"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Right" Height="25" Margin="0,0,162,209" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="textBox_Copy" HorizontalAlignment="Right" Height="25" Margin="0,0,162,161.187" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="textBox_Copy1" HorizontalAlignment="Right" Height="25" Margin="0,0,162,116.187" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="textBox_Copy2" HorizontalAlignment="Right" Height="25" Margin="0,0,32,209" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="textBox_Copy3" HorizontalAlignment="Right" Height="25" Margin="0,0,32,161.187" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="textBox_Copy4" HorizontalAlignment="Right" Height="25" Margin="0,0,32,116.187" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <Label x:Name="label_Copy6" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,92,161.187" VerticalAlignment="Bottom" Width="50"/>
+        <Label x:Name="label_Copy7" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,92,111.187" VerticalAlignment="Bottom" Width="50"/>
     </Grid>
 </Window>
