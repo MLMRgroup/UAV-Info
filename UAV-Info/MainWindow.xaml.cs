@@ -202,7 +202,7 @@ namespace UAV_Info
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                // 轨迹数据
+                // 轨迹数据读入
                 string fileName = openFileDialog.FileName;
                 gpx_trans gpx = new gpx_trans(indexDict,flightBeanList);
                 gpx.start(fileName);
