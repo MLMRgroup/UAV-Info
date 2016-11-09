@@ -80,12 +80,12 @@ namespace UAV_Info
         // Respond to changes
         void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Visible")
+            /*if (e.PropertyName == "Visible")
             {
                 plotPitch.Viewport.Visible = new Rect(((Viewport2D)sender).Visible.X, minPitchIndex, ((Viewport2D)sender).Visible.Width, maxPitchIndex);
                 plotYaw.Viewport.Visible = new Rect(((Viewport2D)sender).Visible.X, minYawIndex, ((Viewport2D)sender).Visible.Width, maxYawIndex);
                 plotRoll.Viewport.Visible = new Rect(((Viewport2D)sender).Visible.X, minRollIndex, ((Viewport2D)sender).Visible.Width, maxRollIndex);
-            }
+            }*/
         }
 
         private void attiPlotMouseClick(object sender, MouseEventArgs e)
@@ -169,6 +169,7 @@ namespace UAV_Info
                 angleDataSource.SetYMapping(y => y);
                 CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
                 LineGraph lineG = new LineGraph();
+                lineG.Description = new PenDescription("俯仰");
                 lineG.DataSource = compositeDataSource;
                 plotPitch.Children.Add(lineG);
             } else if (whichAngle == "yaw") {
@@ -184,6 +185,7 @@ namespace UAV_Info
                 angleDataSource.SetYMapping(y => y);
                 CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
                 LineGraph lineG = new LineGraph();
+                lineG.Description = new PenDescription("偏航");
                 lineG.DataSource = compositeDataSource;
                 plotYaw.Children.Add(lineG);
             }
@@ -200,6 +202,7 @@ namespace UAV_Info
                 angleDataSource.SetYMapping(y => y);
                 CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
                 LineGraph lineG = new LineGraph();
+                lineG.Description = new PenDescription("滚转");
                 lineG.DataSource = compositeDataSource;
                 plotRoll.Children.Add(lineG);
             }
