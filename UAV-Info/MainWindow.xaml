@@ -40,19 +40,24 @@
                 <d3:HorizontalDateTimeAxis x:Name="dateAxis_angle"/>
             </d3:ChartPlotter.HorizontalAxis>
         </d3:ChartPlotter>
-        
-        <d3:ChartPlotter Name ="normolAttitutePlotter" Height="180" Margin="0,35,32,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="305">
-            <d3:ChartPlotter.HorizontalAxis >
-                <d3:HorizontalDateTimeAxis x:Name="dateAxis1"/>
-            </d3:ChartPlotter.HorizontalAxis>
-            <d3:ChartPlotter.VerticalAxis>
-                <d3:VerticalIntegerAxis x:Name="countAxis1"/>
-            </d3:ChartPlotter.VerticalAxis>
 
-            <d3:Header FontFamily="Arial" Content="校准后的姿态数据"/>
-            <d3:VerticalAxisTitle FontFamily="Arial" Content="角度"/>
-            <d3:HorizontalAxisTitle FontFamily="Arial" Content=""/>
-            <d3:CursorCoordinateGraph/>
+        <d3:ChartPlotter Name ="plotPitchNormal" Height="100" Margin="0,49,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="304">
+            <d3:ChartPlotter.VerticalAxis>
+                <d3:VerticalIntegerAxis x:Name="axisPitchNormal"/>
+            </d3:ChartPlotter.VerticalAxis>
+            <d3:CursorCoordinateGraph Name="cordPitchNormal"/>
+        </d3:ChartPlotter>
+        <d3:ChartPlotter Name ="plotYawNormal" Height="100" Margin="0,154,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="304">
+            <d3:ChartPlotter.VerticalAxis>
+                <d3:VerticalIntegerAxis x:Name="axisYawNormal"/>
+            </d3:ChartPlotter.VerticalAxis>
+            <d3:CursorCoordinateGraph Name="cordYaNormal"/>
+        </d3:ChartPlotter>
+        <d3:ChartPlotter Name ="plotRollNormal" Height="100" Margin="0,254,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="304">
+            <d3:ChartPlotter.VerticalAxis>
+                <d3:VerticalIntegerAxis x:Name="axisRollNormal"/>
+            </d3:ChartPlotter.VerticalAxis>
+            <d3:CursorCoordinateGraph Name="cordRollNormal"/>
         </d3:ChartPlotter>
         <d3:ChartPlotter Margin="10,0,0,59" HorizontalAlignment="Left" Width="315" Height="195" VerticalAlignment="Bottom">
             <d3:ChartPlotter.HorizontalAxis >
@@ -81,6 +86,7 @@
         <TextBox x:Name="textBox_Copy4" HorizontalAlignment="Right" Height="25" Margin="0,0,32,116.187" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
         <Label x:Name="label_Copy6" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,92,161.187" VerticalAlignment="Bottom" Width="50"/>
         <Label x:Name="label_Copy7" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,92,111.187" VerticalAlignment="Bottom" Width="50"/>
-        <Button Name="btnBenchmarkReset" Content="Button" HorizontalAlignment="Left" Margin="69,369,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="9.59,-1.751" Click="OnClick_btnBenchmarkReset"/>
+        <Button x:Name="btnNormSpanReset" Content="reset" HorizontalAlignment="Left" Margin="56,374,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
+        <Button x:Name="btnTimeSpanReset" Content="reset" HorizontalAlignment="Left" Margin="455,379,0,0" VerticalAlignment="Top" Width="46" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
     </Grid>
 </Window>
