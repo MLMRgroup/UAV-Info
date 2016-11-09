@@ -89,14 +89,10 @@ namespace UAV_Info
 
         private void attiPlotMouseClick(object sender, MouseEventArgs e)
         {
-            VerticalLine benchmarkLine = new VerticalLine();
             var transform = plotPitch.Transform;
             var mouseScreenPosition = Mouse.GetPosition(plotPitch.CentralGrid);
             var mousePositionInData = mouseScreenPosition.ScreenToViewport(transform);
 
-            SolidColorBrush redBrush = new SolidColorBrush(System.Windows.Media.Colors.Red);
-            benchmarkLine.Stroke = redBrush;
-            benchmarkLine.Value = mousePositionInData.X;
             flightBeanList = new List<FlightBean>();
             indexDict = new Dictionary<string, int>();
         }

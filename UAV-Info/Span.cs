@@ -22,43 +22,44 @@ namespace UAV_Info
 {
     class Span
     {
+        SolidColorBrush brush = new SolidColorBrush(System.Windows.Media.Colors.Red);
         public Span()
         {
             lineA = new VerticalLine();
             lineB = new VerticalLine();
+            lineA.Stroke = brush;
+            lineA.Stroke = brush;
             this.Reset();
         }
 
         private VerticalLine lineA;
-
-
-        public VerticalLine LineA
-
+        public void SetLineA(double value)
         {
-            set
+            if(false == isLineASet)
             {
-                if (false == isLineASet)
-                {
-                    lineA = value;
-                    lineA.Value = 0;
-                }
+                lineA.Value = value;
+                isLineASet = true;
             }
+        }
+        public VerticalLine LineA
+        {
             get
             {
                 return lineA;
             }
         }
+
         private VerticalLine lineB;
+        public void SetLineB(double value)
+        {
+            if (false == isLineBSet)
+            {
+                lineB.Value = value;
+                isLineBSet = true;
+            }
+        }
         public VerticalLine LineB
         {
-            set 
-            {
-                if (false == isLineBSet)
-                {
-                    lineA = value;
-                    isLineBSet = false;
-                }
-            }
             get
             {
                 return lineB;
