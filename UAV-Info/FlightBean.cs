@@ -54,8 +54,7 @@ namespace UAV_Info
         public double roll { get { return _roll; } set { _roll = value; } }
 
         public DateTime timeToDateTime() {
-            string formatTime = "20" + _time.Substring(0, 2) + "-" + _time.Substring(2, 2) + "-" + _time.Substring(4, 2) + " " + _time.Substring(6, 2) + ":" + _time.Substring(8, 2) + ":" + _time.Substring(10, 2);
-            return Convert.ToDateTime(formatTime);
+            return Convert.ToDateTime(_time);
         }
     }
 }
