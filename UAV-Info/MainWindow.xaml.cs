@@ -136,7 +136,7 @@ namespace UAV_Info
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-
+                // 轨迹数据
             }
         }
 
