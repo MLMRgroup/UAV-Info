@@ -41,17 +41,17 @@ namespace UAV_Info
             _roll = roll;
         }
 
-        public string time { get { return _time; } set { _time = time; } }
+        public string time { get { return _time; } set { _time = value; } }
 
-        public double lat { get { return _lat; } set { _lat = lat; } }
+        public double lat { get { return _lat; } set { _lat = value; } }
 
-        public double lng { get { return _lng; } set { _lng = lng; } }
+        public double lng { get { return _lng; } set { _lng = value; } }
 
-        public double pitch { get { return _pitch; } set { _pitch = pitch; } }
+        public double pitch { get { return _pitch; } set { _pitch = value; } }
 
-        public double yaw { get { return _yaw; } set { _yaw = yaw; } }
+        public double yaw { get { return _yaw; } set { _yaw = value; } }
 
-        public double roll { get { return _roll; } set { _roll = roll; } }
+        public double roll { get { return _roll; } set { _roll = value; } }
 
         public DateTime timeToDateTime() {
             string formatTime = "20" + _time.Substring(0, 2) + "-" + _time.Substring(2, 2) + "-" + _time.Substring(4, 2) + " " + _time.Substring(6, 2) + ":" + _time.Substring(8, 2) + ":" + _time.Substring(10, 2);
