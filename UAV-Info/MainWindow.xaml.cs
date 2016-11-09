@@ -14,6 +14,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.IO;
+using Microsoft.Research.DynamicDataDisplay;
+using Microsoft.Research.DynamicDataDisplay.DataSources;
+using System.Windows.Threading;
 
 namespace UAV_Info
 {
@@ -44,6 +47,9 @@ namespace UAV_Info
                     while ((s = sr.ReadLine()) != null)
                     {
                         string[] split = s.Split(',');
+                        if (split.Length< 5) {
+                            continue;
+                        }
                         if (indexDict.ContainsKey(split[1]))
                         {
                             FlightBean fb = flightBeanList[indexDict[split[1]]];
@@ -65,7 +71,10 @@ namespace UAV_Info
                     }
                 }
                 // 绘图
-
+                plotAngle();
+                DispatcherTimer animationTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
+                animationTimer.Tick += animationTimer_Tick;
+                animationTimer.Start();
             }
         }
 
@@ -76,6 +85,37 @@ namespace UAV_Info
             {
 
             }
+        }
+
+        private void plotAngle() {
+            // 例子，绘制俯仰角
+            List<DateTime> dateTimeList = new List<DateTime>();
+            List<double> angleList = new List<double>();
+            foreach (string key in indexDict.Keys){
+                dateTimeList.Add(toDataTime(key));
+                angleList.Add(flightBeanList[indexDict[key]].pitch);
+            }
+
+            EnumerableDataSource<DateTime> datesDataSource = new EnumerableDataSource<DateTime>(dateTimeList);
+            datesDataSource.SetXMapping(x => dateAxis.ConvertToDouble(x));
+            EnumerableDataSource<double> angleDataSource = new EnumerableDataSource<double>(angleList);
+            angleDataSource.SetYMapping(y => y);
+            CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
+            LineGraph lineG = new LineGraph();
+            lineG.DataSource = compositeDataSource;
+            angleChartPlotter.Children.Add(lineG);
+        }
+
+        private void animationTimer_Tick(object sender, EventArgs e)
+        {
+            Point pos = new Point(dateAxis.ConvertToDouble(toDataTime("160529163534")), 0);
+            Point zoomTo = pos.DataToScreen(angleChartPlotter.Viewport.Transform);
+            angleChartPlotter.Viewport.Visible.Zoom(zoomTo, 3.0);
+        }
+
+        private DateTime toDataTime(string time) {
+            string formatTime = "20" + time.Substring(0, 2) + "-" + time.Substring(2, 2) + "-" + time.Substring(4, 2) + " " + time.Substring(6, 2) + ":" + time.Substring(8, 2) + ":" + time.Substring(10, 2);
+            return Convert.ToDateTime(formatTime);
         }
     }
 }
