@@ -178,6 +178,7 @@ namespace UAV_Info
                         }
                     }
                 }
+                indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
                 // 绘图
                 plotAngle("pitch");
                 plotAngle("yaw");
@@ -188,13 +189,18 @@ namespace UAV_Info
             }
        }
                 
-
         private void importTraceData(object sender, RoutedEventArgs args)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-
+                // 轨迹数据读入
+                string fileName = openFileDialog.FileName;
+                gpx_trans gpx = new gpx_trans(indexDict,flightBeanList);
+                gpx.start(fileName);
+                indexDict = gpx.gpxdata;
+                flightBeanList = gpx.gpxlist;
+                indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
             }
         }
 
@@ -258,6 +264,5 @@ namespace UAV_Info
             Point zoomTo = pos.DataToScreen(plotPitch.Viewport.Transform);
             plotPitch.Viewport.Visible.Zoom(zoomTo, 3.0);
         }
-
     }
 }

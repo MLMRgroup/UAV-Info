@@ -16,7 +16,7 @@ namespace UAV_Info
             string formatTime;
             if (time.Contains('T'))
             {
-                formatTime = time.Replace('T', ' ').Substring(0, -2);
+                formatTime = time.Replace('T', ' ').Substring(0, time.Length-1);
             }
             else {
                 formatTime = "20" + time.Substring(0, 2) + "-" + time.Substring(2, 2) + "-" + time.Substring(4, 2) + " " + time.Substring(6, 2) + ":" + time.Substring(8, 2) + ":" + time.Substring(10, 2);
