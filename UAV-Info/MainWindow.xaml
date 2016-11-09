@@ -59,12 +59,9 @@
             </d3:ChartPlotter.VerticalAxis>
             <d3:CursorCoordinateGraph Name="cordRollNormal"/>
         </d3:ChartPlotter>
-        <d3:ChartPlotter Margin="10,0,0,59" HorizontalAlignment="Left" Width="315" Height="195" VerticalAlignment="Bottom">
-            <d3:ChartPlotter.HorizontalAxis >
-                <d3:HorizontalDateTimeAxis x:Name="dateAxis2"/>
-            </d3:ChartPlotter.HorizontalAxis>
+        <d3:ChartPlotter Name="plotTrace" Margin="10,0,0,59" HorizontalAlignment="Left" Width="315" Height="195" VerticalAlignment="Bottom">
             <d3:ChartPlotter.VerticalAxis>
-                <d3:VerticalIntegerAxis x:Name="countAxis2"/>
+                <d3:VerticalIntegerAxis x:Name="axisAlt"/>
             </d3:ChartPlotter.VerticalAxis>
 
             <d3:Header FontFamily="Arial" Content=""/>
@@ -88,5 +85,6 @@
         <Label x:Name="label_Copy7" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,92,111.187" VerticalAlignment="Bottom" Width="50"/>
         <Button x:Name="btnNormSpanReset" Content="reset" HorizontalAlignment="Left" Margin="56,374,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
         <Button x:Name="btnTimeSpanReset" Content="reset" HorizontalAlignment="Left" Margin="455,379,0,0" VerticalAlignment="Top" Width="46" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
+        <Button Content="btnNormlize" HorizontalAlignment="Left" Margin="250,379,0,0" VerticalAlignment="Top" Width="75" />
     </Grid>
 </Window>

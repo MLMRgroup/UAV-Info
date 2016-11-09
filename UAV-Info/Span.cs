@@ -57,6 +57,30 @@ namespace UAV_Info
                 return lineB[lineB.Count - 1];
             }
         }
+        //得到A基准线的索引值
+        public double valueOfLineA
+        {
+            get
+            {
+                if (lineA.Count >= 1)
+                {
+                    return lineA[0].Value;
+                }
+                return 0;
+            }
+        }
+        //得到B基准线的索引值
+        public double valueOfLineB
+        {
+            get
+            {
+                if (lineB.Count >= 1)
+                {
+                    return lineB[0].Value;
+                }
+                return 0;
+            }
+        }
         //改变当前基准线的值
         public void AddLine(double value)
         {

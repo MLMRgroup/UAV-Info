@@ -38,12 +38,6 @@ namespace UAV_Info
             Loaded += new RoutedEventHandler(MainWindow_Loaded);
         }
 
-        double maxPitchIndex = 5;
-        double maxYawIndex = 400;
-        double maxRollIndex = 2;
-        double minPitchIndex = -5;
-        double minYawIndex = 0;
-        double minRollIndex = -2;
         Span normalizeSpan = new Span();
         Span timeSpan = new Span();
 
@@ -99,8 +93,6 @@ namespace UAV_Info
           plotPitchNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
           plotYawNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
           plotRollNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
-
-
         }
 
         private void OnClick_Reset(object sender, RoutedEventArgs e)
@@ -147,7 +139,7 @@ namespace UAV_Info
             {
                 timeSpan.AddLine(mousePositionInData.X);
             }
-           
+
             flightBeanList = new List<FlightBean>();
             indexDict = new Dictionary<string, int>();
         }
