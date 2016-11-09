@@ -27,6 +27,10 @@ namespace UAV_Info
         // 滚转角
         private double _roll;
 
+        public FlightBean() {
+
+        }
+
         public FlightBean(string time, double lat, double lng, double pitch, double yaw, double roll)
         {
             _time = time;
