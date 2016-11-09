@@ -36,6 +36,9 @@
                 <d3:VerticalIntegerAxis Name="axisRoll"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:CursorCoordinateGraph Name="cordRoll"/>
+            <d3:ChartPlotter.HorizontalAxis >
+                <d3:HorizontalDateTimeAxis x:Name="dateAxis_angle"/>
+            </d3:ChartPlotter.HorizontalAxis>
         </d3:ChartPlotter>
 
         <d3:ChartPlotter Name ="plotPitchNormal" Height="100" Margin="0,49,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="304">
