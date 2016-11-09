@@ -46,7 +46,6 @@ namespace UAV_Info
         Span normalizeSpan = new Span();
         Span timeSpan = new Span();
 
-
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
           /*plotPitch.Viewport.SetBinding(Viewport2D.VisibleProperty,
@@ -55,44 +54,99 @@ namespace UAV_Info
                     new Binding("Visible") { Source = plotYaw.Viewport, Mode = BindingMode.TwoWay });
            */
           //plotPitch.Children.Remove(plotPitch.MouseNavigation);
+
+          //为plotter添加基准线组件
           plotPitch.Children.Add(normalizeSpan.LineA);
           plotPitch.Children.Add(normalizeSpan.LineB);
-          plotPitch.Children.Remove(plotPitch.KeyboardNavigation);
+          plotYaw.Children.Add(normalizeSpan.LineA);
+          plotYaw.Children.Add(normalizeSpan.LineB);
+          plotRoll.Children.Add(normalizeSpan.LineA);
+          plotRoll.Children.Add(normalizeSpan.LineB);
+
+          plotPitchNormal.Children.Add(timeSpan.LineA);
+          plotPitchNormal.Children.Add(timeSpan.LineB);
+          plotYawNormal.Children.Add(timeSpan.LineA);
+          plotYawNormal.Children.Add(timeSpan.LineB);
+          plotRollNormal.Children.Add(timeSpan.LineA);
+          plotRollNormal.Children.Add(timeSpan.LineB);
+
           //plotPitch.Viewport.Restrictions.Add();
-          plotYaw.Children.Remove(plotYaw.KeyboardNavigation);
           // plotYaw.DefaultContextMenu.Remove();
+          //删去双击放大事件
+          plotPitch.Children.Remove(plotPitch.KeyboardNavigation);
+          plotYaw.Children.Remove(plotYaw.KeyboardNavigation);
           plotRoll.Children.Remove(plotRoll.KeyboardNavigation);
-          plotPitch.MouseDoubleClick += attiPlotMouseClick;
+
+          plotPitchNormal.Children.Remove(plotPitchNormal.KeyboardNavigation);
+          plotYawNormal.Children.Remove(plotYawNormal.KeyboardNavigation);
+          plotRollNormal.Children.Remove(plotRollNormal.KeyboardNavigation);
+
+          //双击描线事件
+          plotPitch.MouseDoubleClick += onDoubleCkick_AngleChart;
+          plotYaw.MouseDoubleClick += onDoubleCkick_AngleChart;
+          plotRoll.MouseDoubleClick += onDoubleCkick_AngleChart;
+
+          plotPitchNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
+          plotYawNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
+          plotRollNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
 
           // Add handler
           plotPitch.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
           plotYaw.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
           plotRoll.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
 
+          plotPitchNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
+          plotYawNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
+          plotRollNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
+
 
         }
 
-        private void OnClick_btnBenchmarkReset(object sender, RoutedEventArgs e)
+        private void OnClick_Reset(object sender, RoutedEventArgs e)
         {
-            normalizeSpan.Reset();
+            if(sender.Equals(btnNormSpanReset))
+            {
+                normalizeSpan.Reset();
+            }
+            else if(sender.Equals(btnTimeSpanReset))
+            {
+                timeSpan.Reset();
+            }
         }
         // Respond to changes
         void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Visible")
+            //依据事件的来源，同步某侧的三个chart
+            if (sender.Equals(plotPitch.Viewport) || sender.Equals(plotYaw.Viewport) || sender.Equals(plotRoll.Viewport))
             {
                 plotPitch.Viewport.Visible = new Rect(((Viewport2D)sender).Visible.X, minPitchIndex, ((Viewport2D)sender).Visible.Width, maxPitchIndex);
                 plotYaw.Viewport.Visible = new Rect(((Viewport2D)sender).Visible.X, minYawIndex, ((Viewport2D)sender).Visible.Width, maxYawIndex);
                 plotRoll.Viewport.Visible = new Rect(((Viewport2D)sender).Visible.X, minRollIndex, ((Viewport2D)sender).Visible.Width, maxRollIndex);
             }
+            else if (sender.Equals(plotPitchNormal.Viewport) || sender.Equals(plotYawNormal.Viewport) || sender.Equals(plotRollNormal.Viewport))
+            {
+                plotPitchNormal.Viewport.Visible = new Rect(((Viewport2D)sender).Visible.X, minPitchIndex, ((Viewport2D)sender).Visible.Width, maxPitchIndex);
+                plotYawNormal.Viewport.Visible = new Rect(((Viewport2D)sender).Visible.X, minYawIndex, ((Viewport2D)sender).Visible.Width, maxYawIndex);
+                plotRollNormal.Viewport.Visible = new Rect(((Viewport2D)sender).Visible.X, minRollIndex, ((Viewport2D)sender).Visible.Width, maxRollIndex);
+            }
         }
 
-        private void attiPlotMouseClick(object sender, MouseEventArgs e)
+        private void onDoubleCkick_AngleChart(object sender, MouseEventArgs e)
         {
-            var transform = plotPitch.Transform;
-            var mouseScreenPosition = Mouse.GetPosition(plotPitch.CentralGrid);
+            ChartPlotter plotter = (ChartPlotter)sender;
+            var transform = plotter.Transform;
+            var mouseScreenPosition = Mouse.GetPosition(plotter.CentralGrid);
             var mousePositionInData = mouseScreenPosition.ScreenToViewport(transform);
 
+            if (sender.Equals(plotPitch) || sender.Equals(plotYaw) || sender.Equals(plotRoll))
+            {
+                normalizeSpan.AddLine(mousePositionInData.X);
+            }
+            else if (sender.Equals(plotPitchNormal) || sender.Equals(plotYawNormal) || sender.Equals(plotRollNormal))
+            {
+                timeSpan.AddLine(mousePositionInData.X);
+            }
+           
             flightBeanList = new List<FlightBean>();
             indexDict = new Dictionary<string, int>();
         }
@@ -136,7 +190,7 @@ namespace UAV_Info
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
-                // 轨迹数据
+
             }
         }
 
