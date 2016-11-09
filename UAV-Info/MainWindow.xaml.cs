@@ -17,6 +17,7 @@ using Microsoft.Research.DynamicDataDisplay.Charts;
 using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Research.DynamicDataDisplay.Charts.Navigation;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace UAV_Info
 {
@@ -25,10 +26,14 @@ namespace UAV_Info
     /// </summary>
     public partial class MainWindow : Window
     {
+        private List<FlightBean> flightBeanList;
+
+        // key: 飞行的某时刻, value: 数据在flightBeanList中的索引
+        private Dictionary<string, int> indexDict;
+
         public MainWindow()
         {
             InitializeComponent();
-
             Loaded += new RoutedEventHandler(MainWindow_Loaded);
         }
 
@@ -92,14 +97,43 @@ namespace UAV_Info
             SolidColorBrush redBrush = new SolidColorBrush(System.Windows.Media.Colors.Red);
             benchmarkLine.Stroke = redBrush;
             benchmarkLine.Value = mousePositionInData.X;
+            flightBeanList = new List<FlightBean>();
+            indexDict = new Dictionary<string, int>();
         }
 
         private void importAngleData(object sender, RoutedEventArgs args) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true) {
-               
+               string fileName = openFileDialog.FileName;
+                using(FileStream fs = File.Open(fileName, FileMode.Open)){
+                    StreamReader sr = new StreamReader(fs);
+                    string s;
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        string[] split = s.Split(',');
+                        if (indexDict.ContainsKey(split[1]))
+                        {
+                            FlightBean fb = flightBeanList[indexDict[split[1]]];
+                            fb.pitch = Convert.ToDouble(split[2]);
+                            fb.yaw = Convert.ToDouble(split[4]);
+                            fb.roll = Convert.ToDouble(split[3]);
+                        }
+                        else
+                        {
+                            FlightBean fb = new FlightBean();
+                            fb.time = split[1];
+                            fb.pitch = Convert.ToDouble(split[2]);
+                            fb.yaw = Convert.ToDouble(split[4]);
+                            fb.roll = Convert.ToDouble(split[3]);
+                            int index = flightBeanList.Count;
+                            flightBeanList.Add(fb);
+                            indexDict.Add(split[1], index);
+                        }
+                    }
+                }
             }
        }
+                
 
         private void importTraceData(object sender, RoutedEventArgs args)
         {
