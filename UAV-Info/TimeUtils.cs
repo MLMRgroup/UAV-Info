@@ -23,5 +23,9 @@ namespace UAV_Info
             }
             return formatTime;
         }
+
+        public static string DateTimeToStr(DateTime dt) {
+            return dt.ToString("s").Replace('T', ' ');
+        }
     }
 }

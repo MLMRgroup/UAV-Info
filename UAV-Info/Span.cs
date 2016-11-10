@@ -22,52 +22,88 @@ namespace UAV_Info
 {
     class Span
     {
-        SolidColorBrush brush = new SolidColorBrush(System.Windows.Media.Colors.Red);
+        SolidColorBrush markBrush = new SolidColorBrush(System.Windows.Media.Colors.Red);
+        SolidColorBrush tranpBrush = new SolidColorBrush(System.Windows.Media.Colors.Transparent);
+
+        private Boolean isLineASet;
+        private Boolean isLineBSet;
+        private List<VerticalLine> lineA;
+        private List<VerticalLine> lineB;
         public Span()
         {
-            lineA = new VerticalLine();
-            lineB = new VerticalLine();
-            lineA.Stroke = brush;
-            lineA.Stroke = brush;
+            lineA = new List<VerticalLine>();
+            lineB = new List<VerticalLine>();
             this.Reset();
         }
-
-        private VerticalLine lineA;
-        public void SetLineA(double value)
-        {
-            if(false == isLineASet)
-            {
-                lineA.Value = value;
-                isLineASet = true;
-            }
-        }
+        //获取一个A组基准线实例
         public VerticalLine LineA
         {
             get
             {
-                return lineA;
+                lineA.Add(new VerticalLine());
+                lineA[lineA.Count - 1].Value = 0;
+                lineA[lineA.Count - 1].Stroke = tranpBrush;
+                return lineA[lineA.Count-1];
             }
         }
-
-        private VerticalLine lineB;
-        public void SetLineB(double value)
-        {
-            if (false == isLineBSet)
-            {
-                lineB.Value = value;
-                isLineBSet = true;
-            }
-        }
+        //获取一个B组基准线实例
         public VerticalLine LineB
         {
             get
             {
-                return lineB;
+                lineB.Add(new VerticalLine());
+                lineB[lineB.Count - 1].Value = 0;
+                lineB[lineB.Count - 1].Stroke = tranpBrush;
+                return lineB[lineB.Count - 1];
             }
         }
-
-        private Boolean isLineASet;
-        private Boolean isLineBSet;
+        //得到A基准线的索引值
+        public double valueOfLineA
+        {
+            get
+            {
+                if (lineA.Count >= 1)
+                {
+                    return lineA[0].Value;
+                }
+                return 0;
+            }
+        }
+        //得到B基准线的索引值
+        public double valueOfLineB
+        {
+            get
+            {
+                if (lineB.Count >= 1)
+                {
+                    return lineB[0].Value;
+                }
+                return 0;
+            }
+        }
+        //改变当前基准线的值
+        public void AddLine(double value)
+        {
+            if (false == isLineASet)
+            {
+                for (int i = 0; i < lineA.Count; i++)
+                {
+                    lineA[i].Value = value;
+                    lineA[i].Stroke = markBrush;
+                }
+                isLineASet = true;
+            }
+            else if (false == isLineBSet)
+            {
+                for (int i = 0; i < lineB.Count; i++)
+                {
+                    lineB[i].Value = value;
+                    lineB[i].Stroke = markBrush;
+                }
+                isLineBSet = true;
+            }
+        }
+        //检查基准线是否都设置成功
         public Boolean IsSet
         {
             get 
@@ -75,14 +111,21 @@ namespace UAV_Info
                 return isLineASet && isLineBSet; 
             }
         }
+        //重置基准线
         public void Reset()
         {
+            for (int i = 0; i < lineA.Count; i++)
+            {
+                lineA[i].Value = 0;
+                lineA[i].Stroke = tranpBrush;
+            }
+            for (int i = 0; i < lineB.Count; i++)
+            {
+                lineB[i].Value = 0;
+                lineB[i].Stroke = tranpBrush;
+            }
             isLineASet = false;
             isLineBSet = false;
-            lineA.Stroke = null;
-            lineB.Stroke = null;
-            lineA.Value = 0;
-            lineB.Value = 0;
         }
     }
 }
