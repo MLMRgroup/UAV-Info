@@ -8,7 +8,7 @@ namespace UAV_Info
 {
     class FlightBean
     {
-
+        public readonly static double NoneAngle = 361;
         // 时刻
         private string _time;
 
@@ -18,14 +18,15 @@ namespace UAV_Info
         // 经度
         private double _lng;
 
+        // 361 表示无数据
         // 俯仰角
-        private double _pitch;
+        private double _pitch = NoneAngle;
 
         // 偏航角
-        private double _yaw;
+        private double _yaw = NoneAngle;
 
         // 滚转角
-        private double _roll;
+        private double _roll = NoneAngle;
 
         public FlightBean() {
 
