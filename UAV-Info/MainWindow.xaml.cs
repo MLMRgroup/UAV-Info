@@ -33,7 +33,6 @@ namespace UAV_Info
 
         private List<FlightBean> normalizedFlightBeanList;
 
-
         public MainWindow()
         {
             InitializeComponent();
@@ -246,7 +245,6 @@ namespace UAV_Info
             traceChartPlotter.Children.RemoveAll(lineG.GetType());
             traceChartPlotter.Viewport.FitToView();
             traceChartPlotter.Children.Add(lineG);
-
         }
 
         private void plotAngle(string whichAngle) {
@@ -309,7 +307,6 @@ namespace UAV_Info
                 plotRoll.Viewport.FitToView();
                 plotRoll.Children.Add(lineG);
             }
-            
         }
 
         private void plotNormalizedAngle(string whichAngle)
