@@ -21,19 +21,19 @@
         </TabPanel>
         <d3:ChartPlotter Name ="plotPitch" Width="330" Height="100"  HorizontalAlignment="Left" Margin="33,49,0,520">
             <d3:ChartPlotter.VerticalAxis>
-                <d3:VerticalIntegerAxis Name="axisPitch"/>
+                <d3:VerticalAxis Name="axisPitch"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:CursorCoordinateGraph Name="cordPitch"/>
         </d3:ChartPlotter>
         <d3:ChartPlotter Name ="plotYaw" Width="330" Height="100"  HorizontalAlignment="Left" Margin="33,149,0,420">
             <d3:ChartPlotter.VerticalAxis>
-                <d3:VerticalIntegerAxis Name="axisYaw"/>
+                <d3:VerticalAxis Name="axisYaw"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:CursorCoordinateGraph Name="cordYaw"/>
         </d3:ChartPlotter>
         <d3:ChartPlotter Name ="plotRoll" Width="330" Height="100"  HorizontalAlignment="Left" Margin="33,254,0,315">
             <d3:ChartPlotter.VerticalAxis>
-                <d3:VerticalIntegerAxis Name="axisRoll"/>
+                <d3:VerticalAxis Name="axisRoll"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:CursorCoordinateGraph Name="cordRoll"/>
             <d3:ChartPlotter.HorizontalAxis >
@@ -43,19 +43,19 @@
 
         <d3:ChartPlotter Name ="plotPitchNormal" Height="100" Margin="0,49,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="304">
             <d3:ChartPlotter.VerticalAxis>
-                <d3:VerticalIntegerAxis x:Name="axisPitchNormal"/>
+                <d3:VerticalAxis x:Name="axisPitchNormal"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:CursorCoordinateGraph Name="cordPitchNormal"/>
         </d3:ChartPlotter>
         <d3:ChartPlotter Name ="plotYawNormal" Height="100" Margin="0,154,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="304">
             <d3:ChartPlotter.VerticalAxis>
-                <d3:VerticalIntegerAxis x:Name="axisYawNormal"/>
+                <d3:VerticalAxis x:Name="axisYawNormal"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:CursorCoordinateGraph Name="cordYaNormal"/>
         </d3:ChartPlotter>
         <d3:ChartPlotter Name ="plotRollNormal" Height="100" Margin="0,254,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="304">
             <d3:ChartPlotter.VerticalAxis>
-                <d3:VerticalIntegerAxis x:Name="axisRollNormal"/>
+                <d3:VerticalAxis x:Name="axisRollNormal"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:CursorCoordinateGraph Name="cordRollNormal"/>
             <d3:ChartPlotter.HorizontalAxis >
@@ -64,7 +64,7 @@
         </d3:ChartPlotter>
         <d3:ChartPlotter Name="traceChartPlotter" Margin="10,0,0,59" HorizontalAlignment="Left" Width="315" Height="195" VerticalAlignment="Bottom">
             <d3:ChartPlotter.VerticalAxis>
-                <d3:VerticalIntegerAxis x:Name="axisAlt"/>
+                <d3:VerticalAxis x:Name="axisAlt"/>
             </d3:ChartPlotter.VerticalAxis>
 
             <d3:Header FontFamily="Arial" Content=""/>

@@ -403,7 +403,7 @@ namespace UAV_Info
 
             //超出时间范围，则校正为时间边界
             if (dateTimeA < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
-<<<<<<< HEAD
+
             {
                 dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
             }
@@ -417,21 +417,6 @@ namespace UAV_Info
             }
             else if (dateTimeB > TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1)))
             {
-=======
-            {
-                dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
-            }
-            else if (dateTimeA > TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1)))
-            {
-                dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1));
-            }
-            if (dateTimeB < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
-            {
-                dateTimeB = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
-            }
-            else if (dateTimeB > TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1)))
-            {
->>>>>>> 20eeda6a56372e4360b980d7121ce64a9f15afce
                 dateTimeB = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1));
             }
 
@@ -489,7 +474,7 @@ namespace UAV_Info
 
             //超出时间范围，则校正为时间边界
             if (dateTimeA < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
-<<<<<<< HEAD
+
             {
                 dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
             }
@@ -503,21 +488,6 @@ namespace UAV_Info
             }
             else if (dateTimeB > TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1)))
             {
-=======
-            {
-                dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
-            }
-            else if (dateTimeA > TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1)))
-            {
-                dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1));
-            }
-            if (dateTimeB < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
-            {
-                dateTimeB = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
-            }
-            else if (dateTimeB > TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1)))
-            {
->>>>>>> 20eeda6a56372e4360b980d7121ce64a9f15afce
                 dateTimeB = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1));
             }
 
