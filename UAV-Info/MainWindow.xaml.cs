@@ -78,7 +78,7 @@ namespace UAV_Info
           plotPitchNormal.Children.Remove(plotPitchNormal.KeyboardNavigation);
           plotYawNormal.Children.Remove(plotYawNormal.KeyboardNavigation);
           plotRollNormal.Children.Remove(plotRollNormal.KeyboardNavigation);
-          plotTrace.Children.Remove(plotRollNormal.KeyboardNavigation);
+          traceChartPlotter.Children.Remove(plotRollNormal.KeyboardNavigation);
 
 
           //双击描线事件
@@ -222,7 +222,8 @@ namespace UAV_Info
                 PlotTrace();
             }
         }
-        private void PlotTrace()
+
+        private void plotTrace()
         {
             List<double> latList = new List<double>();
             List<double> lngList = new List<double>();
@@ -242,9 +243,9 @@ namespace UAV_Info
             LineGraph lineG = new LineGraph();
             lineG.Description = new PenDescription("轨迹");
             lineG.DataSource = compositeDataSource;
-            plotTrace.Children.RemoveAll(lineG.GetType());
-            plotTrace.Viewport.FitToView();
-            plotTrace.Children.Add(lineG);
+            traceChartPlotter.Children.RemoveAll(lineG.GetType());
+            traceChartPlotter.Viewport.FitToView();
+            traceChartPlotter.Children.Add(lineG);
 
         }
 
@@ -309,32 +310,6 @@ namespace UAV_Info
                 plotRoll.Children.Add(lineG);
             }
             
-        }
-
-        private void plotTRace(double timeA = 0, double timeB = 0)
-        {
-            List<double> latList = new List<double>();
-            List<double> logList = new List<double>();
-            foreach (string key in indexDict.Keys)
-            {
-                if (flightBeanList[indexDict[key]].lat!=0 && flightBeanList[indexDict[key]].lng!=0)
-                {
-                    latList.Add(flightBeanList[indexDict[key]].lat);
-                    logList.Add(flightBeanList[indexDict[key]].lng);
-                }
-            }
-
-            EnumerableDataSource<double> latDataSource = new EnumerableDataSource<double>(latList);
-            latDataSource.SetXMapping(y => y);
-            EnumerableDataSource<double> logDataSource = new EnumerableDataSource<double>(logList);
-            logDataSource.SetYMapping(x => x);
-            CompositeDataSource compositeDataSource = new CompositeDataSource(logDataSource, latDataSource);
-            LineGraph lineG = new LineGraph();
-            lineG.Description = new PenDescription("轨迹");
-            lineG.DataSource = compositeDataSource;
-            plotTrace.Children.RemoveAll(lineG.GetType());
-            plotTrace.Viewport.FitToView();
-            plotTrace.Children.Add(lineG);
         }
 
         private void plotNormalizedAngle(string whichAngle)
@@ -504,8 +479,8 @@ namespace UAV_Info
             };
             lineGHLight.Description = new PenDescription("Highlight");
             lineGHLight.DataSource = compositeHLightDataSource;
-            plotTrace.Viewport.FitToView();
-            plotTrace.Children.Add(lineGHLight);
+            traceChartPlotter.Viewport.FitToView();
+            traceChartPlotter.Children.Add(lineGHLight);
 
         }
 
