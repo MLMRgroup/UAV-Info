@@ -17,6 +17,7 @@ using Microsoft.Research.DynamicDataDisplay;
 using System.IO;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
 using System.Windows.Threading;
+using System.Threading;
 
 namespace UAV_Info
 {
@@ -213,6 +214,8 @@ namespace UAV_Info
                 string fileName = openFileDialog.FileName;
                 gpx_trans gpx = new gpx_trans(indexDict,flightBeanList);
                 gpx.start(fileName);
+                while (gpx.thread1.ThreadState != System.Threading.ThreadState.Stopped) { }
+
                 indexDict = gpx.gpxdata;
                 flightBeanList = gpx.gpxlist;
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
@@ -306,6 +309,32 @@ namespace UAV_Info
                 plotRoll.Children.Add(lineG);
             }
             
+        }
+
+        private void plotTRace(double timeA = 0, double timeB = 0)
+        {
+            List<double> latList = new List<double>();
+            List<double> logList = new List<double>();
+            foreach (string key in indexDict.Keys)
+            {
+                if (flightBeanList[indexDict[key]].lat!=0 && flightBeanList[indexDict[key]].lng!=0)
+                {
+                    latList.Add(flightBeanList[indexDict[key]].lat);
+                    logList.Add(flightBeanList[indexDict[key]].lng);
+                }
+            }
+
+            EnumerableDataSource<double> latDataSource = new EnumerableDataSource<double>(latList);
+            latDataSource.SetXMapping(y => y);
+            EnumerableDataSource<double> logDataSource = new EnumerableDataSource<double>(logList);
+            logDataSource.SetYMapping(x => x);
+            CompositeDataSource compositeDataSource = new CompositeDataSource(logDataSource, latDataSource);
+            LineGraph lineG = new LineGraph();
+            lineG.Description = new PenDescription("轨迹");
+            lineG.DataSource = compositeDataSource;
+            plotTrace.Children.RemoveAll(lineG.GetType());
+            plotTrace.Viewport.FitToView();
+            plotTrace.Children.Add(lineG);
         }
 
         private void plotNormalizedAngle(string whichAngle)

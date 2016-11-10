@@ -15,7 +15,7 @@ namespace UAV_Info
         public List <FlightBean> gpxlist=new List<FlightBean>();
 
         private string strOpenFileName;//打开的文件路径
-        private Thread thread1;
+        public Thread thread1;
 
         public gpx_trans()
         {
