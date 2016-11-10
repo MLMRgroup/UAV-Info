@@ -17,6 +17,7 @@ using Microsoft.Research.DynamicDataDisplay;
 using System.IO;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
 using System.Windows.Threading;
+using System.Threading;
 
 namespace UAV_Info
 {
@@ -213,6 +214,8 @@ namespace UAV_Info
                 string fileName = openFileDialog.FileName;
                 gpx_trans gpx = new gpx_trans(indexDict,flightBeanList);
                 gpx.start(fileName);
+                while (gpx.thread1.ThreadState != System.Threading.ThreadState.Stopped) { }
+
                 indexDict = gpx.gpxdata;
                 flightBeanList = gpx.gpxlist;
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
@@ -289,7 +292,7 @@ namespace UAV_Info
             List<double> logList = new List<double>();
             foreach (string key in indexDict.Keys)
             {
-                if (flightBeanList[indexDict[key]].lat != 0 && flightBeanList[indexDict[key]].lng != 0)
+                if (flightBeanList[indexDict[key]].lat!=0 && flightBeanList[indexDict[key]].lng!=0)
                 {
                     latList.Add(flightBeanList[indexDict[key]].lat);
                     logList.Add(flightBeanList[indexDict[key]].lng);
