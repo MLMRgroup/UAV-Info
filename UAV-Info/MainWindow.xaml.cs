@@ -219,7 +219,7 @@ namespace UAV_Info
                 indexDict = gpx.gpxdata;
                 flightBeanList = gpx.gpxlist;
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
-                PlotTrace();
+                plotTrace();
             }
         }
 
