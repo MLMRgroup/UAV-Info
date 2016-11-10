@@ -58,6 +58,9 @@
                 <d3:VerticalIntegerAxis x:Name="axisRollNormal"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:CursorCoordinateGraph Name="cordRollNormal"/>
+            <d3:ChartPlotter.HorizontalAxis >
+                <d3:HorizontalDateTimeAxis x:Name="dateAxis_angleNormal"/>
+            </d3:ChartPlotter.HorizontalAxis>
         </d3:ChartPlotter>
         <d3:ChartPlotter Name="plotTrace" Margin="10,0,0,59" HorizontalAlignment="Left" Width="315" Height="195" VerticalAlignment="Bottom">
             <d3:ChartPlotter.VerticalAxis>
@@ -75,16 +78,16 @@
         <Label x:Name="label_Copy3" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,227,156.187" VerticalAlignment="Bottom" Width="50"/>
         <Label x:Name="label_Copy4" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,227,111.187" VerticalAlignment="Bottom" Width="50"/>
         <Label x:Name="label_Copy5" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,92,204" VerticalAlignment="Bottom" Width="50"/>
-        <TextBox x:Name="textBox" HorizontalAlignment="Right" Height="25" Margin="0,0,162,209" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <TextBox x:Name="textBox_Copy" HorizontalAlignment="Right" Height="25" Margin="0,0,162,161.187" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <TextBox x:Name="textBox_Copy1" HorizontalAlignment="Right" Height="25" Margin="0,0,162,116.187" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <TextBox x:Name="textBox_Copy2" HorizontalAlignment="Right" Height="25" Margin="0,0,32,209" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <TextBox x:Name="textBox_Copy3" HorizontalAlignment="Right" Height="25" Margin="0,0,32,161.187" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <TextBox x:Name="textBox_Copy4" HorizontalAlignment="Right" Height="25" Margin="0,0,32,116.187" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="pitchMaxTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,162,209" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="rollMaxTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,162,161.187" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="yawMaxTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,162,116.187" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="pitchMinTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,32,209" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="rollMinTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,32,161.187" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="yawMinTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,32,116.187" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
         <Label x:Name="label_Copy6" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,92,161.187" VerticalAlignment="Bottom" Width="50"/>
         <Label x:Name="label_Copy7" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,92,111.187" VerticalAlignment="Bottom" Width="50"/>
-        <Button x:Name="btnNormSpanReset" Content="reset" HorizontalAlignment="Left" Margin="56,374,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
-        <Button x:Name="btnTimeSpanReset" Content="reset" HorizontalAlignment="Left" Margin="455,379,0,0" VerticalAlignment="Top" Width="46" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
-        <Button Content="btnNormlize" HorizontalAlignment="Left" Margin="250,379,0,0" VerticalAlignment="Top" Width="75" />
+        <Button x:Name="btnNormSpanReset" Content="重置" HorizontalAlignment="Left" Margin="56,374,0,0" VerticalAlignment="Top" Width="45" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
+        <Button x:Name="btnTimeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="455,379,0,0" VerticalAlignment="Top" Width="46" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
+        <Button Name="btnNormlize" Content="规范化" HorizontalAlignment="Left" Margin="250,379,0,0" VerticalAlignment="Top" Width="75" Click="onClick_NormalizeAngle" IsEnabled="False"/>
     </Grid>
 </Window>
