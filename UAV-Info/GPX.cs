@@ -34,7 +34,7 @@ namespace UAV_Info
             thread1 = new Thread(th1);
             thread1.IsBackground = true;//后台线程
             thread1.Name = "hxb";
-            thread1.Priority = ThreadPriority.Lowest;
+            thread1.Priority = ThreadPriority.Highest;
             thread1.Start();//开始子线程
         }
 
@@ -149,7 +149,7 @@ namespace UAV_Info
                                 }
                                 else
                                 {
-                                    FlightBean fb = new FlightBean();
+                                    FlightBean fb = new FlightBean("", 0, 0, 0, 0, 0);
                                     fb.time = format_time;
                                     fb.lat = Convert.ToDouble(wd);
                                     fb.lng = Convert.ToDouble(jd);

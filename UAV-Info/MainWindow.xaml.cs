@@ -79,8 +79,6 @@ namespace UAV_Info
           plotYawNormal.Children.Remove(plotYawNormal.KeyboardNavigation);
           plotRollNormal.Children.Remove(plotRollNormal.KeyboardNavigation);
 
-          plotYaw.Children.Remove(plotYaw.KeyboardNavigation);
-          plotRoll.Children.Remove(plotRoll.KeyboardNavigation);
 
           //双击描线事件
           plotPitch.MouseDoubleClick += onDoubleCkick_AngleChart;
@@ -184,7 +182,7 @@ namespace UAV_Info
                         }
                         else
                         {
-                            FlightBean fb = new FlightBean();
+                            FlightBean fb = new FlightBean("",0,0,0,0,0);
                             fb.time = time;
                             fb.pitch = Convert.ToDouble(split[2]);
                             fb.yaw = Convert.ToDouble(split[4]);
@@ -291,8 +289,11 @@ namespace UAV_Info
             List<double> logList = new List<double>();
             foreach (string key in indexDict.Keys)
             {
-                latList.Add(flightBeanList[indexDict[key]].lat);
-                logList.Add(flightBeanList[indexDict[key]].lng);
+                if (flightBeanList[indexDict[key]].lat != 0 && flightBeanList[indexDict[key]].lng != 0)
+                {
+                    latList.Add(flightBeanList[indexDict[key]].lat);
+                    logList.Add(flightBeanList[indexDict[key]].lng);
+                }
             }
 
             EnumerableDataSource<double> latDataSource = new EnumerableDataSource<double>(latList);
