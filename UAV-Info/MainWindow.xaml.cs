@@ -74,10 +74,10 @@ namespace UAV_Info
           plotPitch.Children.Remove(plotPitch.KeyboardNavigation);
           plotYaw.Children.Remove(plotYaw.KeyboardNavigation);
           plotRoll.Children.Remove(plotRoll.KeyboardNavigation);
-
           plotPitchNormal.Children.Remove(plotPitchNormal.KeyboardNavigation);
           plotYawNormal.Children.Remove(plotYawNormal.KeyboardNavigation);
           plotRollNormal.Children.Remove(plotRollNormal.KeyboardNavigation);
+          plotTrace.Children.Remove(plotRollNormal.KeyboardNavigation);
 
 
           //双击描线事件
@@ -216,8 +216,33 @@ namespace UAV_Info
                 indexDict = gpx.gpxdata;
                 flightBeanList = gpx.gpxlist;
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
-                plotTRace();
+                PlotTrace();
             }
+        }
+        private void PlotTrace()
+        {
+            List<double> latList = new List<double>();
+            List<double> lngList = new List<double>();
+            foreach (string key in indexDict.Keys)
+            {
+                if (flightBeanList[indexDict[key]].lat != 0 && flightBeanList[indexDict[key]].lng != 0)
+                {
+                    latList.Add(flightBeanList[indexDict[key]].lat);
+                    lngList.Add(flightBeanList[indexDict[key]].lng);
+                }
+            }
+            EnumerableDataSource<double> latDataSource = new EnumerableDataSource<double>(latList);
+            latDataSource.SetXMapping(y => y);
+            EnumerableDataSource<double> logDataSource = new EnumerableDataSource<double>(lngList);
+            logDataSource.SetYMapping(x => x);
+            CompositeDataSource compositeDataSource = new CompositeDataSource(logDataSource, latDataSource);
+            LineGraph lineG = new LineGraph();
+            lineG.Description = new PenDescription("轨迹");
+            lineG.DataSource = compositeDataSource;
+            plotTrace.Children.RemoveAll(lineG.GetType());
+            plotTrace.Viewport.FitToView();
+            plotTrace.Children.Add(lineG);
+
         }
 
         private void plotAngle(string whichAngle) {
@@ -281,32 +306,6 @@ namespace UAV_Info
                 plotRoll.Children.Add(lineG);
             }
             
-        }
-
-        private void plotTRace(double timeA = 0, double timeB = 0)
-        {
-            List<double> latList = new List<double>();
-            List<double> logList = new List<double>();
-            foreach (string key in indexDict.Keys)
-            {
-                if (flightBeanList[indexDict[key]].lat != 0 && flightBeanList[indexDict[key]].lng != 0)
-                {
-                    latList.Add(flightBeanList[indexDict[key]].lat);
-                    logList.Add(flightBeanList[indexDict[key]].lng);
-                }
-            }
-
-            EnumerableDataSource<double> latDataSource = new EnumerableDataSource<double>(latList);
-            latDataSource.SetXMapping(y => y);
-            EnumerableDataSource<double> logDataSource = new EnumerableDataSource<double>(logList);
-            logDataSource.SetYMapping(x => x);
-            CompositeDataSource compositeDataSource = new CompositeDataSource(logDataSource, latDataSource);
-            LineGraph lineG = new LineGraph();
-            lineG.Description = new PenDescription("轨迹");
-            lineG.DataSource = compositeDataSource;
-            plotTrace.Children.RemoveAll(lineG.GetType());
-            plotTrace.Viewport.FitToView();
-            plotTrace.Children.Add(lineG);
         }
 
         private void plotNormalizedAngle(string whichAngle)
@@ -383,16 +382,24 @@ namespace UAV_Info
             List<FlightBean> list = new List<FlightBean>();
             DateTime timeEnd = dateAxis_angle.ConvertFromDouble(normalizeSpan.valueOfLineB);
             string time2 = TimeUtils.DateTimeToStr(timeEnd);
-            if (indexDict.ContainsKey(time1) && indexDict.ContainsKey(time2))
+
+            if (false == indexDict.ContainsKey(time1))
             {
-                int index1 = indexDict[time1];
-                int index2 = indexDict[time2];
-                if (index1 < index2) {
-                    list = flightBeanList.GetRange(index1, index2 - index1);
-                }
-                else {
-                    list = flightBeanList.GetRange(index2, index1 - index2);
-                }
+                time1 = indexDict.Keys.ElementAt(0);
+            }
+            if (false == indexDict.ContainsKey(time2))
+            {
+                time2 = indexDict.Keys.ElementAt(indexDict.Keys.Count - 1);
+            }
+
+            int index1 = indexDict[time1];
+            int index2 = indexDict[time2];
+
+            if (index1 < index2) {
+                list = flightBeanList.GetRange(index1, index2 - index1);
+            }
+            else {
+                list = flightBeanList.GetRange(index2, index1 - index2);
             }
             double meanOfPitch = (from l in list select l.pitch).Sum() / list.Count;
             double meanOfYaw = (from l in list select l.yaw).Sum() / list.Count;
@@ -409,24 +416,36 @@ namespace UAV_Info
         }
 
         private void analyseAngleNormalized() {
+            //获取时间区间
             DateTime timeStart = dateAxis_angleNormal.ConvertFromDouble(timeSpan.valueOfLineA);
             string time1 = TimeUtils.DateTimeToStr(timeStart);
-            List<FlightBean> list = new List<FlightBean>();
             DateTime timeEnd = dateAxis_angleNormal.ConvertFromDouble(timeSpan.valueOfLineB);
             string time2 = TimeUtils.DateTimeToStr(timeEnd);
-            if (indexDict.ContainsKey(time1) && indexDict.ContainsKey(time2))
+
+            List<FlightBean> list = new List<FlightBean>();
+
+            //超出时间范围，则校正为时间边界
+            if (false == indexDict.ContainsKey(time1))
             {
-                int index1 = indexDict[time1];
-                int index2 = indexDict[time2];
-                if (index1 < index2)
-                {
-                    list = normalizedFlightBeanList.GetRange(index1, index2 - index1);
-                }
-                else
-                {
-                    list = normalizedFlightBeanList.GetRange(index2, index1 - index2);
-                }
+                time1 = indexDict.Keys.ElementAt(0);
             }
+            if (false == indexDict.ContainsKey(time2))
+            {
+                time2 = indexDict.Keys.ElementAt(indexDict.Keys.Count-1);
+            }
+
+            int index1 = indexDict[time1];
+            int index2 = indexDict[time2];
+
+            if (index1 < index2)
+            {
+                list = normalizedFlightBeanList.GetRange(index1, index2 - index1);
+            }
+            else
+            {
+                list = normalizedFlightBeanList.GetRange(index2, index1 - index2);
+            }
+
             double maxOfPitch = (from l in list select l.pitch).Max();
             double minOfPitch = (from l in list select l.pitch).Min();
             double maxOfYaw = (from l in list select l.yaw).Max();
@@ -439,6 +458,26 @@ namespace UAV_Info
             pitchMinTextBox.Text = minOfPitch.ToString("f2");
             yawMinTextBox.Text = minOfYaw.ToString("f2");
             rollMinTextBox.Text = minOfRoll.ToString("f2");
+
+            //HighLight The Trace
+            List<double> latListHLight = (from item in list where item.lat != 0 select item.lat).ToList();
+            List<double> lngListHLight = (from item in list where item.lng != 0 select item.lng).ToList(); 
+            
+            EnumerableDataSource<double> latHLightDataSource = new EnumerableDataSource<double>(latListHLight);
+            latHLightDataSource.SetXMapping(y => y);
+            EnumerableDataSource<double> logHLightDataSource = new EnumerableDataSource<double>(lngListHLight);
+            logHLightDataSource.SetYMapping(x => x);
+            CompositeDataSource compositeHLightDataSource = new CompositeDataSource(logHLightDataSource, latHLightDataSource);
+            LineGraph lineGHLight = new LineGraph
+            {
+                Stroke = Brushes.Green,
+                StrokeThickness = 2,
+            };
+            lineGHLight.Description = new PenDescription("Highlight");
+            lineGHLight.DataSource = compositeHLightDataSource;
+            plotTrace.Viewport.FitToView();
+            plotTrace.Children.Add(lineGHLight);
+
         }
 
         private void animationTimer_Tick(object sender, EventArgs e)
