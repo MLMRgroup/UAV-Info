@@ -347,7 +347,12 @@ namespace UAV_Info
             {
                 int index1 = indexDict[time1];
                 int index2 = indexDict[time2];
-                list = flightBeanList.GetRange(index1, index2 - index1);
+                if (index1 < index2) {
+                    list = flightBeanList.GetRange(index1, index2 - index1);
+                }
+                else {
+                    list = flightBeanList.GetRange(index2, index1 - index2);
+                }
             }
             double meanOfPitch = (from l in list select l.pitch).Sum() / list.Count;
             double meanOfYaw = (from l in list select l.yaw).Sum() / list.Count;
@@ -373,7 +378,14 @@ namespace UAV_Info
             {
                 int index1 = indexDict[time1];
                 int index2 = indexDict[time2];
-                list = flightBeanList.GetRange(index1, index2 - index1);
+                if (index1 < index2)
+                {
+                    list = normalizedFlightBeanList.GetRange(index1, index2 - index1);
+                }
+                else
+                {
+                    list = normalizedFlightBeanList.GetRange(index2, index1 - index2);
+                }
             }
             double maxOfPitch = (from l in list select l.pitch).Max();
             double minOfPitch = (from l in list select l.pitch).Min();
