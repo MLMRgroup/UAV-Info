@@ -80,7 +80,6 @@ namespace UAV_Info
           plotRollNormal.Children.Remove(plotRollNormal.KeyboardNavigation);
           plotTrace.Children.Remove(plotRollNormal.KeyboardNavigation);
 
-
           //双击描线事件
           plotPitch.MouseDoubleClick += onDoubleCkick_AngleChart;
           plotYaw.MouseDoubleClick += onDoubleCkick_AngleChart;
@@ -220,6 +219,7 @@ namespace UAV_Info
                 flightBeanList = gpx.gpxlist;
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
                 PlotTrace();
+                plotTrace.LegendVisible = false;
             }
         }
         private void PlotTrace()
@@ -239,13 +239,16 @@ namespace UAV_Info
             EnumerableDataSource<double> logDataSource = new EnumerableDataSource<double>(lngList);
             logDataSource.SetYMapping(x => x);
             CompositeDataSource compositeDataSource = new CompositeDataSource(logDataSource, latDataSource);
-            LineGraph lineG = new LineGraph();
-            lineG.Description = new PenDescription("轨迹");
+            LineGraph lineG = new LineGraph()
+            {
+                Stroke = Brushes.Gray,
+                StrokeThickness = 1,
+            };
+
             lineG.DataSource = compositeDataSource;
             plotTrace.Children.RemoveAll(lineG.GetType());
             plotTrace.Viewport.FitToView();
             plotTrace.Children.Add(lineG);
-
         }
 
         private void plotAngle(string whichAngle) {
@@ -311,31 +314,6 @@ namespace UAV_Info
             
         }
 
-        private void plotTRace(double timeA = 0, double timeB = 0)
-        {
-            List<double> latList = new List<double>();
-            List<double> logList = new List<double>();
-            foreach (string key in indexDict.Keys)
-            {
-                if (flightBeanList[indexDict[key]].lat!=0 && flightBeanList[indexDict[key]].lng!=0)
-                {
-                    latList.Add(flightBeanList[indexDict[key]].lat);
-                    logList.Add(flightBeanList[indexDict[key]].lng);
-                }
-            }
-
-            EnumerableDataSource<double> latDataSource = new EnumerableDataSource<double>(latList);
-            latDataSource.SetXMapping(y => y);
-            EnumerableDataSource<double> logDataSource = new EnumerableDataSource<double>(logList);
-            logDataSource.SetYMapping(x => x);
-            CompositeDataSource compositeDataSource = new CompositeDataSource(logDataSource, latDataSource);
-            LineGraph lineG = new LineGraph();
-            lineG.Description = new PenDescription("轨迹");
-            lineG.DataSource = compositeDataSource;
-            plotTrace.Children.RemoveAll(lineG.GetType());
-            plotTrace.Viewport.FitToView();
-            plotTrace.Children.Add(lineG);
-        }
 
         private void plotNormalizedAngle(string whichAngle)
         {
@@ -405,36 +383,63 @@ namespace UAV_Info
 
         }
 
-        private void onClick_NormalizeAngle(object sender, EventArgs e) {
-            DateTime timeStart = dateAxis_angle.ConvertFromDouble(normalizeSpan.valueOfLineA);
-            string time1 = TimeUtils.DateTimeToStr(timeStart);
-            List<FlightBean> list = new List<FlightBean>();
-            DateTime timeEnd = dateAxis_angle.ConvertFromDouble(normalizeSpan.valueOfLineB);
-            string time2 = TimeUtils.DateTimeToStr(timeEnd);
+        private void onClick_NormalizeAngle(object sender = null, EventArgs e = null) {
+            //获取时间区间
+            DateTime dateTimeA = dateAxis_angleNormal.ConvertFromDouble(normalizeSpan.valueOfLineA);
+            DateTime dateTimeB = dateAxis_angleNormal.ConvertFromDouble(normalizeSpan.valueOfLineB);
 
-            if (false == indexDict.ContainsKey(time1))
+            List<FlightBean> list = null;
+
+            //超出时间范围，则校正为时间边界
+            if (dateTimeA < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
             {
-                time1 = indexDict.Keys.ElementAt(0);
+                dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
             }
-            if (false == indexDict.ContainsKey(time2))
+            else if (dateTimeA > TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1)))
             {
-                time2 = indexDict.Keys.ElementAt(indexDict.Keys.Count - 1);
+                dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1));
+            }
+            if (dateTimeB < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
+            {
+                dateTimeB = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
+            }
+            else if (dateTimeB > TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1)))
+            {
+                dateTimeB = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1));
             }
 
-            int index1 = indexDict[time1];
-            int index2 = indexDict[time2];
 
-            if (index1 < index2) {
-                list = flightBeanList.GetRange(index1, index2 - index1);
+            if (dateTimeA < dateTimeB)
+            {
+                list = (from item in indexDict.Keys
+                        where (dateTimeA < TimeUtils.strToDateTime(item)
+                                && dateTimeB > TimeUtils.strToDateTime(item)
+                                && flightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle)
+                        select flightBeanList[indexDict[item]]
+                        ).ToList();
             }
-            else {
-                list = flightBeanList.GetRange(index2, index1 - index2);
+            else
+            {
+                list = (from item in indexDict.Keys
+                        where (dateTimeA > TimeUtils.strToDateTime(item)
+                                && dateTimeB < TimeUtils.strToDateTime(item)
+                                && flightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle)
+                        select flightBeanList[indexDict[item]]
+                        ).ToList();
             }
-            double meanOfPitch = (from l in list select l.pitch).Sum() / list.Count;
-            double meanOfYaw = (from l in list select l.yaw).Sum() / list.Count;
-            double meanOfRoll = (from l in list select l.roll).Sum() / list.Count;
+
+            double meanOfPitch = 0, meanOfYaw = 0, meanOfRoll = 0;
+            if (null != list && 0 != list.Count)
+            {
+                meanOfPitch = (from l in list select l.pitch).Sum() / list.Count;
+                meanOfYaw = (from l in list select l.yaw).Sum() / list.Count;
+                meanOfRoll = (from l in list select l.roll).Sum() / list.Count;
+            }
+
             normalizedFlightBeanList = new List<FlightBean>(flightBeanList);
             foreach (FlightBean fb in normalizedFlightBeanList) {
+                if (fb.pitch == FlightBean.NoneAngle)
+                    continue;
                 fb.pitch -= meanOfPitch;
                 fb.yaw -= meanOfYaw;
                 fb.roll -= meanOfRoll;
@@ -445,34 +450,66 @@ namespace UAV_Info
         }
 
         private void analyseAngleNormalized() {
-            //获取时间区间
-            DateTime timeStart = dateAxis_angleNormal.ConvertFromDouble(timeSpan.valueOfLineA);
-            string time1 = TimeUtils.DateTimeToStr(timeStart);
-            DateTime timeEnd = dateAxis_angleNormal.ConvertFromDouble(timeSpan.valueOfLineB);
-            string time2 = TimeUtils.DateTimeToStr(timeEnd);
+            
+            if (null == normalizedFlightBeanList)
+                return;
 
-            List<FlightBean> list = new List<FlightBean>();
+            //获取时间区间
+            DateTime dateTimeA = dateAxis_angleNormal.ConvertFromDouble(timeSpan.valueOfLineA);
+            DateTime dateTimeB = dateAxis_angleNormal.ConvertFromDouble(timeSpan.valueOfLineB);
+
+            List<FlightBean> list = null;
 
             //超出时间范围，则校正为时间边界
-            if (false == indexDict.ContainsKey(time1))
+            if (dateTimeA < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
             {
-                time1 = indexDict.Keys.ElementAt(0);
+                dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
             }
-            if (false == indexDict.ContainsKey(time2))
+            else if (dateTimeA > TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1)))
             {
-                time2 = indexDict.Keys.ElementAt(indexDict.Keys.Count-1);
+                dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1));
+            }
+            if (dateTimeB < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
+            {
+                dateTimeB = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
+            }
+            else if (dateTimeB > TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1)))
+            {
+                dateTimeB = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1));
             }
 
-            int index1 = indexDict[time1];
-            int index2 = indexDict[time2];
 
-            if (index1 < index2)
+            if (dateTimeA < dateTimeB)
             {
-                list = normalizedFlightBeanList.GetRange(index1, index2 - index1);
+                list = (from item in indexDict.Keys
+                        where (dateTimeA < TimeUtils.strToDateTime(item)
+                                && dateTimeB > TimeUtils.strToDateTime(item)
+                                && indexDict[item] < normalizedFlightBeanList.Count 
+                                && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle)
+                        select normalizedFlightBeanList[indexDict[item]]
+                        ).ToList();
             }
             else
             {
-                list = normalizedFlightBeanList.GetRange(index2, index1 - index2);
+                list = (from item in indexDict.Keys
+                        where (dateTimeA > TimeUtils.strToDateTime(item)
+                                && dateTimeB < TimeUtils.strToDateTime(item)
+                                && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle)
+                        select normalizedFlightBeanList[indexDict[item]]
+                        ).ToList();
+            }
+
+            if(null == list || 0 == list.Count)
+            {
+                pitchMaxTextBox.Text = "";
+                yawMaxTextBox.Text = "";
+                rollMaxTextBox.Text = "";
+                pitchMinTextBox.Text = "";
+                yawMinTextBox.Text = "";
+                rollMinTextBox.Text = "";
+                PlotTrace();
+                plotTrace.LegendVisible = false;
+                return;
             }
 
             double maxOfPitch = (from l in list select l.pitch).Max();
@@ -481,6 +518,7 @@ namespace UAV_Info
             double minOfYaw = (from l in list select l.yaw).Min();
             double maxOfRoll = (from l in list select l.roll).Max();
             double minOfRoll = (from l in list select l.roll).Min();
+            
             pitchMaxTextBox.Text = maxOfPitch.ToString("f2");
             yawMaxTextBox.Text = maxOfYaw.ToString("f2");
             rollMaxTextBox.Text = maxOfRoll.ToString("f2");
@@ -490,8 +528,10 @@ namespace UAV_Info
 
             //HighLight The Trace
             List<double> latListHLight = (from item in list where item.lat != 0 select item.lat).ToList();
-            List<double> lngListHLight = (from item in list where item.lng != 0 select item.lng).ToList(); 
-            
+            List<double> lngListHLight = (from item in list where item.lng != 0 select item.lng).ToList();
+            if (latListHLight.Count != lngListHLight.Count || latListHLight.Count == 0)
+                return;
+
             EnumerableDataSource<double> latHLightDataSource = new EnumerableDataSource<double>(latListHLight);
             latHLightDataSource.SetXMapping(y => y);
             EnumerableDataSource<double> logHLightDataSource = new EnumerableDataSource<double>(lngListHLight);
@@ -499,13 +539,14 @@ namespace UAV_Info
             CompositeDataSource compositeHLightDataSource = new CompositeDataSource(logHLightDataSource, latHLightDataSource);
             LineGraph lineGHLight = new LineGraph
             {
-                Stroke = Brushes.Green,
-                StrokeThickness = 2,
+                Stroke = Brushes.Blue,
+                StrokeThickness = 3,
             };
-            lineGHLight.Description = new PenDescription("Highlight");
             lineGHLight.DataSource = compositeHLightDataSource;
-            plotTrace.Viewport.FitToView();
+            PlotTrace();
             plotTrace.Children.Add(lineGHLight);
+            plotTrace.LegendVisible = false;
+            
 
         }
 
