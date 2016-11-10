@@ -33,6 +33,7 @@ namespace UAV_Info
 
         private List<FlightBean> normalizedFlightBeanList;
 
+        private bool isReopenAngleFile;
 
         public MainWindow()
         {
@@ -40,6 +41,7 @@ namespace UAV_Info
             flightBeanList = new List<FlightBean>();
             indexDict = new Dictionary<string, int>();
             Loaded += new RoutedEventHandler(MainWindow_Loaded);
+            isReopenAngleFile = false;
         }
 
         Span normalizeSpan = new Span();
@@ -110,6 +112,11 @@ namespace UAV_Info
             else if(sender.Equals(btnTimeSpanReset))
             {
                 timeSpan.Reset();
+                clearanalysisTextBox();
+                if (((LineGraph)traceChartPlotter.FindName("traceHLight")) != null) { 
+                    traceChartPlotter.Children.Remove((LineGraph)FindName("traceHLight"));
+                    traceChartPlotter.UnregisterName("traceHLight");
+                }
             }
         }
         // Respond to changes
@@ -196,9 +203,13 @@ namespace UAV_Info
                 }
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
                 // 绘图
+                if (isReopenAngleFile) {
+                    clearWhenReopenAngleFile();
+                }
                 plotAngle("pitch");
                 plotAngle("yaw");
                 plotAngle("roll");
+                isReopenAngleFile = true;
                 DispatcherTimer animationTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
                 animationTimer.Tick += animationTimer_Tick;
                 animationTimer.Start();
@@ -474,9 +485,13 @@ namespace UAV_Info
             CompositeDataSource compositeHLightDataSource = new CompositeDataSource(logHLightDataSource, latHLightDataSource);
             LineGraph lineGHLight = new LineGraph
             {
+                Name = "traceHLight",
                 Stroke = Brushes.Green,
                 StrokeThickness = 2,
             };
+            if (traceChartPlotter.FindName("traceHLight") == null) {
+                traceChartPlotter.RegisterName("traceHLight", lineGHLight);
+            }
             lineGHLight.Description = new PenDescription("Highlight");
             lineGHLight.DataSource = compositeHLightDataSource;
             traceChartPlotter.Viewport.FitToView();
@@ -489,6 +504,33 @@ namespace UAV_Info
             Point pos = new Point(dateAxis_angle.ConvertToDouble(TimeUtils.strToDateTime(TimeUtils.toformatTime("160529163534"))), 0);
             Point zoomTo = pos.DataToScreen(plotPitch.Viewport.Transform);
             plotPitch.Viewport.Visible.Zoom(zoomTo, 3.0);
+        }
+
+        private void clearWhenReopenAngleFile()
+        {
+            plotPitch.Children.RemoveAll(typeof(LineGraph));
+            plotYaw.Children.RemoveAll(typeof(LineGraph));
+            plotRoll.Children.RemoveAll(typeof(LineGraph));
+            plotPitchNormal.Children.RemoveAll(typeof(LineGraph));
+            plotYawNormal.Children.RemoveAll(typeof(LineGraph));
+            plotRollNormal.Children.RemoveAll(typeof(LineGraph));
+            normalizeSpan.Reset();
+            timeSpan.Reset();
+            clearanalysisTextBox();
+            btnNormlize.IsEnabled = false;
+            if (((LineGraph)traceChartPlotter.FindName("traceHLight")) != null) {
+                traceChartPlotter.Children.Remove((LineGraph)FindName("traceHLight"));
+                traceChartPlotter.UnregisterName("traceHLight");
+            }
+        }
+
+        private void clearanalysisTextBox() {
+            pitchMaxTextBox.Text = "";
+            yawMaxTextBox.Text = "";
+            rollMaxTextBox.Text = "";
+            pitchMinTextBox.Text = "";
+            yawMinTextBox.Text = "";
+            rollMinTextBox.Text = "";
         }
     }
 }
