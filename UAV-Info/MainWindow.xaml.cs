@@ -222,6 +222,7 @@ namespace UAV_Info
                 PlotTrace();
             }
         }
+
         private void PlotTrace()
         {
             List<double> latList = new List<double>();
@@ -245,7 +246,6 @@ namespace UAV_Info
             plotTrace.Children.RemoveAll(lineG.GetType());
             plotTrace.Viewport.FitToView();
             plotTrace.Children.Add(lineG);
-
         }
 
         private void plotAngle(string whichAngle) {
