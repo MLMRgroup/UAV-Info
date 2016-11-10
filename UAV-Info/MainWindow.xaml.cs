@@ -422,7 +422,7 @@ namespace UAV_Info
                 dateTimeB = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1));
             }
 
-
+            //获取截取的符合标准的链表
             if (dateTimeA < dateTimeB)
             {
                 list = (from item in indexDict.Keys
@@ -442,6 +442,7 @@ namespace UAV_Info
                         ).ToList();
             }
 
+            //如果没有符合标准的链表，则归一化的参数全部默认为零
             double meanOfPitch = 0, meanOfYaw = 0, meanOfRoll = 0;
             if (null != list && 0 != list.Count)
             {
@@ -498,6 +499,7 @@ namespace UAV_Info
                 list = (from item in indexDict.Keys
                         where (dateTimeA < TimeUtils.strToDateTime(item)
                                 && dateTimeB > TimeUtils.strToDateTime(item)
+                                //normalizedFlightBeanList的个数可能与indexDict不同
                                 && indexDict[item] < normalizedFlightBeanList.Count 
                                 && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle)
                         select normalizedFlightBeanList[indexDict[item]]
@@ -508,19 +510,15 @@ namespace UAV_Info
                 list = (from item in indexDict.Keys
                         where (dateTimeA > TimeUtils.strToDateTime(item)
                                 && dateTimeB < TimeUtils.strToDateTime(item)
+                                && indexDict[item] < normalizedFlightBeanList.Count  
                                 && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle)
                         select normalizedFlightBeanList[indexDict[item]]
                         ).ToList();
             }
 
+            //无符合标准的点，则不分析不高亮
             if(null == list || 0 == list.Count)
             {
-                pitchMaxTextBox.Text = "";
-                yawMaxTextBox.Text = "";
-                rollMaxTextBox.Text = "";
-                pitchMinTextBox.Text = "";
-                yawMinTextBox.Text = "";
-                rollMinTextBox.Text = "";
                 plotTrace();
                 traceChartPlotter.LegendVisible = false;
                 return;

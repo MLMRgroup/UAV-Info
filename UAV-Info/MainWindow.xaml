@@ -64,7 +64,7 @@
         </d3:ChartPlotter>
         <d3:ChartPlotter Name="traceChartPlotter" Margin="10,0,0,59" HorizontalAlignment="Left" Width="315" Height="195" VerticalAlignment="Bottom">
             <d3:ChartPlotter.VerticalAxis>
-                <d3:VerticalIntegerAxis x:Name="axisAlt"/>
+                <d3:VerticalAxis x:Name="axisAlt"/>
             </d3:ChartPlotter.VerticalAxis>
 
             <d3:Header FontFamily="Arial" Content=""/>
