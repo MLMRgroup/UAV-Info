@@ -76,6 +76,9 @@ namespace UAV_Info
           plotYawNormal.Children.Remove(plotYawNormal.KeyboardNavigation);
           plotRollNormal.Children.Remove(plotRollNormal.KeyboardNavigation);
 
+          plotYaw.Children.Remove(plotYaw.KeyboardNavigation);
+          plotRoll.Children.Remove(plotRoll.KeyboardNavigation);
+
           //双击描线事件
           plotPitch.MouseDoubleClick += onDoubleCkick_AngleChart;
           plotYaw.MouseDoubleClick += onDoubleCkick_AngleChart;
@@ -139,9 +142,6 @@ namespace UAV_Info
             {
                 timeSpan.AddLine(mousePositionInData.X);
             }
-
-            flightBeanList = new List<FlightBean>();
-            indexDict = new Dictionary<string, int>();
         }
 
         private void importAngleData(object sender, RoutedEventArgs args) {
