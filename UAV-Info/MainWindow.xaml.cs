@@ -400,6 +400,9 @@ namespace UAV_Info
             DateTime dateTimeB = dateAxis_angleNormal.ConvertFromDouble(normalizeSpan.valueOfLineB);
 
             List<FlightBean> list = null;
+            if (indexDict.Keys.Count == 0) {
+                return;
+            }
 
             //超出时间范围，则校正为时间边界
             if (dateTimeA < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
