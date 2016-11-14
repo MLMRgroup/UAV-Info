@@ -19,7 +19,7 @@
                 <MenuItem Header="导入轨迹文件" Height="30" Width="110" Click="importTraceData"></MenuItem>
             </Menu>
         </TabPanel>
-        <d3:ChartPlotter Name ="plotPitch" Width="330"  HorizontalAlignment="Left" Margin="33,49,0,490">
+        <d3:ChartPlotter Name ="plotPitch" Width="379"  HorizontalAlignment="Left" Margin="33,49,0,490">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis Name="axisPitch"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -28,16 +28,16 @@
             </d3:ChartPlotter.HorizontalAxis>
             <d3:CursorCoordinateGraph Name="cordPitch"/>
         </d3:ChartPlotter>
-        <d3:ChartPlotter Name ="plotYaw" Width="330"  HorizontalAlignment="Left" Margin="33,167,0,371">
+        <d3:ChartPlotter Name ="plotYaw" Width="379"  HorizontalAlignment="Left" Margin="33,167,0,371">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis Name="axisYaw"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:ChartPlotter.HorizontalAxis>
                 <d3:HorizontalDateTimeAxis Name="HaxisYaw"/>
             </d3:ChartPlotter.HorizontalAxis>
-            <d3:CursorCoordinateGraph Name="cordYaw"/>
+            <d3:CursorCoordinateGraph Name="cordYaw" Margin="0,0,-4,0"/>
         </d3:ChartPlotter>
-        <d3:ChartPlotter Name ="plotRoll" Width="330"  HorizontalAlignment="Left" Margin="33,286,0,248">
+        <d3:ChartPlotter Name ="plotRoll" Width="379"  HorizontalAlignment="Left" Margin="33,286,0,248">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis Name="axisRoll"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -47,7 +47,7 @@
             </d3:ChartPlotter.HorizontalAxis>
         </d3:ChartPlotter>
 
-        <d3:ChartPlotter Name ="plotPitchNormal" Height="113" Margin="0,49,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="330">
+        <d3:ChartPlotter Name ="plotPitchNormal" Height="113" Margin="0,49,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="378">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis x:Name="axisPitchNormal"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -56,7 +56,7 @@
             </d3:ChartPlotter.HorizontalAxis>
             <d3:CursorCoordinateGraph Name="cordPitchNormal"/>
         </d3:ChartPlotter>
-        <d3:ChartPlotter Name ="plotYawNormal" Height="114" Margin="0,167,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="330">
+        <d3:ChartPlotter Name ="plotYawNormal" Height="114" Margin="0,167,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="378">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis x:Name="axisYawNormal"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -65,7 +65,7 @@
             </d3:ChartPlotter.HorizontalAxis>
             <d3:CursorCoordinateGraph Name="cordYaNormal"/>
         </d3:ChartPlotter>
-        <d3:ChartPlotter Name ="plotRollNormal" Height="118" Margin="0,286,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="330">
+        <d3:ChartPlotter Name ="plotRollNormal" Height="118" Margin="0,286,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="378">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis x:Name="axisRollNormal"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -74,7 +74,7 @@
                 <d3:HorizontalDateTimeAxis x:Name="dateAxis_angleNormal"/>
             </d3:ChartPlotter.HorizontalAxis>
         </d3:ChartPlotter>
-        <d3:ChartPlotter Name="traceChartPlotter" Margin="33,0,0,10" HorizontalAlignment="Left" Width="330" Height="189" VerticalAlignment="Bottom">
+        <d3:ChartPlotter Name="traceChartPlotter" Margin="33,0,0,10" HorizontalAlignment="Left" Width="379" Height="189" VerticalAlignment="Bottom">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis x:Name="axisAlt"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -82,25 +82,25 @@
             <d3:Header FontFamily="Arial" Content=""/>
             <d3:VerticalAxisTitle FontFamily="Arial" Content=""/>
             <d3:HorizontalAxisTitle FontFamily="Arial" Content="二维地图轨迹"/>
-            <d3:CursorCoordinateGraph Name="cordMap" Height="152" VerticalAlignment="Bottom"/>
+            <d3:CursorCoordinateGraph Name="cordMap" Height="152" VerticalAlignment="Bottom" Margin="0,-5,3,0"/>
         </d3:ChartPlotter>
-        <Label x:Name="label" Content="俯仰角" HorizontalAlignment="Right" Height="30" Margin="0,0,316,156" VerticalAlignment="Bottom" Width="60"/>
-        <Label x:Name="label_Copy" Content="滚转角" HorizontalAlignment="Right" Height="30" Margin="0,0,316,103" VerticalAlignment="Bottom" Width="60"/>
-        <Label x:Name="label_Copy1" Content="偏航角" HorizontalAlignment="Right" Height="30" Margin="0,0,316,52" VerticalAlignment="Bottom" Width="60"/>
-        <Label x:Name="label_Copy2" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,261,156" VerticalAlignment="Bottom" Width="50"/>
-        <Label x:Name="label_Copy3" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,261,103" VerticalAlignment="Bottom" Width="50"/>
-        <Label x:Name="label_Copy4" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,261,52" VerticalAlignment="Bottom" Width="50"/>
-        <Label x:Name="label_Copy5" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,105,156" VerticalAlignment="Bottom" Width="50"/>
-        <TextBox x:Name="pitchMaxTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,181,156" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <TextBox x:Name="rollMaxTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,181,108" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <TextBox x:Name="yawMaxTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,181,57" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <TextBox x:Name="pitchMinTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,46,156" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <TextBox x:Name="rollMinTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,45,108" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55" RenderTransformOrigin="0.827,0.84"/>
-        <TextBox x:Name="yawMinTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,45,57" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <Label x:Name="label_Copy6" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,105,108" VerticalAlignment="Bottom" Width="50"/>
-        <Label x:Name="label_Copy7" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,105,52" VerticalAlignment="Bottom" Width="50"/>
-        <Button x:Name="btnNormSpanReset" Content="重置" HorizontalAlignment="Left" Margin="52,414,0,0" VerticalAlignment="Top" Width="46" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
-        <Button x:Name="btnTimeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="848,414,0,0" VerticalAlignment="Top" Width="46" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
+        <Label x:Name="label" Content="俯仰角" HorizontalAlignment="Right" Height="30" Margin="0,0,364,156" VerticalAlignment="Bottom" Width="60"/>
+        <Label x:Name="label_Copy" Content="滚转角" HorizontalAlignment="Right" Height="30" Margin="0,0,364,108" VerticalAlignment="Bottom" Width="60"/>
+        <Label x:Name="label_Copy1" Content="偏航角" HorizontalAlignment="Right" Height="30" Margin="0,0,364,52" VerticalAlignment="Bottom" Width="60"/>
+        <Label x:Name="label_Copy2" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,279,156" VerticalAlignment="Bottom" Width="50"/>
+        <Label x:Name="label_Copy3" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,279,108" VerticalAlignment="Bottom" Width="50"/>
+        <Label x:Name="label_Copy4" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,279,52" VerticalAlignment="Bottom" Width="50"/>
+        <Label x:Name="label_Copy5" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,121,156" VerticalAlignment="Bottom" Width="50"/>
+        <TextBox x:Name="pitchMaxTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,203,161" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="rollMaxTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,203,113" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="yawMaxTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,203,57" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="pitchMinTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,46,161" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <TextBox x:Name="rollMinTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,46,113" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55" RenderTransformOrigin="0.827,0.84"/>
+        <TextBox x:Name="yawMinTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,46,57" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
+        <Label x:Name="label_Copy6" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,121,108" VerticalAlignment="Bottom" Width="50"/>
+        <Label x:Name="label_Copy7" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,121,52" VerticalAlignment="Bottom" Width="50"/>
+        <Button x:Name="btnNormSpanReset" Content="重置" HorizontalAlignment="Left" Margin="52,414,0,0" VerticalAlignment="Top" Width="62" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
+        <Button x:Name="btnTimeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="848,414,0,0" VerticalAlignment="Top" Width="62" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
         <Button Name="btnNormlize" Content="规范化" HorizontalAlignment="Left" Margin="289,414,0,0" VerticalAlignment="Top" Width="74" Click="onClick_NormalizeAngle" IsEnabled="False"/>
     </Grid>
 </Window>

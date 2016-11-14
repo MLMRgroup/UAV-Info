@@ -50,7 +50,6 @@ namespace UAV_Info
 
         Span normalizeSpan = new Span();
         Span timeSpan = new Span();
-
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
           /*plotPitch.Viewport.SetBinding(Viewport2D.VisibleProperty,
