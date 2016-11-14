@@ -39,7 +39,7 @@ namespace UAV_Info
             InitializeComponent();
             //设置背景颜色
             SolidColorBrush NewColor = new SolidColorBrush();
-            NewColor.Color = Color.FromArgb(255,110,204,224);
+            NewColor.Color = Color.FromArgb(255,110,204,210);
             this.Background = NewColor;
 
             flightBeanList = new List<FlightBean>();
