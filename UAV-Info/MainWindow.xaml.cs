@@ -37,6 +37,11 @@ namespace UAV_Info
         public MainWindow()
         {
             InitializeComponent();
+            //设置背景颜色
+            SolidColorBrush NewColor = new SolidColorBrush();
+            NewColor.Color = Color.FromArgb(255,110,204,224);
+            this.Background = NewColor;
+
             flightBeanList = new List<FlightBean>();
             indexDict = new Dictionary<string, int>();
             Loaded += new RoutedEventHandler(MainWindow_Loaded);
@@ -230,7 +235,15 @@ namespace UAV_Info
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
                 plotTrace();
                 traceChartPlotter.LegendVisible = false;
-                plotTrace();
+                if (timeSpan.IsSet)
+                {
+                    analyseAngleNormalized();
+                }
+                else
+                {
+                    plotTrace();
+                }
+               
             }
         }
 
