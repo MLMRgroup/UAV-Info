@@ -22,6 +22,8 @@ namespace UAV_Info
     {
         private DispatcherTimer _timer;
         private MainWindow _MainWindow = null;
+        private double _waitTime = 1.0;
+        private double _timeUnit = 5; //Millisecond
         public WelcomeWindow()
         {
             InitializeComponent();
@@ -37,22 +39,19 @@ namespace UAV_Info
         {
             this._timer = new DispatcherTimer();
             ProgressBar.Value = 0;
-            this._timer.Interval = TimeSpan.FromMilliseconds(5);
+            this._timer.Interval = TimeSpan.FromMilliseconds(_timeUnit);
             this._timer.Tick += timer_Tick;
             this._timer.Start();
         }
         private void timer_Tick(object sender, EventArgs e)
         {
-            ProgressBar.Value += 0.005;
-            if(Math.Abs(ProgressBar.Value -1) <= 0.005)
+            if (ProgressBar.Value >= 1)
             {
                 this.Close();
             }
-            //...........读取系统配置
-            //关闭启动窗体
-
-     
+            ProgressBar.Value += 1 / (_waitTime * 1000 / _timeUnit);
         }
+
         private void WelcomeWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             this._timer.Stop();
