@@ -175,33 +175,46 @@ namespace UAV_Info
             if (openFileDialog.ShowDialog() == true) {
                string fileName = openFileDialog.FileName;
                 using(FileStream fs = File.Open(fileName, FileMode.Open)){
+                    if (!fileName.EndsWith(".GYT")) {
+                        MessageBox.Show("姿态文件格式有误", "警告");
+                        args.Handled = true;
+                        return;
+                    }
                     StreamReader sr = new StreamReader(fs);
                     string s;
-                    while ((s = sr.ReadLine()) != null)
-                    {
-                        string[] split = s.Split(',');
-                        if (split.Length< 5) {
-                            continue;
-                        }
-                        string time = TimeUtils.toformatTime(split[1]);
-                        if (indexDict.ContainsKey(time))
+                    try {
+                        while ((s = sr.ReadLine()) != null)
                         {
-                            FlightBean fb = flightBeanList[indexDict[time]];
-                            fb.pitch = Convert.ToDouble(split[2]);
-                            fb.yaw = Convert.ToDouble(split[4]);
-                            fb.roll = Convert.ToDouble(split[3]);
+                            string[] split = s.Split(',');
+                            if (split.Length < 5)
+                            {
+                                continue;
+                            }
+                            string time = TimeUtils.toformatTime(split[1]);
+                            if (indexDict.ContainsKey(time))
+                            {
+                                FlightBean fb = flightBeanList[indexDict[time]];
+                                fb.pitch = Convert.ToDouble(split[2]);
+                                fb.yaw = Convert.ToDouble(split[4]);
+                                fb.roll = Convert.ToDouble(split[3]);
+                            }
+                            else
+                            {
+                                FlightBean fb = new FlightBean("", 0, 0, 0, 0, 0);
+                                fb.time = time;
+                                fb.pitch = Convert.ToDouble(split[2]);
+                                fb.yaw = Convert.ToDouble(split[4]);
+                                fb.roll = Convert.ToDouble(split[3]);
+                                int index = flightBeanList.Count;
+                                flightBeanList.Add(fb);
+                                indexDict.Add(time, index);
+                            }
                         }
-                        else
-                        {
-                            FlightBean fb = new FlightBean("",0,0,0,0,0);
-                            fb.time = time;
-                            fb.pitch = Convert.ToDouble(split[2]);
-                            fb.yaw = Convert.ToDouble(split[4]);
-                            fb.roll = Convert.ToDouble(split[3]);
-                            int index = flightBeanList.Count;
-                            flightBeanList.Add(fb);
-                            indexDict.Add(time, index);
-                        }
+                    }
+                    catch {
+                        MessageBox.Show("姿态文件格式有误", "警告");
+                        args.Handled = true;
+                        return;
                     }
                 }
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
@@ -419,6 +432,9 @@ namespace UAV_Info
             DateTime dateTimeB = dateAxis_angleNormal.ConvertFromDouble(normalizeSpan.valueOfLineB);
 
             List<FlightBean> list = null;
+            if (indexDict.Keys.Count == 0) {
+                return;
+            }
 
             //超出时间范围，则校正为时间边界
             if (dateTimeA < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
