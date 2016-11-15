@@ -18,6 +18,7 @@ using System.IO;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
 using System.Windows.Threading;
 using System.Threading;
+//using System.Windows.Forms;
 
 namespace UAV_Info
 {
@@ -225,6 +226,12 @@ namespace UAV_Info
             {
                 // 轨迹数据读入
                 string fileName = openFileDialog.FileName;
+                if (fileName == null || !fileName.EndsWith(".gpx"))
+                {
+                    MessageBox.Show("轨迹文件格式错误，请选择.gpx文件");
+                    return;
+                }
+
                 gpx_trans gpx = new gpx_trans(indexDict,flightBeanList);
                 gpx.start(fileName);
                 while (gpx.thread1.ThreadState != System.Threading.ThreadState.Stopped) { }
