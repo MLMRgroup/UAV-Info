@@ -648,10 +648,16 @@ namespace UAV_Info
             CompositeDataSource compositeHLightDataSource = new CompositeDataSource(logHLightDataSource, latHLightDataSource);
             LineGraph lineGHLight = new LineGraph
             {
+                Name = "traceHLight",
                 Stroke = Brushes.Blue,
                 StrokeThickness = 3,
             };
             lineGHLight.DataSource = compositeHLightDataSource;
+            if (((LineGraph)traceChartPlotter.FindName("traceHLight")) == null)
+            {
+                traceChartPlotter.RegisterName("traceHLight", lineGHLight);
+            }
+
             plotTrace();
             traceChartPlotter.Children.Add(lineGHLight);
             traceChartPlotter.LegendVisible = false;
