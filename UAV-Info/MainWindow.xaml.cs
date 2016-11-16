@@ -132,10 +132,7 @@ namespace UAV_Info
             {
                 analyzeSpan.Reset();
                 clearanalysisTextBox();
-                if (((LineGraph)traceChartPlotter.FindName("traceHLight")) != null) { 
-                    traceChartPlotter.Children.Remove((LineGraph)FindName("traceHLight"));
-                    traceChartPlotter.UnregisterName("traceHLight");
-                }
+                clearHLight();
             }
         }
         // 窗口同步，暂时用不到
@@ -283,16 +280,14 @@ namespace UAV_Info
                 flightBeanList = gpx.gpxlist;
                 //将字典对象里的数据按时间排序
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
-                traceChartPlotter.LegendVisible = false;
+
+                plotTrace();
 
                 if (analyzeSpan.IsSet)
                 {
                     analyseAngleNormalized();
                 }
-                else
-                {
-                    plotTrace();
-                }
+
             }
         }
 
@@ -316,6 +311,14 @@ namespace UAV_Info
                 return;
             }
 
+            //清空之前的图
+            clearHLight();
+            if (((LineGraph)traceChartPlotter.FindName("traceOrdinary")) != null)
+            {
+                traceChartPlotter.Children.Remove((LineGraph)FindName("traceOrdinary"));
+                traceChartPlotter.UnregisterName("traceOrdinary");
+            }
+
             //将List数据转化为图的横纵轴数据并设置图的颜色和轮廓宽度
             EnumerableDataSource<double> latDataSource = new EnumerableDataSource<double>(latList);
             latDataSource.SetXMapping(y => y);
@@ -324,13 +327,15 @@ namespace UAV_Info
             CompositeDataSource compositeDataSource = new CompositeDataSource(logDataSource, latDataSource);
             LineGraph lineG = new LineGraph()
             {
+                Name = "traceOrdinary",
                 Stroke = Brushes.Gray,
                 StrokeThickness = 1,
                 DataSource = compositeDataSource
             };
-
-            //清空之前的图
-            traceChartPlotter.Children.RemoveAll(lineG.GetType());
+            if (((LineGraph)traceChartPlotter.FindName("traceOrdinary")) == null)
+            {
+                traceChartPlotter.RegisterName("traceOrdinary", lineG);
+            }
             traceChartPlotter.Viewport.FitToView();
             //加入要绘制的图
             traceChartPlotter.Children.Add(lineG);
@@ -343,6 +348,10 @@ namespace UAV_Info
         /// <param name="whichAngle">当前绘制的姿态角，可选姿态角：pitch,yaw,roll</param>
         /// <example>plotAngle(pitch);// 绘制俯仰角姿态的数据图</example>
         private void plotAngle(string whichAngle) {
+
+            normalizeSpan.Reset();
+            analyzeSpan.Reset();
+
             List<DateTime> dateTimeList = new List<DateTime>();
             List<double> angleList = new List<double>();
             if (whichAngle == "pitch") {
@@ -610,7 +619,8 @@ namespace UAV_Info
             //无符合标准的点，则不分析
             if(null == list || 0 == list.Count)
             {
-                plotTrace();
+                clearHLight();
+                clearanalysisTextBox();
                 return;
             }
 
@@ -634,7 +644,7 @@ namespace UAV_Info
             //无可以高亮的轨迹，则不高亮
             if (latListHLight.Count != lngListHLight.Count || latListHLight.Count == 0)
             {
-                plotTrace();
+                clearHLight(); 
                 return;
             }
 
@@ -651,11 +661,11 @@ namespace UAV_Info
                 DataSource = compositeHLightDataSource
             };
             lineGHLight.DataSource = compositeHLightDataSource;
+
             if (((LineGraph)traceChartPlotter.FindName("traceHLight")) == null)
             {
                 traceChartPlotter.RegisterName("traceHLight", lineGHLight);
             }
-            plotTrace();
             traceChartPlotter.Children.Add(lineGHLight);
             traceChartPlotter.LegendVisible = false;
         }
@@ -684,14 +694,9 @@ namespace UAV_Info
             plotPitchNormal.Children.RemoveAll(typeof(LineGraph));
             plotYawNormal.Children.RemoveAll(typeof(LineGraph));
             plotRollNormal.Children.RemoveAll(typeof(LineGraph));
-            normalizeSpan.Reset();
-            analyzeSpan.Reset();
             clearanalysisTextBox();
+            clearHLight();
             btnNormlize.IsEnabled = false;
-            if (((LineGraph)traceChartPlotter.FindName("traceHLight")) != null) {
-                traceChartPlotter.Children.Remove((LineGraph)FindName("traceHLight"));
-                traceChartPlotter.UnregisterName("traceHLight");
-            }
         }
 
         /// <summary>
@@ -704,6 +709,16 @@ namespace UAV_Info
             pitchMinTextBox.Text = "";
             yawMinTextBox.Text = "";
             rollMinTextBox.Text = "";
+        }
+
+        private void clearHLight()
+        {
+            if (((LineGraph)traceChartPlotter.FindName("traceHLight")) != null)
+            {
+                traceChartPlotter.Children.Remove((LineGraph)FindName("traceHLight"));
+                traceChartPlotter.UnregisterName("traceHLight");
+                traceChartPlotter.LegendVisible = false;
+            }
         }
     }
 }
