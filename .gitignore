@@ -2,4 +2,8 @@ bin
 obj
 .vs
 .csproj
+<<<<<<< HEAD
 .bmp
+=======
+/UAV-Info/UAV-Info.csproj
+>>>>>>> 790a359f5aff58344a3b3bd9f7ad47063e2af9b6

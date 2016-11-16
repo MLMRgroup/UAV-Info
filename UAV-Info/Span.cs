@@ -22,11 +22,13 @@ namespace UAV_Info
 {
     class Span
     {
+        //markBrush：红色刷子  unmarkBrush：透明刷子
         SolidColorBrush markBrush = new SolidColorBrush(System.Windows.Media.Colors.Red);
-        SolidColorBrush tranpBrush = new SolidColorBrush(System.Windows.Media.Colors.Transparent);
+        SolidColorBrush unmarkBrush = new SolidColorBrush(System.Windows.Media.Colors.Transparent);
 
         private Boolean isLineASet;
         private Boolean isLineBSet;
+        //每条直线可以有多个自身复制，由Span类统一管理，存储在各自的List中
         private List<VerticalLine> lineA;
         private List<VerticalLine> lineB;
         public Span()
@@ -42,7 +44,7 @@ namespace UAV_Info
             {
                 lineA.Add(new VerticalLine());
                 lineA[lineA.Count - 1].Value = 0;
-                lineA[lineA.Count - 1].Stroke = tranpBrush;
+                lineA[lineA.Count - 1].Stroke = unmarkBrush;
                 return lineA[lineA.Count-1];
             }
         }
@@ -53,7 +55,7 @@ namespace UAV_Info
             {
                 lineB.Add(new VerticalLine());
                 lineB[lineB.Count - 1].Value = 0;
-                lineB[lineB.Count - 1].Stroke = tranpBrush;
+                lineB[lineB.Count - 1].Stroke = unmarkBrush;
                 return lineB[lineB.Count - 1];
             }
         }
@@ -81,7 +83,7 @@ namespace UAV_Info
                 return 0;
             }
         }
-        //改变当前基准线的值
+        //改变当前基准线的值  优先设置A基准线  设置之后的基准线以红色显示出来
         public void AddLine(double value)
         {
             if (false == isLineASet)
@@ -117,12 +119,12 @@ namespace UAV_Info
             for (int i = 0; i < lineA.Count; i++)
             {
                 lineA[i].Value = 0;
-                lineA[i].Stroke = tranpBrush;
+                lineA[i].Stroke = unmarkBrush;
             }
             for (int i = 0; i < lineB.Count; i++)
             {
                 lineB[i].Value = 0;
-                lineB[i].Stroke = tranpBrush;
+                lineB[i].Stroke = unmarkBrush;
             }
             isLineASet = false;
             isLineBSet = false;
