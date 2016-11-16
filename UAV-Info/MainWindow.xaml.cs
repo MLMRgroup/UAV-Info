@@ -135,7 +135,7 @@ namespace UAV_Info
                 clearHLight();
             }
         }
-        // 窗口同步，暂时用不到
+        //窗口同步，暂时用不到
         void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
         {
             /*if (e.PropertyName == "Visible")
@@ -158,7 +158,7 @@ namespace UAV_Info
                 plotRollNormal.Viewport.Visible = new Rect(((Viewport2D)sender).Visible.X, plotRollNormal.Viewport.Visible.Y, ((Viewport2D)sender).Visible.Width, plotRollNormal.Viewport.Visible.Height);
             }*/
         }
-        //窗口双击时间
+        //窗口双击事件
         private void onDoubleCkick_AngleChart(object sender, MouseEventArgs e)
         {
             ChartPlotter plotter = (ChartPlotter)sender;
@@ -711,6 +711,9 @@ namespace UAV_Info
             rollMinTextBox.Text = "";
         }
 
+        /// <summary>
+        /// 清除高亮轨迹
+        /// </summary>
         private void clearHLight()
         {
             if (((LineGraph)traceChartPlotter.FindName("traceHLight")) != null)
