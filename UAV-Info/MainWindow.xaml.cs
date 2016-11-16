@@ -224,7 +224,7 @@ namespace UAV_Info
                             }
                             else
                             {
-                                FlightBean fb = new FlightBean("", FlightBean.NoneLat, FlightBean.NoneLng, FlightBean.NoneAngle, FlightBean.NoneAngle, FlightBean.NoneAngle);
+                                FlightBean fb = new FlightBean();
                                 fb.time = time;
                                 fb.pitch = Convert.ToDouble(split[2]);
                                 fb.yaw = Convert.ToDouble(split[4]);
@@ -302,37 +302,39 @@ namespace UAV_Info
             //存横纵轴数据的列表
             List<double> latList = new List<double>();
             List<double> lngList = new List<double>();
-            //
-            foreach (string key in indexDict.Keys)
+
+            //获取轨迹数据
+            foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].lat != FlightBean.NoneCoordinate) )
             {
-                //无经纬度数据的不读入列表
-                if (flightBeanList[indexDict[key]].lat != FlightBean.NoneLat && flightBeanList[indexDict[key]].lng != FlightBean.NoneLng)
-                {
                     latList.Add(flightBeanList[indexDict[key]].lat);
                     lngList.Add(flightBeanList[indexDict[key]].lng);
-                }
             }
-            //将List数据转化为图的横纵轴数据
+
+            if (latList.Count != lngList.Count || latList.Count == 0)
+            {
+                traceChartPlotter.Children.RemoveAll(typeof(LineGraph));
+                return;
+            }
+
+            //将List数据转化为图的横纵轴数据并设置图的颜色和轮廓宽度
             EnumerableDataSource<double> latDataSource = new EnumerableDataSource<double>(latList);
             latDataSource.SetXMapping(y => y);
             EnumerableDataSource<double> logDataSource = new EnumerableDataSource<double>(lngList);
             logDataSource.SetYMapping(x => x);
             CompositeDataSource compositeDataSource = new CompositeDataSource(logDataSource, latDataSource);
-
-            //设置图的颜色和轮廓宽度
             LineGraph lineG = new LineGraph()
             {
                 Stroke = Brushes.Gray,
                 StrokeThickness = 1,
+                DataSource = compositeDataSource
             };
-
-            lineG.DataSource = compositeDataSource;
 
             //清空之前的图
             traceChartPlotter.Children.RemoveAll(lineG.GetType());
             traceChartPlotter.Viewport.FitToView();
             //加入要绘制的图
             traceChartPlotter.Children.Add(lineG);
+            traceChartPlotter.LegendVisible = false;
         }
 
         /// <summary>
@@ -344,7 +346,7 @@ namespace UAV_Info
             List<DateTime> dateTimeList = new List<DateTime>();
             List<double> angleList = new List<double>();
             if (whichAngle == "pitch") {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key)); 
                     angleList.Add(flightBeanList[indexDict[key]].pitch);
@@ -362,7 +364,7 @@ namespace UAV_Info
                 plotPitch.Viewport.FitToView();
                 plotPitch.Children.Add(lineG);
             } else if (whichAngle == "yaw") {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle))
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(flightBeanList[indexDict[key]].yaw);
@@ -381,7 +383,7 @@ namespace UAV_Info
                 plotYaw.Children.Add(lineG);
             }
             else {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle))
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(flightBeanList[indexDict[key]].roll);
@@ -414,7 +416,7 @@ namespace UAV_Info
             List<double> angleList = new List<double>();
             if (whichAngle == "pitch")
             {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(normalizedFlightBeanList[indexDict[key]].pitch);
@@ -434,7 +436,7 @@ namespace UAV_Info
             }
             else if (whichAngle == "yaw")
             {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(normalizedFlightBeanList[indexDict[key]].yaw);
@@ -454,7 +456,7 @@ namespace UAV_Info
             }
             else
             {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(normalizedFlightBeanList[indexDict[key]].roll);
@@ -493,7 +495,6 @@ namespace UAV_Info
 
             //超出时间范围，则校正为时间边界
             if (dateTimeA < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
-
             {
                 dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
             }
@@ -540,9 +541,7 @@ namespace UAV_Info
             }
 
             normalizedFlightBeanList = new List<FlightBean>(flightBeanList);
-            foreach (FlightBean fb in normalizedFlightBeanList) {
-                if (fb.pitch == FlightBean.NoneAngle)
-                    continue;
+            foreach (FlightBean fb in normalizedFlightBeanList.Where(fb => fb.pitch != FlightBean.NoneAngle)) {
                 fb.pitch -= meanOfPitch;
                 fb.yaw -= meanOfYaw;
                 fb.roll -= meanOfRoll;
@@ -569,7 +568,6 @@ namespace UAV_Info
 
             //超出时间范围，则校正为时间边界
             if (dateTimeA < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
-
             {
                 dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
             }
@@ -586,7 +584,7 @@ namespace UAV_Info
                 dateTimeB = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1));
             }
 
-
+            //截取分析区间的数据列表
             if (dateTimeA < dateTimeB)
             {
                 list = (from item in indexDict.Keys
@@ -594,9 +592,7 @@ namespace UAV_Info
                                 && dateTimeB > TimeUtils.strToDateTime(item)
                                 //normalizedFlightBeanList的个数可能与indexDict不同
                                 && indexDict[item] < normalizedFlightBeanList.Count 
-                                && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle
-                                && normalizedFlightBeanList[indexDict[item]].lat!=FlightBean.NoneLat
-                                && normalizedFlightBeanList[indexDict[item]].lng!=FlightBean.NoneLng)
+                                && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle)
                         select normalizedFlightBeanList[indexDict[item]]
                         ).ToList();
             }
@@ -606,18 +602,15 @@ namespace UAV_Info
                         where (dateTimeA > TimeUtils.strToDateTime(item)
                                 && dateTimeB < TimeUtils.strToDateTime(item)
                                 && indexDict[item] < normalizedFlightBeanList.Count  
-                                && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle
-                                && normalizedFlightBeanList[indexDict[item]].lat != FlightBean.NoneLat
-                                && normalizedFlightBeanList[indexDict[item]].lng != FlightBean.NoneLng)
+                                && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle)
                         select normalizedFlightBeanList[indexDict[item]]
                         ).ToList();
             }
 
-            //无符合标准的点，则不分析不高亮
+            //无符合标准的点，则不分析
             if(null == list || 0 == list.Count)
             {
                 plotTrace();
-                traceChartPlotter.LegendVisible = false;
                 return;
             }
 
@@ -636,10 +629,14 @@ namespace UAV_Info
             rollMinTextBox.Text = minOfRoll.ToString("f2");
 
             //HighLight The Trace
-            List<double> latListHLight = (from item in list where item.lat != 0 select item.lat).ToList();
-            List<double> lngListHLight = (from item in list where item.lng != 0 select item.lng).ToList();
+            List<double> latListHLight = (from item in list where item.lat != FlightBean.NoneCoordinate select item.lat).ToList();
+            List<double> lngListHLight = (from item in list where item.lng != FlightBean.NoneCoordinate select item.lng).ToList();
+            //无可以高亮的轨迹，则不高亮
             if (latListHLight.Count != lngListHLight.Count || latListHLight.Count == 0)
+            {
+                plotTrace();
                 return;
+            }
 
             EnumerableDataSource<double> latHLightDataSource = new EnumerableDataSource<double>(latListHLight);
             latHLightDataSource.SetXMapping(y => y);
@@ -651,13 +648,13 @@ namespace UAV_Info
                 Name = "traceHLight",
                 Stroke = Brushes.Blue,
                 StrokeThickness = 3,
+                DataSource = compositeHLightDataSource
             };
             lineGHLight.DataSource = compositeHLightDataSource;
             if (((LineGraph)traceChartPlotter.FindName("traceHLight")) == null)
             {
                 traceChartPlotter.RegisterName("traceHLight", lineGHLight);
             }
-
             plotTrace();
             traceChartPlotter.Children.Add(lineGHLight);
             traceChartPlotter.LegendVisible = false;

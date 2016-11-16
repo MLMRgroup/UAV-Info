@@ -171,7 +171,7 @@ namespace UAV_Info
                                 else
                                 {
                                     //初始化经纬度为0，表示该时间点未读到经纬度数据
-                                    FlightBean fb = new FlightBean("", FlightBean.NoneLat, FlightBean.NoneLng, FlightBean.NoneAngle, FlightBean.NoneAngle, FlightBean.NoneAngle);
+                                    FlightBean fb = new FlightBean();
                                     fb.time = format_time;
                                     fb.lat = Convert.ToDouble(wd);
                                     fb.lng = Convert.ToDouble(jd);
