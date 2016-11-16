@@ -31,7 +31,6 @@ namespace UAV_Info
 
         // key: 飞行的某时刻, value: 数据在flightBeanList中的索引
         private Dictionary<string, int> indexDict;
-
         private List<FlightBean> normalizedFlightBeanList;
 
         private bool isReopenAngleFile;
@@ -132,9 +131,9 @@ namespace UAV_Info
             {
                 analyzeSpan.Reset();
                 clearanalysisTextBox();
-                if (((LineGraph)traceChartPlotter.FindName("traceHLight")) != null) { 
-                    traceChartPlotter.Children.Remove((LineGraph)FindName("traceHLight"));
-                    traceChartPlotter.UnregisterName("traceHLight");
+                if (((LineGraph)traceChartPlotter.FindName("TraceHLight")) != null) { 
+                    traceChartPlotter.Children.Remove((LineGraph)FindName("lineGHLight"));
+                    traceChartPlotter.UnregisterName("lineGHLight");
                 }
             }
         }
@@ -193,7 +192,7 @@ namespace UAV_Info
                string fileName = openFileDialog.FileName;
                 using(FileStream fs = File.Open(fileName, FileMode.Open)){
                     if (!fileName.EndsWith(".GYT")) {
-                        MessageBox.Show("姿态文件格式有误", "警告");
+                        MessageBox.Show("姿态文件格式有误，请选择.gpx文件", "警告");
                         args.Handled = true;
                         return;
                     }
@@ -217,7 +216,7 @@ namespace UAV_Info
                             }
                             else
                             {
-                                FlightBean fb = new FlightBean("", 0, 0, 0, 0, 0);
+                                FlightBean fb = new FlightBean();
                                 fb.time = time;
                                 fb.pitch = Convert.ToDouble(split[2]);
                                 fb.yaw = Convert.ToDouble(split[4]);
@@ -248,29 +247,36 @@ namespace UAV_Info
                 animationTimer.Start();
             }
        }
-                
+        
+        //点击轨迹按钮
         private void importTraceData(object sender, RoutedEventArgs args)
         {
+            //打开选择文件窗口
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
                 // 轨迹数据读入
                 string fileName = openFileDialog.FileName;
+                //若选择的不是gpx文件，则报错
                 if (fileName == null || !fileName.EndsWith(".gpx"))
                 {
-                    MessageBox.Show("轨迹文件格式错误，请选择.gpx文件");
+                    MessageBox.Show("轨迹文件格式错误，请选择.gpx文件","警告");
                     return;
                 }
-
+                //定义gpx_trans类对象，用来读GPX文件
                 gpx_trans gpx = new gpx_trans(indexDict,flightBeanList);
+                //开始读
                 gpx.start(fileName);
+                //等待读完再进行下一步操作
                 while (gpx.thread1.ThreadState != System.Threading.ThreadState.Stopped) { }
 
+                //读到的数据传给当前类的成员变量
                 indexDict = gpx.gpxdata;
                 flightBeanList = gpx.gpxlist;
+                //将字典对象里的数据按时间排序
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
-                plotTrace();
                 traceChartPlotter.LegendVisible = false;
+
                 if (analyzeSpan.IsSet)
                 {
                     analyseAngleNormalized();
@@ -279,20 +285,30 @@ namespace UAV_Info
                 {
                     plotTrace();
                 }
-               
             }
         }
 
+        //绘轨迹图
         private void plotTrace()
         {
+            //存横纵轴数据的列表
             List<double> latList = new List<double>();
             List<double> lngList = new List<double>();
+
+            //获取轨迹数据
             foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].lat != FlightBean.NoneCoordinate) )
             {
                     latList.Add(flightBeanList[indexDict[key]].lat);
                     lngList.Add(flightBeanList[indexDict[key]].lng);
             }
 
+            if (latList.Count != lngList.Count || latList.Count == 0)
+            {
+                traceChartPlotter.Children.RemoveAll(typeof(LineGraph));
+                return;
+            }
+
+            //将List数据转化为图的横纵轴数据并设置图的颜色和轮廓宽度
             EnumerableDataSource<double> latDataSource = new EnumerableDataSource<double>(latList);
             latDataSource.SetXMapping(y => y);
             EnumerableDataSource<double> logDataSource = new EnumerableDataSource<double>(lngList);
@@ -302,13 +318,15 @@ namespace UAV_Info
             {
                 Stroke = Brushes.Gray,
                 StrokeThickness = 1,
+                DataSource = compositeDataSource
             };
 
-            lineG.DataSource = compositeDataSource;
-
+            //清空之前的图
             traceChartPlotter.Children.RemoveAll(lineG.GetType());
             traceChartPlotter.Viewport.FitToView();
+            //加入要绘制的图
             traceChartPlotter.Children.Add(lineG);
+            traceChartPlotter.LegendVisible = false;
         }
 
         private void plotAngle(string whichAngle) {
@@ -453,7 +471,6 @@ namespace UAV_Info
 
             //超出时间范围，则校正为时间边界
             if (dateTimeA < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
-
             {
                 dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
             }
@@ -539,7 +556,7 @@ namespace UAV_Info
                 dateTimeB = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1));
             }
 
-
+            //截取分析区间的数据列表
             if (dateTimeA < dateTimeB)
             {
                 list = (from item in indexDict.Keys
@@ -562,11 +579,10 @@ namespace UAV_Info
                         ).ToList();
             }
 
-            //无符合标准的点，则不分析不高亮
+            //无符合标准的点，则不分析
             if(null == list || 0 == list.Count)
             {
                 plotTrace();
-                traceChartPlotter.LegendVisible = false;
                 return;
             }
 
@@ -587,8 +603,12 @@ namespace UAV_Info
             //HighLight The Trace
             List<double> latListHLight = (from item in list where item.lat != FlightBean.NoneCoordinate select item.lat).ToList();
             List<double> lngListHLight = (from item in list where item.lng != FlightBean.NoneCoordinate select item.lng).ToList();
+            //无可以高亮的轨迹，则不高亮
             if (latListHLight.Count != lngListHLight.Count || latListHLight.Count == 0)
+            {
+                plotTrace();
                 return;
+            }
 
             EnumerableDataSource<double> latHLightDataSource = new EnumerableDataSource<double>(latListHLight);
             latHLightDataSource.SetXMapping(y => y);
@@ -597,10 +617,11 @@ namespace UAV_Info
             CompositeDataSource compositeHLightDataSource = new CompositeDataSource(logHLightDataSource, latHLightDataSource);
             LineGraph lineGHLight = new LineGraph
             {
+                Name = "TraceHLight",
                 Stroke = Brushes.Blue,
                 StrokeThickness = 3,
+                DataSource = compositeHLightDataSource
             };
-            lineGHLight.DataSource = compositeHLightDataSource;
             plotTrace();
             traceChartPlotter.Children.Add(lineGHLight);
             traceChartPlotter.LegendVisible = false;

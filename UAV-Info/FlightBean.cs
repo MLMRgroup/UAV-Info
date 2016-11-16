@@ -8,32 +8,29 @@ namespace UAV_Info
 {
     class FlightBean
     {
-        public readonly static double NoneAngle = 361;
-        public readonly static double NoneCoordinate = 361;
+        public const double NoneAngle = 361;
+
+        public const double NoneCoordinate = 181;
         // 时刻
         private string _time;
 
         // 纬度
-        private double _lat = NoneCoordinate;
+        private double _lat;
 
         // 经度
-        private double _lng = NoneCoordinate;
+        private double _lng;
 
         // 361 表示无数据
         // 俯仰角
-        private double _pitch = NoneAngle;
+        private double _pitch;
 
         // 偏航角
-        private double _yaw = NoneAngle;
+        private double _yaw;
 
         // 滚转角
-        private double _roll = NoneAngle;
+        private double _roll;
 
-        public FlightBean() {
-
-        }
-
-        public FlightBean(string time, double lat, double lng, double pitch, double yaw, double roll)
+        public FlightBean(string time = "", double lat = NoneCoordinate, double lng = NoneCoordinate, double pitch = NoneAngle, double yaw = NoneAngle, double roll = NoneAngle)
         {
             _time = time;
             _lat = lat;
