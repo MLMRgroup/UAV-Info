@@ -6,6 +6,17 @@ using System.Threading.Tasks;
 
 namespace UAV_Info
 {
+    /// <summary>
+    /// 无人机的6个维度的数据
+    /// </summary>
+    /// <example>
+    /// time:飞行时间节点
+    /// lat:纬度
+    /// lng:经度
+    /// pitch:俯仰角
+    /// yaw:偏航角
+    /// roll:滚转角
+    /// </example>
     class FlightBean
     {
         public readonly static double NoneAngle = 361;

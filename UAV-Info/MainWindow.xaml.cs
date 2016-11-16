@@ -39,7 +39,7 @@ namespace UAV_Info
             InitializeComponent();
             //设置背景颜色
             SolidColorBrush NewColor = new SolidColorBrush();
-            NewColor.Color = Color.FromArgb(255,110,204,224);
+            NewColor.Color = Color.FromArgb(255,110,204,210);
             this.Background = NewColor;
 
             flightBeanList = new List<FlightBean>();
@@ -50,7 +50,6 @@ namespace UAV_Info
 
         Span normalizeSpan = new Span();
         Span timeSpan = new Span();
-
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
           /*plotPitch.Viewport.SetBinding(Viewport2D.VisibleProperty,
@@ -170,6 +169,13 @@ namespace UAV_Info
             }
         }
 
+        /// <summary>
+        /// 导入无人机姿态数据，需保证文件格式正确，并以.GYT为文件后缀
+        /// 数据存入flightBeanList中，并用indexDict为索引存储
+        /// 导入数据成功之后，进行无人机姿态角图形的绘制，包括三个维度的姿态角：俯仰，偏航，滚转
+        /// </summary>
+        /// <param name="sender">事件对象</param>
+        /// <param name="args">事件参数</param>
         private void importAngleData(object sender, RoutedEventArgs args) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true) {
@@ -218,7 +224,7 @@ namespace UAV_Info
                     }
                 }
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
-                // 绘图
+                // 绘制无人机姿态角数据图
                 if (isReopenAngleFile) {
                     clearWhenReopenAngleFile();
                 }
@@ -239,6 +245,12 @@ namespace UAV_Info
             {
                 // 轨迹数据读入
                 string fileName = openFileDialog.FileName;
+                if (fileName == null || !fileName.EndsWith(".gpx"))
+                {
+                    MessageBox.Show("轨迹文件格式错误，请选择.gpx文件");
+                    return;
+                }
+
                 gpx_trans gpx = new gpx_trans(indexDict,flightBeanList);
                 gpx.start(fileName);
                 while (gpx.thread1.ThreadState != System.Threading.ThreadState.Stopped) { }
@@ -290,14 +302,18 @@ namespace UAV_Info
             traceChartPlotter.Children.Add(lineG);
         }
 
+        /// <summary>
+        /// 绘制三个姿态角的数据图，内部函数
+        /// </summary>
+        /// <param name="whichAngle">当前绘制的姿态角，可选姿态角：pitch,yaw,roll</param>
+        /// <example>plotAngle(pitch);// 绘制俯仰角姿态的数据图</example>
         private void plotAngle(string whichAngle) {
-            // 例子，绘制俯仰角
             List<DateTime> dateTimeList = new List<DateTime>();
             List<double> angleList = new List<double>();
             if (whichAngle == "pitch") {
                 foreach (string key in indexDict.Keys)
                 {
-                    dateTimeList.Add(TimeUtils.strToDateTime(key));
+                    dateTimeList.Add(TimeUtils.strToDateTime(key)); 
                     angleList.Add(flightBeanList[indexDict[key]].pitch);
                 }
 
@@ -352,6 +368,12 @@ namespace UAV_Info
             }
         }
 
+        /// <summary>
+        /// 绘制规范化之后的姿态数据图
+        /// 在成功导入数据并绘制原始姿态数据图之后，选择时间域，以此做规范化，并绘制规范化后的姿态数据图
+        /// </summary>
+        /// <param name="whichAngle">当前绘制的姿态角，可选姿态角：pitch,yaw,roll</param>
+        /// <example>plotNormalizedAngle(pitch);// 绘制俯仰角姿态的规范化数据图</example>
         private void plotNormalizedAngle(string whichAngle)
         {
             // 例子，绘制俯仰角
@@ -420,6 +442,12 @@ namespace UAV_Info
 
         }
 
+        /// <summary>
+        /// 在点击了规范化之后，根据在原始姿态图中所选择的区域，得到用作校准的时间区域，分割得到区域中的
+        /// 所需数据，并计算零点值，调用plotNormalizedAngle函数绘制规范化之后的姿态数据图
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void onClick_NormalizeAngle(object sender = null, EventArgs e = null) {
             //获取时间区间
             DateTime dateTimeA = dateAxis_angleNormal.ConvertFromDouble(normalizeSpan.valueOfLineA);
@@ -491,6 +519,10 @@ namespace UAV_Info
             plotNormalizedAngle("roll");
         }
 
+        /// <summary>
+        /// 在规范化的姿态数据图中选择时间区域后，将在轨迹图中对应时间区域的部分进行高亮显示，
+        /// 并计算零点值，得到该分析区间得到姿态角的最大值最小值并显示
+        /// </summary>
         private void analyseAngleNormalized() {
             
             if (null == normalizedFlightBeanList)
@@ -588,6 +620,11 @@ namespace UAV_Info
             traceChartPlotter.LegendVisible = false;
         }
 
+        /// <summary>
+        /// 将姿态数据图zoom到合适的范围
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void animationTimer_Tick(object sender, EventArgs e)
         {
             Point pos = new Point(dateAxis_angle.ConvertToDouble(TimeUtils.strToDateTime(TimeUtils.toformatTime("160529163534"))), 0);
@@ -595,6 +632,10 @@ namespace UAV_Info
             plotPitch.Viewport.Visible.Zoom(zoomTo, 3.0);
         }
 
+        /// <summary>
+        /// 当重新打开姿态文件之后，需要清空已经绘制的姿态数据曲线，以及选择好的时间区域（以红线标注），
+        /// 还有对轨迹中的高亮区域去除高亮，清空姿态数据展示的6个文本框
+        /// </summary>
         private void clearWhenReopenAngleFile()
         {
             plotPitch.Children.RemoveAll(typeof(LineGraph));
@@ -613,6 +654,9 @@ namespace UAV_Info
             }
         }
 
+        /// <summary>
+        /// 重置之后，或重新导入姿态数据文件，需清空三个姿态角，共6个文本框的文本
+        /// </summary>
         private void clearanalysisTextBox() {
             pitchMaxTextBox.Text = "";
             yawMaxTextBox.Text = "";
