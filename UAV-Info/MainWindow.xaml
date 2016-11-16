@@ -24,7 +24,7 @@
                 <d3:VerticalAxis Name="axisPitch"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:ChartPlotter.HorizontalAxis>
-                <d3:HorizontalDateTimeAxis Name="HaxisPitch"/>
+                <d3:HorizontalDateTimeAxis Name="dateAxisPitch"/>
             </d3:ChartPlotter.HorizontalAxis>
             <d3:CursorCoordinateGraph Name="cordPitch"/>
         </d3:ChartPlotter>
@@ -33,17 +33,17 @@
                 <d3:VerticalAxis Name="axisYaw"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:ChartPlotter.HorizontalAxis>
-                <d3:HorizontalDateTimeAxis Name="HaxisYaw"/>
+                <d3:HorizontalDateTimeAxis Name="dateAxisYaw"/>
             </d3:ChartPlotter.HorizontalAxis>
             <d3:CursorCoordinateGraph Name="cordYaw" Margin="0,0,-4,0"/>
         </d3:ChartPlotter>
-        <d3:ChartPlotter Name ="plotRoll" Width="379"  HorizontalAlignment="Left" Margin="33,286,0,248">
+        <d3:ChartPlotter Name ="plotRoll"  Width="379"  HorizontalAlignment="Left" Margin="33,286,0,248">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis Name="axisRoll"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:CursorCoordinateGraph Name="cordRoll"/>
             <d3:ChartPlotter.HorizontalAxis >
-                <d3:HorizontalDateTimeAxis x:Name="dateAxis_angle"/>
+                <d3:HorizontalDateTimeAxis x:Name="dateAxisRoll"/>
             </d3:ChartPlotter.HorizontalAxis>
         </d3:ChartPlotter>
 
@@ -52,7 +52,7 @@
                 <d3:VerticalAxis x:Name="axisPitchNormal"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:ChartPlotter.HorizontalAxis>
-                <d3:HorizontalDateTimeAxis x:Name="HaxisPitchNormal"/>
+                <d3:HorizontalDateTimeAxis x:Name="dateAxisPitchNormal"/>
             </d3:ChartPlotter.HorizontalAxis>
             <d3:CursorCoordinateGraph Name="cordPitchNormal"/>
         </d3:ChartPlotter>
@@ -61,9 +61,9 @@
                 <d3:VerticalAxis x:Name="axisYawNormal"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:ChartPlotter.HorizontalAxis>
-                <d3:HorizontalDateTimeAxis x:Name="HaxisYawNormal"/>
+                <d3:HorizontalDateTimeAxis x:Name="dateAxisYawNormal"/>
             </d3:ChartPlotter.HorizontalAxis>
-            <d3:CursorCoordinateGraph Name="cordYaNormal"/>
+            <d3:CursorCoordinateGraph Name="cordYawNormal"/>
         </d3:ChartPlotter>
         <d3:ChartPlotter Name ="plotRollNormal" Height="118" Margin="0,286,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="378">
             <d3:ChartPlotter.VerticalAxis>
@@ -71,7 +71,7 @@
             </d3:ChartPlotter.VerticalAxis>
             <d3:CursorCoordinateGraph Name="cordRollNormal"/>
             <d3:ChartPlotter.HorizontalAxis >
-                <d3:HorizontalDateTimeAxis x:Name="dateAxis_angleNormal"/>
+                <d3:HorizontalDateTimeAxis x:Name="dateAxisRollNormal"/>
             </d3:ChartPlotter.HorizontalAxis>
         </d3:ChartPlotter>
         <d3:ChartPlotter Name="traceChartPlotter" Margin="33,0,0,10" HorizontalAlignment="Left" Width="379" Height="189" VerticalAlignment="Bottom">

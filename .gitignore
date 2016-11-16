@@ -2,3 +2,4 @@ bin
 obj
 .vs
 .csproj
+/UAV-Info/UAV-Info.csproj

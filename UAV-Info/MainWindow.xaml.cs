@@ -31,7 +31,6 @@ namespace UAV_Info
 
         // key: 飞行的某时刻, value: 数据在flightBeanList中的索引
         private Dictionary<string, int> indexDict;
-
         private List<FlightBean> normalizedFlightBeanList;
 
         private bool isReopenAngleFile;
@@ -84,7 +83,7 @@ namespace UAV_Info
           plotPitchNormal.Children.Remove(plotPitchNormal.KeyboardNavigation);
           plotYawNormal.Children.Remove(plotYawNormal.KeyboardNavigation);
           plotRollNormal.Children.Remove(plotRollNormal.KeyboardNavigation);
-          traceChartPlotter.Children.Remove(plotRollNormal.KeyboardNavigation);
+          traceChartPlotter.Children.Remove(traceChartPlotter.KeyboardNavigation);
 
           //双击描线事件
           plotPitch.MouseDoubleClick += onDoubleCkick_AngleChart;
@@ -95,8 +94,16 @@ namespace UAV_Info
           plotYawNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
           plotRollNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
 
-          // Add handler
-          plotPitch.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
+          //坐标显示
+          cordPitch.XTextMapping = x => dateAxisPitch.ConvertFromDouble(x).ToString("HH:mm:ss");
+          cordYaw.XTextMapping = x => dateAxisYaw.ConvertFromDouble(x).ToString("HH:mm:ss");
+          cordRoll.XTextMapping = x => dateAxisRoll.ConvertFromDouble(x).ToString("HH:mm:ss");
+          cordPitchNormal.XTextMapping = x => dateAxisPitchNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
+          cordYawNormal.XTextMapping = x => dateAxisYawNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
+          cordRollNormal.XTextMapping = x => dateAxisRollNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
+
+            // Add handler
+            plotPitch.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
           plotYaw.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
           plotRoll.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
 
@@ -176,7 +183,7 @@ namespace UAV_Info
                string fileName = openFileDialog.FileName;
                 using(FileStream fs = File.Open(fileName, FileMode.Open)){
                     if (!fileName.EndsWith(".GYT")) {
-                        MessageBox.Show("姿态文件格式有误", "警告");
+                        MessageBox.Show("姿态文件格式有误，请选择.gpx文件", "警告");
                         args.Handled = true;
                         return;
                     }
@@ -200,7 +207,7 @@ namespace UAV_Info
                             }
                             else
                             {
-                                FlightBean fb = new FlightBean("", 0, 0, 0, 0, 0);
+                                FlightBean fb = new FlightBean("", FlightBean.NoneLat, FlightBean.NoneLng, FlightBean.NoneAngle, FlightBean.NoneAngle, FlightBean.NoneAngle);
                                 fb.time = time;
                                 fb.pitch = Convert.ToDouble(split[2]);
                                 fb.yaw = Convert.ToDouble(split[4]);
@@ -231,29 +238,36 @@ namespace UAV_Info
                 animationTimer.Start();
             }
        }
-                
+        
+        //点击轨迹按钮
         private void importTraceData(object sender, RoutedEventArgs args)
         {
+            //打开选择文件窗口
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
                 // 轨迹数据读入
                 string fileName = openFileDialog.FileName;
+                //若选择的不是gpx文件，则报错
                 if (fileName == null || !fileName.EndsWith(".gpx"))
                 {
-                    MessageBox.Show("轨迹文件格式错误，请选择.gpx文件");
+                    MessageBox.Show("轨迹文件格式错误，请选择.gpx文件","警告");
                     return;
                 }
-
+                //定义gpx_trans类对象，用来读GPX文件
                 gpx_trans gpx = new gpx_trans(indexDict,flightBeanList);
+                //开始读
                 gpx.start(fileName);
+                //等待读完再进行下一步操作
                 while (gpx.thread1.ThreadState != System.Threading.ThreadState.Stopped) { }
 
+                //读到的数据传给当前类的成员变量
                 indexDict = gpx.gpxdata;
                 flightBeanList = gpx.gpxlist;
+                //将字典对象里的数据按时间排序
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
-                plotTrace();
                 traceChartPlotter.LegendVisible = false;
+                //姿态数据已读入，分析进行规范化操作
                 if (timeSpan.IsSet)
                 {
                     analyseAngleNormalized();
@@ -266,23 +280,30 @@ namespace UAV_Info
             }
         }
 
+        //绘轨迹图
         private void plotTrace()
         {
+            //存横纵轴数据的列表
             List<double> latList = new List<double>();
             List<double> lngList = new List<double>();
+            //
             foreach (string key in indexDict.Keys)
             {
-                if (flightBeanList[indexDict[key]].lat != 0 && flightBeanList[indexDict[key]].lng != 0)
+                //无经纬度数据的不读入列表
+                if (flightBeanList[indexDict[key]].lat != FlightBean.NoneLat && flightBeanList[indexDict[key]].lng != FlightBean.NoneLng)
                 {
                     latList.Add(flightBeanList[indexDict[key]].lat);
                     lngList.Add(flightBeanList[indexDict[key]].lng);
                 }
             }
+            //将List数据转化为图的横纵轴数据
             EnumerableDataSource<double> latDataSource = new EnumerableDataSource<double>(latList);
             latDataSource.SetXMapping(y => y);
             EnumerableDataSource<double> logDataSource = new EnumerableDataSource<double>(lngList);
             logDataSource.SetYMapping(x => x);
             CompositeDataSource compositeDataSource = new CompositeDataSource(logDataSource, latDataSource);
+
+            //设置图的颜色和轮廓宽度
             LineGraph lineG = new LineGraph()
             {
                 Stroke = Brushes.Gray,
@@ -291,8 +312,10 @@ namespace UAV_Info
 
             lineG.DataSource = compositeDataSource;
 
+            //清空之前的图
             traceChartPlotter.Children.RemoveAll(lineG.GetType());
             traceChartPlotter.Viewport.FitToView();
+            //加入要绘制的图
             traceChartPlotter.Children.Add(lineG);
         }
 
@@ -308,7 +331,7 @@ namespace UAV_Info
                 }
 
                 EnumerableDataSource<DateTime> datesDataSource = new EnumerableDataSource<DateTime>(dateTimeList);
-                datesDataSource.SetXMapping(x => dateAxis_angle.ConvertToDouble(x));
+                datesDataSource.SetXMapping(x => dateAxisPitch.ConvertToDouble(x));
                 EnumerableDataSource<double> angleDataSource = new EnumerableDataSource<double>(angleList);
                 angleDataSource.SetYMapping(y => y);
                 CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
@@ -326,7 +349,7 @@ namespace UAV_Info
                 }
 
                 EnumerableDataSource<DateTime> datesDataSource = new EnumerableDataSource<DateTime>(dateTimeList);
-                datesDataSource.SetXMapping(x => dateAxis_angle.ConvertToDouble(x));
+                datesDataSource.SetXMapping(x => dateAxisYaw.ConvertToDouble(x));
                 EnumerableDataSource<double> angleDataSource = new EnumerableDataSource<double>(angleList);
                 angleDataSource.SetYMapping(y => y);
                 CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
@@ -345,7 +368,7 @@ namespace UAV_Info
                 }
 
                 EnumerableDataSource<DateTime> datesDataSource = new EnumerableDataSource<DateTime>(dateTimeList);
-                datesDataSource.SetXMapping(x => dateAxis_angle.ConvertToDouble(x));
+                datesDataSource.SetXMapping(x => dateAxisRoll.ConvertToDouble(x));
                 EnumerableDataSource<double> angleDataSource = new EnumerableDataSource<double>(angleList);
                 angleDataSource.SetYMapping(y => y);
                 CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
@@ -372,7 +395,7 @@ namespace UAV_Info
                 }
 
                 EnumerableDataSource<DateTime> datesDataSource = new EnumerableDataSource<DateTime>(dateTimeList);
-                datesDataSource.SetXMapping(x => dateAxis_angleNormal.ConvertToDouble(x));
+                datesDataSource.SetXMapping(x => dateAxisPitchNormal.ConvertToDouble(x));
                 EnumerableDataSource<double> angleDataSource = new EnumerableDataSource<double>(angleList);
                 angleDataSource.SetYMapping(y => y);
                 CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
@@ -392,7 +415,7 @@ namespace UAV_Info
                 }
 
                 EnumerableDataSource<DateTime> datesDataSource = new EnumerableDataSource<DateTime>(dateTimeList);
-                datesDataSource.SetXMapping(x => dateAxis_angleNormal.ConvertToDouble(x));
+                datesDataSource.SetXMapping(x => dateAxisYawNormal.ConvertToDouble(x));
                 EnumerableDataSource<double> angleDataSource = new EnumerableDataSource<double>(angleList);
                 angleDataSource.SetYMapping(y => y);
                 CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
@@ -412,7 +435,7 @@ namespace UAV_Info
                 }
 
                 EnumerableDataSource<DateTime> datesDataSource = new EnumerableDataSource<DateTime>(dateTimeList);
-                datesDataSource.SetXMapping(x => dateAxis_angleNormal.ConvertToDouble(x));
+                datesDataSource.SetXMapping(x => dateAxisRollNormal.ConvertToDouble(x));
                 EnumerableDataSource<double> angleDataSource = new EnumerableDataSource<double>(angleList);
                 angleDataSource.SetYMapping(y => y);
                 CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
@@ -428,8 +451,8 @@ namespace UAV_Info
 
         private void onClick_NormalizeAngle(object sender = null, EventArgs e = null) {
             //获取时间区间
-            DateTime dateTimeA = dateAxis_angleNormal.ConvertFromDouble(normalizeSpan.valueOfLineA);
-            DateTime dateTimeB = dateAxis_angleNormal.ConvertFromDouble(normalizeSpan.valueOfLineB);
+            DateTime dateTimeA = dateAxisPitch.ConvertFromDouble(normalizeSpan.valueOfLineA);
+            DateTime dateTimeB = dateAxisPitch.ConvertFromDouble(normalizeSpan.valueOfLineB);
 
             List<FlightBean> list = null;
             if (indexDict.Keys.Count == 0) {
@@ -503,8 +526,8 @@ namespace UAV_Info
                 return;
 
             //获取时间区间
-            DateTime dateTimeA = dateAxis_angleNormal.ConvertFromDouble(timeSpan.valueOfLineA);
-            DateTime dateTimeB = dateAxis_angleNormal.ConvertFromDouble(timeSpan.valueOfLineB);
+            DateTime dateTimeA = dateAxisPitchNormal.ConvertFromDouble(timeSpan.valueOfLineA);
+            DateTime dateTimeB = dateAxisPitchNormal.ConvertFromDouble(timeSpan.valueOfLineB);
 
             List<FlightBean> list = null;
 
@@ -596,7 +619,7 @@ namespace UAV_Info
 
         private void animationTimer_Tick(object sender, EventArgs e)
         {
-            Point pos = new Point(dateAxis_angle.ConvertToDouble(TimeUtils.strToDateTime(TimeUtils.toformatTime("160529163534"))), 0);
+            Point pos = new Point(dateAxisPitch.ConvertToDouble(TimeUtils.strToDateTime(TimeUtils.toformatTime("160529163534"))), 0);
             Point zoomTo = pos.DataToScreen(plotPitch.Viewport.Transform);
             plotPitch.Viewport.Visible.Zoom(zoomTo, 3.0);
         }
