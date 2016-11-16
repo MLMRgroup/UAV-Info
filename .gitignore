@@ -1,5 +1,5 @@
 bin
 obj
-.vs
-.csproj
-.bmp
+*.vs
+*.csproj
+*.bmp
