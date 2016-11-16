@@ -287,14 +287,12 @@ namespace UAV_Info
         {
             List<double> latList = new List<double>();
             List<double> lngList = new List<double>();
-            foreach (string key in indexDict.Keys)
+            foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].lat != FlightBean.NoneCoordinate) )
             {
-                if (flightBeanList[indexDict[key]].lat != 0 && flightBeanList[indexDict[key]].lng != 0)
-                {
                     latList.Add(flightBeanList[indexDict[key]].lat);
                     lngList.Add(flightBeanList[indexDict[key]].lng);
-                }
             }
+
             EnumerableDataSource<double> latDataSource = new EnumerableDataSource<double>(latList);
             latDataSource.SetXMapping(y => y);
             EnumerableDataSource<double> logDataSource = new EnumerableDataSource<double>(lngList);
@@ -318,7 +316,7 @@ namespace UAV_Info
             List<DateTime> dateTimeList = new List<DateTime>();
             List<double> angleList = new List<double>();
             if (whichAngle == "pitch") {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(flightBeanList[indexDict[key]].pitch);
@@ -336,7 +334,7 @@ namespace UAV_Info
                 plotPitch.Viewport.FitToView();
                 plotPitch.Children.Add(lineG);
             } else if (whichAngle == "yaw") {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle))
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(flightBeanList[indexDict[key]].yaw);
@@ -355,7 +353,7 @@ namespace UAV_Info
                 plotYaw.Children.Add(lineG);
             }
             else {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle))
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(flightBeanList[indexDict[key]].roll);
@@ -382,7 +380,7 @@ namespace UAV_Info
             List<double> angleList = new List<double>();
             if (whichAngle == "pitch")
             {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(normalizedFlightBeanList[indexDict[key]].pitch);
@@ -402,7 +400,7 @@ namespace UAV_Info
             }
             else if (whichAngle == "yaw")
             {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(normalizedFlightBeanList[indexDict[key]].yaw);
@@ -422,7 +420,7 @@ namespace UAV_Info
             }
             else
             {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(normalizedFlightBeanList[indexDict[key]].roll);
@@ -502,9 +500,7 @@ namespace UAV_Info
             }
 
             normalizedFlightBeanList = new List<FlightBean>(flightBeanList);
-            foreach (FlightBean fb in normalizedFlightBeanList) {
-                if (fb.pitch == FlightBean.NoneAngle)
-                    continue;
+            foreach (FlightBean fb in normalizedFlightBeanList.Where(fb => fb.pitch != FlightBean.NoneAngle)) {
                 fb.pitch -= meanOfPitch;
                 fb.yaw -= meanOfYaw;
                 fb.roll -= meanOfRoll;
@@ -527,7 +523,6 @@ namespace UAV_Info
 
             //超出时间范围，则校正为时间边界
             if (dateTimeA < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
-
             {
                 dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
             }
@@ -590,8 +585,8 @@ namespace UAV_Info
             rollMinTextBox.Text = minOfRoll.ToString("f2");
 
             //HighLight The Trace
-            List<double> latListHLight = (from item in list where item.lat != 0 select item.lat).ToList();
-            List<double> lngListHLight = (from item in list where item.lng != 0 select item.lng).ToList();
+            List<double> latListHLight = (from item in list where item.lat != FlightBean.NoneCoordinate select item.lat).ToList();
+            List<double> lngListHLight = (from item in list where item.lng != FlightBean.NoneCoordinate select item.lng).ToList();
             if (latListHLight.Count != lngListHLight.Count || latListHLight.Count == 0)
                 return;
 

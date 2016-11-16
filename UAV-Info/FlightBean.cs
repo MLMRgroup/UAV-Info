@@ -9,14 +9,15 @@ namespace UAV_Info
     class FlightBean
     {
         public readonly static double NoneAngle = 361;
+        public readonly static double NoneCoordinate = 361;
         // 时刻
         private string _time;
 
         // 纬度
-        private double _lat;
+        private double _lat = NoneCoordinate;
 
         // 经度
-        private double _lng;
+        private double _lng = NoneCoordinate;
 
         // 361 表示无数据
         // 俯仰角
