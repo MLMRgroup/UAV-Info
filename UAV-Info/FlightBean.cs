@@ -9,6 +9,8 @@ namespace UAV_Info
     class FlightBean
     {
         public readonly static double NoneAngle = 361;
+        public readonly static double NoneLat = 181;
+        public readonly static double NoneLng = 181;
         // 时刻
         private string _time;
 
