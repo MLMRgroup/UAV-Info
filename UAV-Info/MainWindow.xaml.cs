@@ -48,8 +48,10 @@ namespace UAV_Info
             isReopenAngleFile = false;
         }
 
+        //normalizeSpan：规范化选取区间  analyzeSpan：分析选取区间
         Span normalizeSpan = new Span();
-        Span timeSpan = new Span();
+        Span analyzeSpan = new Span();
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
           /*plotPitch.Viewport.SetBinding(Viewport2D.VisibleProperty,
@@ -67,15 +69,16 @@ namespace UAV_Info
           plotRoll.Children.Add(normalizeSpan.LineA);
           plotRoll.Children.Add(normalizeSpan.LineB);
 
-          plotPitchNormal.Children.Add(timeSpan.LineA);
-          plotPitchNormal.Children.Add(timeSpan.LineB);
-          plotYawNormal.Children.Add(timeSpan.LineA);
-          plotYawNormal.Children.Add(timeSpan.LineB);
-          plotRollNormal.Children.Add(timeSpan.LineA);
-          plotRollNormal.Children.Add(timeSpan.LineB);
+          plotPitchNormal.Children.Add(analyzeSpan.LineA);
+          plotPitchNormal.Children.Add(analyzeSpan.LineB);
+          plotYawNormal.Children.Add(analyzeSpan.LineA);
+          plotYawNormal.Children.Add(analyzeSpan.LineB);
+          plotRollNormal.Children.Add(analyzeSpan.LineA);
+          plotRollNormal.Children.Add(analyzeSpan.LineB);
 
           //plotPitch.Viewport.Restrictions.Add();
-          // plotYaw.DefaultContextMenu.Remove();
+          //plotYaw.DefaultContextMenu.Remove();
+
           //删去双击放大事件
           plotPitch.Children.Remove(plotPitch.KeyboardNavigation);
           plotYaw.Children.Remove(plotYaw.KeyboardNavigation);
@@ -85,7 +88,7 @@ namespace UAV_Info
           plotRollNormal.Children.Remove(plotRollNormal.KeyboardNavigation);
           traceChartPlotter.Children.Remove(traceChartPlotter.KeyboardNavigation);
 
-          //双击描线事件
+          //添加双击描线事件
           plotPitch.MouseDoubleClick += onDoubleCkick_AngleChart;
           plotYaw.MouseDoubleClick += onDoubleCkick_AngleChart;
           plotRoll.MouseDoubleClick += onDoubleCkick_AngleChart;
@@ -94,7 +97,7 @@ namespace UAV_Info
           plotYawNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
           plotRollNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
 
-          //坐标显示
+          //添加坐标中的日期显示格式
           cordPitch.XTextMapping = x => dateAxisPitch.ConvertFromDouble(x).ToString("HH:mm:ss");
           cordYaw.XTextMapping = x => dateAxisYaw.ConvertFromDouble(x).ToString("HH:mm:ss");
           cordRoll.XTextMapping = x => dateAxisRoll.ConvertFromDouble(x).ToString("HH:mm:ss");
@@ -102,26 +105,31 @@ namespace UAV_Info
           cordYawNormal.XTextMapping = x => dateAxisYawNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
           cordRollNormal.XTextMapping = x => dateAxisRollNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
 
-            // Add handler
-            plotPitch.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
+          // Add handler
+          /*
+          plotPitch.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
           plotYaw.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
           plotRoll.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
 
           plotPitchNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
           plotYawNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
           plotRollNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
+          */
         }
 
+        //重置按钮响应函数
         private void OnClick_Reset(object sender, RoutedEventArgs e)
         {
-            if(sender.Equals(btnNormSpanReset))
+            //重置规范化区间
+            if(sender.Equals(btnNormlizeSpanReset))
             {
                 normalizeSpan.Reset();
                 btnNormlize.IsEnabled = false;
             }
-            else if(sender.Equals(btnTimeSpanReset))
+            //重置分析区间
+            else if(sender.Equals(btnAnalyzeSpanReset))
             {
-                timeSpan.Reset();
+                analyzeSpan.Reset();
                 clearanalysisTextBox();
                 if (((LineGraph)traceChartPlotter.FindName("traceHLight")) != null) { 
                     traceChartPlotter.Children.Remove((LineGraph)FindName("traceHLight"));
@@ -129,7 +137,7 @@ namespace UAV_Info
                 }
             }
         }
-        // Respond to changes
+        // 窗口同步，暂时用不到
         void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
         {
             /*if (e.PropertyName == "Visible")
@@ -152,27 +160,28 @@ namespace UAV_Info
                 plotRollNormal.Viewport.Visible = new Rect(((Viewport2D)sender).Visible.X, plotRollNormal.Viewport.Visible.Y, ((Viewport2D)sender).Visible.Width, plotRollNormal.Viewport.Visible.Height);
             }*/
         }
-
+        //窗口双击时间
         private void onDoubleCkick_AngleChart(object sender, MouseEventArgs e)
         {
             ChartPlotter plotter = (ChartPlotter)sender;
-            //坐标转换
+            //坐标转换，得到当前坐标
             var transform = plotter.Transform;
             var mouseScreenPosition = Mouse.GetPosition(plotter.CentralGrid);
             var mousePositionInData = mouseScreenPosition.ScreenToViewport(transform);
-
+            //添加基准线
             if (sender.Equals(plotPitch) || sender.Equals(plotYaw) || sender.Equals(plotRoll))
             {
                 normalizeSpan.AddLine(mousePositionInData.X);
             }
             else if (sender.Equals(plotPitchNormal) || sender.Equals(plotYawNormal) || sender.Equals(plotRollNormal))
             {
-                timeSpan.AddLine(mousePositionInData.X);
+                analyzeSpan.AddLine(mousePositionInData.X);
             }
+            
             if (normalizeSpan.IsSet) {
                 btnNormlize.IsEnabled = true;
             }
-            if (timeSpan.IsSet) {
+            if (analyzeSpan.IsSet) {
                 analyseAngleNormalized();
             }
         }
@@ -267,8 +276,8 @@ namespace UAV_Info
                 //将字典对象里的数据按时间排序
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
                 traceChartPlotter.LegendVisible = false;
-                //姿态数据已读入，分析进行规范化操作
-                if (timeSpan.IsSet)
+
+                if (analyzeSpan.IsSet)
                 {
                     analyseAngleNormalized();
                 }
@@ -526,8 +535,8 @@ namespace UAV_Info
                 return;
 
             //获取时间区间
-            DateTime dateTimeA = dateAxisPitchNormal.ConvertFromDouble(timeSpan.valueOfLineA);
-            DateTime dateTimeB = dateAxisPitchNormal.ConvertFromDouble(timeSpan.valueOfLineB);
+            DateTime dateTimeA = dateAxisPitchNormal.ConvertFromDouble(analyzeSpan.valueOfLineA);
+            DateTime dateTimeB = dateAxisPitchNormal.ConvertFromDouble(analyzeSpan.valueOfLineB);
 
             List<FlightBean> list = null;
 
@@ -633,7 +642,7 @@ namespace UAV_Info
             plotYawNormal.Children.RemoveAll(typeof(LineGraph));
             plotRollNormal.Children.RemoveAll(typeof(LineGraph));
             normalizeSpan.Reset();
-            timeSpan.Reset();
+            analyzeSpan.Reset();
             clearanalysisTextBox();
             btnNormlize.IsEnabled = false;
             if (((LineGraph)traceChartPlotter.FindName("traceHLight")) != null) {
