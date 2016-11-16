@@ -293,7 +293,6 @@ namespace UAV_Info
                 {
                     plotTrace();
                 }
-               
             }
         }
 
@@ -595,7 +594,9 @@ namespace UAV_Info
                                 && dateTimeB > TimeUtils.strToDateTime(item)
                                 //normalizedFlightBeanList的个数可能与indexDict不同
                                 && indexDict[item] < normalizedFlightBeanList.Count 
-                                && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle)
+                                && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle
+                                && normalizedFlightBeanList[indexDict[item]].lat!=FlightBean.NoneLat
+                                && normalizedFlightBeanList[indexDict[item]].lng!=FlightBean.NoneLng)
                         select normalizedFlightBeanList[indexDict[item]]
                         ).ToList();
             }
@@ -605,7 +606,9 @@ namespace UAV_Info
                         where (dateTimeA > TimeUtils.strToDateTime(item)
                                 && dateTimeB < TimeUtils.strToDateTime(item)
                                 && indexDict[item] < normalizedFlightBeanList.Count  
-                                && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle)
+                                && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle
+                                && normalizedFlightBeanList[indexDict[item]].lat != FlightBean.NoneLat
+                                && normalizedFlightBeanList[indexDict[item]].lng != FlightBean.NoneLng)
                         select normalizedFlightBeanList[indexDict[item]]
                         ).ToList();
             }
