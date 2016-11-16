@@ -99,8 +99,8 @@
         <TextBox x:Name="yawMinTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,46,57" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
         <Label x:Name="label_Copy6" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,121,108" VerticalAlignment="Bottom" Width="50"/>
         <Label x:Name="label_Copy7" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,121,52" VerticalAlignment="Bottom" Width="50"/>
-        <Button x:Name="btnNormSpanReset" Content="重置" HorizontalAlignment="Left" Margin="52,414,0,0" VerticalAlignment="Top" Width="62" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
-        <Button x:Name="btnTimeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="848,414,0,0" VerticalAlignment="Top" Width="62" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
+        <Button x:Name="btnNormlizeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="52,414,0,0" VerticalAlignment="Top" Width="62" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
+        <Button x:Name="btnAnalyzeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="848,414,0,0" VerticalAlignment="Top" Width="62" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
         <Button Name="btnNormlize" Content="规范化" HorizontalAlignment="Left" Margin="289,414,0,0" VerticalAlignment="Top" Width="74" Click="onClick_NormalizeAngle" IsEnabled="False"/>
     </Grid>
 </Window>
