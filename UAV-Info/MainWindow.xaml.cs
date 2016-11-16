@@ -31,7 +31,6 @@ namespace UAV_Info
 
         // key: 飞行的某时刻, value: 数据在flightBeanList中的索引
         private Dictionary<string, int> indexDict;
-
         private List<FlightBean> normalizedFlightBeanList;
 
         private bool isReopenAngleFile;
@@ -49,8 +48,11 @@ namespace UAV_Info
             isReopenAngleFile = false;
         }
 
+        //normalizeSpan：规范化选取区间  analyzeSpan：分析选取区间
         Span normalizeSpan = new Span();
         Span timeSpan = new Span();
+        Span analyzeSpan = new Span();
+
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
           /*plotPitch.Viewport.SetBinding(Viewport2D.VisibleProperty,
@@ -68,15 +70,16 @@ namespace UAV_Info
           plotRoll.Children.Add(normalizeSpan.LineA);
           plotRoll.Children.Add(normalizeSpan.LineB);
 
-          plotPitchNormal.Children.Add(timeSpan.LineA);
-          plotPitchNormal.Children.Add(timeSpan.LineB);
-          plotYawNormal.Children.Add(timeSpan.LineA);
-          plotYawNormal.Children.Add(timeSpan.LineB);
-          plotRollNormal.Children.Add(timeSpan.LineA);
-          plotRollNormal.Children.Add(timeSpan.LineB);
+          plotPitchNormal.Children.Add(analyzeSpan.LineA);
+          plotPitchNormal.Children.Add(analyzeSpan.LineB);
+          plotYawNormal.Children.Add(analyzeSpan.LineA);
+          plotYawNormal.Children.Add(analyzeSpan.LineB);
+          plotRollNormal.Children.Add(analyzeSpan.LineA);
+          plotRollNormal.Children.Add(analyzeSpan.LineB);
 
           //plotPitch.Viewport.Restrictions.Add();
-          // plotYaw.DefaultContextMenu.Remove();
+          //plotYaw.DefaultContextMenu.Remove();
+
           //删去双击放大事件
           plotPitch.Children.Remove(plotPitch.KeyboardNavigation);
           plotYaw.Children.Remove(plotYaw.KeyboardNavigation);
@@ -86,7 +89,7 @@ namespace UAV_Info
           plotRollNormal.Children.Remove(plotRollNormal.KeyboardNavigation);
           traceChartPlotter.Children.Remove(traceChartPlotter.KeyboardNavigation);
 
-          //双击描线事件
+          //添加双击描线事件
           plotPitch.MouseDoubleClick += onDoubleCkick_AngleChart;
           plotYaw.MouseDoubleClick += onDoubleCkick_AngleChart;
           plotRoll.MouseDoubleClick += onDoubleCkick_AngleChart;
@@ -95,7 +98,7 @@ namespace UAV_Info
           plotYawNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
           plotRollNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
 
-          //坐标显示
+          //添加坐标中的日期显示格式
           cordPitch.XTextMapping = x => dateAxisPitch.ConvertFromDouble(x).ToString("HH:mm:ss");
           cordYaw.XTextMapping = x => dateAxisYaw.ConvertFromDouble(x).ToString("HH:mm:ss");
           cordRoll.XTextMapping = x => dateAxisRoll.ConvertFromDouble(x).ToString("HH:mm:ss");
@@ -103,34 +106,36 @@ namespace UAV_Info
           cordYawNormal.XTextMapping = x => dateAxisYawNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
           cordRollNormal.XTextMapping = x => dateAxisRollNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
 
-            // Add handler
-            plotPitch.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
+          // Add handler
+          /*
+          plotPitch.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
           plotYaw.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
           plotRoll.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
 
           plotPitchNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
           plotYawNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
           plotRollNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
+          */
         }
 
+        //重置按钮响应函数
         private void OnClick_Reset(object sender, RoutedEventArgs e)
         {
-            if(sender.Equals(btnNormSpanReset))
+            //重置规范化区间
+            if(sender.Equals(btnNormlizeSpanReset))
             {
                 normalizeSpan.Reset();
                 btnNormlize.IsEnabled = false;
             }
-            else if(sender.Equals(btnTimeSpanReset))
+            //重置分析区间
+            else if(sender.Equals(btnAnalyzeSpanReset))
             {
-                timeSpan.Reset();
+                analyzeSpan.Reset();
                 clearanalysisTextBox();
-                if (((LineGraph)traceChartPlotter.FindName("traceHLight")) != null) { 
-                    traceChartPlotter.Children.Remove((LineGraph)FindName("traceHLight"));
-                    traceChartPlotter.UnregisterName("traceHLight");
-                }
+                clearHLight();
             }
         }
-        // Respond to changes
+        //窗口同步，暂时用不到
         void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
         {
             /*if (e.PropertyName == "Visible")
@@ -153,38 +158,46 @@ namespace UAV_Info
                 plotRollNormal.Viewport.Visible = new Rect(((Viewport2D)sender).Visible.X, plotRollNormal.Viewport.Visible.Y, ((Viewport2D)sender).Visible.Width, plotRollNormal.Viewport.Visible.Height);
             }*/
         }
-
+        //窗口双击事件
         private void onDoubleCkick_AngleChart(object sender, MouseEventArgs e)
         {
             ChartPlotter plotter = (ChartPlotter)sender;
-            //坐标转换
+            //坐标转换，得到当前坐标
             var transform = plotter.Transform;
             var mouseScreenPosition = Mouse.GetPosition(plotter.CentralGrid);
             var mousePositionInData = mouseScreenPosition.ScreenToViewport(transform);
-
+            //添加基准线
             if (sender.Equals(plotPitch) || sender.Equals(plotYaw) || sender.Equals(plotRoll))
             {
                 normalizeSpan.AddLine(mousePositionInData.X);
             }
             else if (sender.Equals(plotPitchNormal) || sender.Equals(plotYawNormal) || sender.Equals(plotRollNormal))
             {
-                timeSpan.AddLine(mousePositionInData.X);
+                analyzeSpan.AddLine(mousePositionInData.X);
             }
+            
             if (normalizeSpan.IsSet) {
                 btnNormlize.IsEnabled = true;
             }
-            if (timeSpan.IsSet) {
+            if (analyzeSpan.IsSet) {
                 analyseAngleNormalized();
             }
         }
 
+        /// <summary>
+        /// 导入无人机姿态数据，需保证文件格式正确，并以.GYT为文件后缀
+        /// 数据存入flightBeanList中，并用indexDict为索引存储
+        /// 导入数据成功之后，进行无人机姿态角图形的绘制，包括三个维度的姿态角：俯仰，偏航，滚转
+        /// </summary>
+        /// <param name="sender">事件对象</param>
+        /// <param name="args">事件参数</param>
         private void importAngleData(object sender, RoutedEventArgs args) {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true) {
                string fileName = openFileDialog.FileName;
                 using(FileStream fs = File.Open(fileName, FileMode.Open)){
                     if (!fileName.EndsWith(".GYT")) {
-                        MessageBox.Show("姿态文件格式有误", "警告");
+                        MessageBox.Show("姿态文件格式有误，请选择.gpx文件", "警告");
                         args.Handled = true;
                         return;
                     }
@@ -208,7 +221,7 @@ namespace UAV_Info
                             }
                             else
                             {
-                                FlightBean fb = new FlightBean("", 0, 0, 0, 0, 0);
+                                FlightBean fb = new FlightBean();
                                 fb.time = time;
                                 fb.pitch = Convert.ToDouble(split[2]);
                                 fb.yaw = Convert.ToDouble(split[4]);
@@ -226,7 +239,7 @@ namespace UAV_Info
                     }
                 }
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
-                // 绘图
+                // 绘制无人机姿态角数据图
                 if (isReopenAngleFile) {
                     clearWhenReopenAngleFile();
                 }
@@ -239,53 +252,74 @@ namespace UAV_Info
                 animationTimer.Start();
             }
        }
-                
+        
+        //点击轨迹按钮
         private void importTraceData(object sender, RoutedEventArgs args)
         {
+            //打开选择文件窗口
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
                 // 轨迹数据读入
                 string fileName = openFileDialog.FileName;
+                //若选择的不是gpx文件，则报错
                 if (fileName == null || !fileName.EndsWith(".gpx"))
                 {
-                    MessageBox.Show("轨迹文件格式错误，请选择.gpx文件");
+                    MessageBox.Show("轨迹文件格式错误，请选择.gpx文件","警告");
                     return;
                 }
-
+                //定义gpx_trans类对象，用来读GPX文件
                 gpx_trans gpx = new gpx_trans(indexDict,flightBeanList);
+                //开始读
                 gpx.start(fileName);
+                //等待读完再进行下一步操作
                 while (gpx.thread1.ThreadState != System.Threading.ThreadState.Stopped) { }
 
+                //读到的数据传给当前类的成员变量
                 indexDict = gpx.gpxdata;
                 flightBeanList = gpx.gpxlist;
+                //将字典对象里的数据按时间排序
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
+
                 plotTrace();
-                traceChartPlotter.LegendVisible = false;
-                if (timeSpan.IsSet)
+
+                if (analyzeSpan.IsSet)
                 {
                     analyseAngleNormalized();
                 }
-                else
-                {
-                    plotTrace();
-                }
-               
+
             }
         }
 
+        //绘轨迹图
         private void plotTrace()
         {
+            //存横纵轴数据的列表
             List<double> latList = new List<double>();
             List<double> lngList = new List<double>();
-            foreach (string key in indexDict.Keys)
+
+            //获取轨迹数据
+            foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].lat != FlightBean.NoneCoordinate) )
             {
-                if (flightBeanList[indexDict[key]].lat != 0 && flightBeanList[indexDict[key]].lng != 0)
-                {
                     latList.Add(flightBeanList[indexDict[key]].lat);
                     lngList.Add(flightBeanList[indexDict[key]].lng);
-                }
             }
+
+            if (latList.Count != lngList.Count || latList.Count == 0)
+            {
+                traceChartPlotter.Children.RemoveAll(typeof(LineGraph));
+                return;
+            }
+
+            //清空之前的图
+            clearHLight();
+            if (((LineGraph)traceChartPlotter.FindName("traceOrdinary")) != null)
+            {
+                traceChartPlotter.Children.Remove((LineGraph)FindName("traceOrdinary"));
+                traceChartPlotter.UnregisterName("traceOrdinary");
+            }
+
+            //将List数据转化为图的横纵轴数据并设置图的颜色和轮廓宽度
             EnumerableDataSource<double> latDataSource = new EnumerableDataSource<double>(latList);
             latDataSource.SetXMapping(y => y);
             EnumerableDataSource<double> logDataSource = new EnumerableDataSource<double>(lngList);
@@ -293,25 +327,37 @@ namespace UAV_Info
             CompositeDataSource compositeDataSource = new CompositeDataSource(logDataSource, latDataSource);
             LineGraph lineG = new LineGraph()
             {
+                Name = "traceOrdinary",
                 Stroke = Brushes.Gray,
                 StrokeThickness = 1,
+                DataSource = compositeDataSource
             };
-
-            lineG.DataSource = compositeDataSource;
-
-            traceChartPlotter.Children.RemoveAll(lineG.GetType());
+            if (((LineGraph)traceChartPlotter.FindName("traceOrdinary")) == null)
+            {
+                traceChartPlotter.RegisterName("traceOrdinary", lineG);
+            }
             traceChartPlotter.Viewport.FitToView();
+            //加入要绘制的图
             traceChartPlotter.Children.Add(lineG);
+            traceChartPlotter.LegendVisible = false;
         }
 
+        /// <summary>
+        /// 绘制三个姿态角的数据图，内部函数
+        /// </summary>
+        /// <param name="whichAngle">当前绘制的姿态角，可选姿态角：pitch,yaw,roll</param>
+        /// <example>plotAngle(pitch);// 绘制俯仰角姿态的数据图</example>
         private void plotAngle(string whichAngle) {
-            // 例子，绘制俯仰角
+
+            normalizeSpan.Reset();
+            analyzeSpan.Reset();
+
             List<DateTime> dateTimeList = new List<DateTime>();
             List<double> angleList = new List<double>();
             if (whichAngle == "pitch") {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
                 {
-                    dateTimeList.Add(TimeUtils.strToDateTime(key));
+                    dateTimeList.Add(TimeUtils.strToDateTime(key)); 
                     angleList.Add(flightBeanList[indexDict[key]].pitch);
                 }
 
@@ -327,7 +373,7 @@ namespace UAV_Info
                 plotPitch.Viewport.FitToView();
                 plotPitch.Children.Add(lineG);
             } else if (whichAngle == "yaw") {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle))
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(flightBeanList[indexDict[key]].yaw);
@@ -346,7 +392,7 @@ namespace UAV_Info
                 plotYaw.Children.Add(lineG);
             }
             else {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle))
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(flightBeanList[indexDict[key]].roll);
@@ -366,6 +412,12 @@ namespace UAV_Info
             }
         }
 
+        /// <summary>
+        /// 绘制规范化之后的姿态数据图
+        /// 在成功导入数据并绘制原始姿态数据图之后，选择时间域，以此做规范化，并绘制规范化后的姿态数据图
+        /// </summary>
+        /// <param name="whichAngle">当前绘制的姿态角，可选姿态角：pitch,yaw,roll</param>
+        /// <example>plotNormalizedAngle(pitch);// 绘制俯仰角姿态的规范化数据图</example>
         private void plotNormalizedAngle(string whichAngle)
         {
             // 例子，绘制俯仰角
@@ -373,7 +425,7 @@ namespace UAV_Info
             List<double> angleList = new List<double>();
             if (whichAngle == "pitch")
             {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(normalizedFlightBeanList[indexDict[key]].pitch);
@@ -393,7 +445,7 @@ namespace UAV_Info
             }
             else if (whichAngle == "yaw")
             {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(normalizedFlightBeanList[indexDict[key]].yaw);
@@ -413,7 +465,7 @@ namespace UAV_Info
             }
             else
             {
-                foreach (string key in indexDict.Keys)
+                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(normalizedFlightBeanList[indexDict[key]].roll);
@@ -434,6 +486,12 @@ namespace UAV_Info
 
         }
 
+        /// <summary>
+        /// 在点击了规范化之后，根据在原始姿态图中所选择的区域，得到用作校准的时间区域，分割得到区域中的
+        /// 所需数据，并计算零点值，调用plotNormalizedAngle函数绘制规范化之后的姿态数据图
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void onClick_NormalizeAngle(object sender = null, EventArgs e = null) {
             //获取时间区间
             DateTime dateTimeA = dateAxisPitch.ConvertFromDouble(normalizeSpan.valueOfLineA);
@@ -446,7 +504,6 @@ namespace UAV_Info
 
             //超出时间范围，则校正为时间边界
             if (dateTimeA < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
-
             {
                 dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
             }
@@ -493,9 +550,7 @@ namespace UAV_Info
             }
 
             normalizedFlightBeanList = new List<FlightBean>(flightBeanList);
-            foreach (FlightBean fb in normalizedFlightBeanList) {
-                if (fb.pitch == FlightBean.NoneAngle)
-                    continue;
+            foreach (FlightBean fb in normalizedFlightBeanList.Where(fb => fb.pitch != FlightBean.NoneAngle)) {
                 fb.pitch -= meanOfPitch;
                 fb.yaw -= meanOfYaw;
                 fb.roll -= meanOfRoll;
@@ -505,20 +560,23 @@ namespace UAV_Info
             plotNormalizedAngle("roll");
         }
 
+        /// <summary>
+        /// 在规范化的姿态数据图中选择时间区域后，将在轨迹图中对应时间区域的部分进行高亮显示，
+        /// 并计算零点值，得到该分析区间得到姿态角的最大值最小值并显示
+        /// </summary>
         private void analyseAngleNormalized() {
             
             if (null == normalizedFlightBeanList)
                 return;
 
             //获取时间区间
-            DateTime dateTimeA = dateAxisPitchNormal.ConvertFromDouble(timeSpan.valueOfLineA);
-            DateTime dateTimeB = dateAxisPitchNormal.ConvertFromDouble(timeSpan.valueOfLineB);
+            DateTime dateTimeA = dateAxisPitchNormal.ConvertFromDouble(analyzeSpan.valueOfLineA);
+            DateTime dateTimeB = dateAxisPitchNormal.ConvertFromDouble(analyzeSpan.valueOfLineB);
 
             List<FlightBean> list = null;
 
             //超出时间范围，则校正为时间边界
             if (dateTimeA < TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0)))
-
             {
                 dateTimeA = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(0));
             }
@@ -535,7 +593,7 @@ namespace UAV_Info
                 dateTimeB = TimeUtils.strToDateTime(indexDict.Keys.ElementAt(indexDict.Keys.Count - 1));
             }
 
-
+            //截取分析区间的数据列表
             if (dateTimeA < dateTimeB)
             {
                 list = (from item in indexDict.Keys
@@ -558,11 +616,11 @@ namespace UAV_Info
                         ).ToList();
             }
 
-            //无符合标准的点，则不分析不高亮
+            //无符合标准的点，则不分析
             if(null == list || 0 == list.Count)
             {
-                plotTrace();
-                traceChartPlotter.LegendVisible = false;
+                clearHLight();
+                clearanalysisTextBox();
                 return;
             }
 
@@ -581,10 +639,14 @@ namespace UAV_Info
             rollMinTextBox.Text = minOfRoll.ToString("f2");
 
             //HighLight The Trace
-            List<double> latListHLight = (from item in list where item.lat != 0 select item.lat).ToList();
-            List<double> lngListHLight = (from item in list where item.lng != 0 select item.lng).ToList();
+            List<double> latListHLight = (from item in list where item.lat != FlightBean.NoneCoordinate select item.lat).ToList();
+            List<double> lngListHLight = (from item in list where item.lng != FlightBean.NoneCoordinate select item.lng).ToList();
+            //无可以高亮的轨迹，则不高亮
             if (latListHLight.Count != lngListHLight.Count || latListHLight.Count == 0)
+            {
+                clearHLight(); 
                 return;
+            }
 
             EnumerableDataSource<double> latHLightDataSource = new EnumerableDataSource<double>(latListHLight);
             latHLightDataSource.SetXMapping(y => y);
@@ -593,15 +655,26 @@ namespace UAV_Info
             CompositeDataSource compositeHLightDataSource = new CompositeDataSource(logHLightDataSource, latHLightDataSource);
             LineGraph lineGHLight = new LineGraph
             {
+                Name = "traceHLight",
                 Stroke = Brushes.Blue,
                 StrokeThickness = 3,
+                DataSource = compositeHLightDataSource
             };
             lineGHLight.DataSource = compositeHLightDataSource;
-            plotTrace();
+
+            if (((LineGraph)traceChartPlotter.FindName("traceHLight")) == null)
+            {
+                traceChartPlotter.RegisterName("traceHLight", lineGHLight);
+            }
             traceChartPlotter.Children.Add(lineGHLight);
             traceChartPlotter.LegendVisible = false;
         }
 
+        /// <summary>
+        /// 将姿态数据图zoom到合适的范围
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void animationTimer_Tick(object sender, EventArgs e)
         {
             Point pos = new Point(dateAxisPitch.ConvertToDouble(TimeUtils.strToDateTime(TimeUtils.toformatTime("160529163534"))), 0);
@@ -609,6 +682,10 @@ namespace UAV_Info
             plotPitch.Viewport.Visible.Zoom(zoomTo, 3.0);
         }
 
+        /// <summary>
+        /// 当重新打开姿态文件之后，需要清空已经绘制的姿态数据曲线，以及选择好的时间区域（以红线标注），
+        /// 还有对轨迹中的高亮区域去除高亮，清空姿态数据展示的6个文本框
+        /// </summary>
         private void clearWhenReopenAngleFile()
         {
             plotPitch.Children.RemoveAll(typeof(LineGraph));
@@ -617,16 +694,14 @@ namespace UAV_Info
             plotPitchNormal.Children.RemoveAll(typeof(LineGraph));
             plotYawNormal.Children.RemoveAll(typeof(LineGraph));
             plotRollNormal.Children.RemoveAll(typeof(LineGraph));
-            normalizeSpan.Reset();
-            timeSpan.Reset();
             clearanalysisTextBox();
+            clearHLight();
             btnNormlize.IsEnabled = false;
-            if (((LineGraph)traceChartPlotter.FindName("traceHLight")) != null) {
-                traceChartPlotter.Children.Remove((LineGraph)FindName("traceHLight"));
-                traceChartPlotter.UnregisterName("traceHLight");
-            }
         }
 
+        /// <summary>
+        /// 重置之后，或重新导入姿态数据文件，需清空三个姿态角，共6个文本框的文本
+        /// </summary>
         private void clearanalysisTextBox() {
             pitchMaxTextBox.Text = "";
             yawMaxTextBox.Text = "";
@@ -634,6 +709,19 @@ namespace UAV_Info
             pitchMinTextBox.Text = "";
             yawMinTextBox.Text = "";
             rollMinTextBox.Text = "";
+        }
+
+        /// <summary>
+        /// 清除高亮轨迹
+        /// </summary>
+        private void clearHLight()
+        {
+            if (((LineGraph)traceChartPlotter.FindName("traceHLight")) != null)
+            {
+                traceChartPlotter.Children.Remove((LineGraph)FindName("traceHLight"));
+                traceChartPlotter.UnregisterName("traceHLight");
+                traceChartPlotter.LegendVisible = false;
+            }
         }
     }
 }
