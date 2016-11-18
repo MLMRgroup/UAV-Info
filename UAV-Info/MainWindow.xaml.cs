@@ -88,7 +88,7 @@ namespace UAV_Info
           plotPitchNormal.Children.Remove(plotPitchNormal.KeyboardNavigation);
           plotYawNormal.Children.Remove(plotYawNormal.KeyboardNavigation);
           plotRollNormal.Children.Remove(plotRollNormal.KeyboardNavigation);
-          traceChartPlotter.Children.Remove(traceChartPlotter.KeyboardNavigation);
+          //traceChartPlotter.Children.Remove(traceChartPlotter.KeyboardNavigation);
 
           //添加双击描线事件
           plotPitch.MouseDoubleClick += onDoubleCkick_AngleChart;

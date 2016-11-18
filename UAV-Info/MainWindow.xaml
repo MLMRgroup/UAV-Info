@@ -19,7 +19,7 @@
                 <MenuItem Header="导入轨迹文件" Height="30" Width="110" Click="importTraceData"></MenuItem>
             </Menu>
         </TabPanel>
-        <d3:ChartPlotter  Name ="plotPitch" Width="379"  HorizontalAlignment="Left" Margin="33,49,0,490">
+        <d3:ChartPlotter Name ="plotPitch" Width="379"  HorizontalAlignment="Left" Margin="33,49,0,490">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis Name="axisPitch"/>
             </d3:ChartPlotter.VerticalAxis>
