@@ -75,7 +75,7 @@
                 <d3:HorizontalDateTimeAxis x:Name="dateAxisRollNormal"/>
             </d3:ChartPlotter.HorizontalAxis>
         </d3:ChartPlotter>
-        <d3:ChartPlotter Name="traceChartPlotter" Margin="33,0,0,10" HorizontalAlignment="Left" Width="379" Height="189" VerticalAlignment="Bottom">
+        <d3:ChartPlotter Name="traceChartPlotter" Margin="33,0,0,10" HorizontalAlignment="Left" Width="379" Height="189" VerticalAlignment="Bottom" MouseDoubleClick="scaleMap">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis x:Name="axisAlt" Margin="0,10,0,0"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -104,5 +104,6 @@
         <Button x:Name="btnNormlizeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="52,414,0,0" VerticalAlignment="Top" Width="62" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
         <Button x:Name="btnAnalyzeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="848,414,0,0" VerticalAlignment="Top" Width="62" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
         <Button Name="btnNormlize" Content="规范化" HorizontalAlignment="Left" Margin="289,414,0,0" VerticalAlignment="Top" Width="74" Click="onClick_NormalizeAngle" IsEnabled="False"/>
+        <Slider x:Name="sliderTraceZoom" IsSelectionRangeEnabled="True" HorizontalAlignment="Left" Height="140" Margin="440,0,0,37.5" VerticalAlignment="Bottom" Width="30" Orientation="Vertical" ValueChanged="slider_ValueChanged" Maximum="100" Visibility="Hidden"/>
     </Grid>
 </Window>
