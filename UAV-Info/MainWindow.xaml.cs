@@ -16,6 +16,7 @@ using Microsoft.Win32;
 using Microsoft.Research.DynamicDataDisplay;
 using System.IO;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
+using Microsoft.Research.DynamicDataDisplay.PointMarkers;
 using System.Windows.Threading;
 using System.Threading;
 //using System.Windows.Forms;
@@ -34,19 +35,27 @@ namespace UAV_Info
         private List<FlightBean> normalizedFlightBeanList;
 
         private bool isReopenAngleFile;
+
+        FlightBean maxOfPitch = null;
+        FlightBean maxOfYaw = null;
+        FlightBean maxOfRoll = null;
+        FlightBean minOfPitch = null;
+        FlightBean minOfYaw = null;
+        FlightBean minOfRoll = null;
+
         public MainWindow()
         {
             InitializeComponent();
             //设置背景颜色
             SolidColorBrush NewColor = new SolidColorBrush();
-            NewColor.Color = Color.FromArgb(255,110,204,210);
+            NewColor.Color = Color.FromArgb(255, 110, 204, 210);
             this.Background = NewColor;
 
             flightBeanList = new List<FlightBean>();
             indexDict = new Dictionary<string, int>();
             Loaded += new RoutedEventHandler(MainWindow_Loaded);
             isReopenAngleFile = false;
-            
+
 
         }
 
@@ -57,57 +66,57 @@ namespace UAV_Info
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-          /*plotPitch.Viewport.SetBinding(Viewport2D.VisibleProperty,
-                    new Binding("Visible") { Source = plotRoll.Viewport, Mode = BindingMode.TwoWay });
-            plotRoll.Viewport.SetBinding(Viewport2D.VisibleProperty,
-                    new Binding("Visible") { Source = plotYaw.Viewport, Mode = BindingMode.TwoWay });
-           */
-          //plotPitch.Children.Remove(plotPitch.MouseNavigation);
+            /*plotPitch.Viewport.SetBinding(Viewport2D.VisibleProperty,
+                      new Binding("Visible") { Source = plotRoll.Viewport, Mode = BindingMode.TwoWay });
+              plotRoll.Viewport.SetBinding(Viewport2D.VisibleProperty,
+                      new Binding("Visible") { Source = plotYaw.Viewport, Mode = BindingMode.TwoWay });
+             */
+            //plotPitch.Children.Remove(plotPitch.MouseNavigation);
 
-          //为plotter添加基准线组件
-          plotPitch.Children.Add(normalizeSpan.LineA);
-          plotPitch.Children.Add(normalizeSpan.LineB);
-          plotYaw.Children.Add(normalizeSpan.LineA);
-          plotYaw.Children.Add(normalizeSpan.LineB);
-          plotRoll.Children.Add(normalizeSpan.LineA);
-          plotRoll.Children.Add(normalizeSpan.LineB);
+            //为plotter添加基准线组件
+            plotPitch.Children.Add(normalizeSpan.LineA);
+            plotPitch.Children.Add(normalizeSpan.LineB);
+            plotYaw.Children.Add(normalizeSpan.LineA);
+            plotYaw.Children.Add(normalizeSpan.LineB);
+            plotRoll.Children.Add(normalizeSpan.LineA);
+            plotRoll.Children.Add(normalizeSpan.LineB);
 
-          plotPitchNormal.Children.Add(analyzeSpan.LineA);
-          plotPitchNormal.Children.Add(analyzeSpan.LineB);
-          plotYawNormal.Children.Add(analyzeSpan.LineA);
-          plotYawNormal.Children.Add(analyzeSpan.LineB);
-          plotRollNormal.Children.Add(analyzeSpan.LineA);
-          plotRollNormal.Children.Add(analyzeSpan.LineB);
+            plotPitchNormal.Children.Add(analyzeSpan.LineA);
+            plotPitchNormal.Children.Add(analyzeSpan.LineB);
+            plotYawNormal.Children.Add(analyzeSpan.LineA);
+            plotYawNormal.Children.Add(analyzeSpan.LineB);
+            plotRollNormal.Children.Add(analyzeSpan.LineA);
+            plotRollNormal.Children.Add(analyzeSpan.LineB);
 
-          //plotPitch.Viewport.Restrictions.Add();
-          //plotYaw.DefaultContextMenu.Remove();
+            //plotPitch.Viewport.Restrictions.Add();
+            //plotYaw.DefaultContextMenu.Remove();
 
-          //删去双击放大事件
-          plotPitch.Children.Remove(plotPitch.KeyboardNavigation);
-          plotYaw.Children.Remove(plotYaw.KeyboardNavigation);
-          plotRoll.Children.Remove(plotRoll.KeyboardNavigation);
-          plotPitchNormal.Children.Remove(plotPitchNormal.KeyboardNavigation);
-          plotYawNormal.Children.Remove(plotYawNormal.KeyboardNavigation);
-          plotRollNormal.Children.Remove(plotRollNormal.KeyboardNavigation);
-          //traceChartPlotter.Children.Remove(traceChartPlotter.KeyboardNavigation);
+            //删去双击放大事件
+            plotPitch.Children.Remove(plotPitch.KeyboardNavigation);
+            plotYaw.Children.Remove(plotYaw.KeyboardNavigation);
+            plotRoll.Children.Remove(plotRoll.KeyboardNavigation);
+            plotPitchNormal.Children.Remove(plotPitchNormal.KeyboardNavigation);
+            plotYawNormal.Children.Remove(plotYawNormal.KeyboardNavigation);
+            plotRollNormal.Children.Remove(plotRollNormal.KeyboardNavigation);
+            //traceChartPlotter.Children.Remove(traceChartPlotter.KeyboardNavigation);
 
-          //添加双击描线事件
-          plotPitch.MouseDoubleClick += onDoubleCkick_AngleChart;
-          plotYaw.MouseDoubleClick += onDoubleCkick_AngleChart;
-          plotRoll.MouseDoubleClick += onDoubleCkick_AngleChart;
+            //添加双击描线事件
+            plotPitch.MouseDoubleClick += onDoubleCkick_AngleChart;
+            plotYaw.MouseDoubleClick += onDoubleCkick_AngleChart;
+            plotRoll.MouseDoubleClick += onDoubleCkick_AngleChart;
 
-          plotPitchNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
-          plotYawNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
-          plotRollNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
+            plotPitchNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
+            plotYawNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
+            plotRollNormal.MouseDoubleClick += onDoubleCkick_AngleChart;
 
-          //添加坐标中的日期显示格式
-          cordPitch.XTextMapping = x => dateAxisPitch.ConvertFromDouble(x).ToString("HH:mm:ss");
-          cordYaw.XTextMapping = x => dateAxisYaw.ConvertFromDouble(x).ToString("HH:mm:ss");
-          cordRoll.XTextMapping = x => dateAxisRoll.ConvertFromDouble(x).ToString("HH:mm:ss");
-          cordPitchNormal.XTextMapping = x => dateAxisPitchNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
-          cordYawNormal.XTextMapping = x => dateAxisYawNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
-          cordRollNormal.XTextMapping = x => dateAxisRollNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
-          traceChartPlotter.PreviewKeyDown += Zoom;
+            //添加坐标中的日期显示格式
+            cordPitch.XTextMapping = x => dateAxisPitch.ConvertFromDouble(x).ToString("HH:mm:ss");
+            cordYaw.XTextMapping = x => dateAxisYaw.ConvertFromDouble(x).ToString("HH:mm:ss");
+            cordRoll.XTextMapping = x => dateAxisRoll.ConvertFromDouble(x).ToString("HH:mm:ss");
+            cordPitchNormal.XTextMapping = x => dateAxisPitchNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
+            cordYawNormal.XTextMapping = x => dateAxisYawNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
+            cordRollNormal.XTextMapping = x => dateAxisRollNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
+            traceChartPlotter.PreviewKeyDown += Zoom;
             // Add handler
             /*
             plotPitch.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
@@ -124,13 +133,13 @@ namespace UAV_Info
         private void OnClick_Reset(object sender, RoutedEventArgs e)
         {
             //重置规范化区间
-            if(sender.Equals(btnNormlizeSpanReset))
+            if (sender.Equals(btnNormlizeSpanReset))
             {
                 normalizeSpan.Reset();
                 btnNormlize.IsEnabled = false;
             }
             //重置分析区间
-            else if(sender.Equals(btnAnalyzeSpanReset))
+            else if (sender.Equals(btnAnalyzeSpanReset))
             {
                 analyzeSpan.Reset();
                 clearanalysisTextBox();
@@ -177,11 +186,13 @@ namespace UAV_Info
             {
                 analyzeSpan.AddLine(mousePositionInData.X);
             }
-            
-            if (normalizeSpan.IsSet) {
+
+            if (normalizeSpan.IsSet)
+            {
                 btnNormlize.IsEnabled = true;
             }
-            if (analyzeSpan.IsSet) {
+            if (analyzeSpan.IsSet)
+            {
                 analyseAngleNormalized();
             }
         }
@@ -193,19 +204,24 @@ namespace UAV_Info
         /// </summary>
         /// <param name="sender">事件对象</param>
         /// <param name="args">事件参数</param>
-        private void importAngleData(object sender, RoutedEventArgs args) {
+        private void importAngleData(object sender, RoutedEventArgs args)
+        {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            if (openFileDialog.ShowDialog() == true) {
-               string fileName = openFileDialog.FileName;
-                using(FileStream fs = File.Open(fileName, FileMode.Open)){
-                    if (!fileName.EndsWith(".GYT")) {
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string fileName = openFileDialog.FileName;
+                using (FileStream fs = File.Open(fileName, FileMode.Open))
+                {
+                    if (!fileName.EndsWith(".GYT"))
+                    {
                         MessageBox.Show("姿态文件格式有误，请选择.gpx文件", "警告");
                         args.Handled = true;
                         return;
                     }
                     StreamReader sr = new StreamReader(fs);
                     string s;
-                    try {
+                    try
+                    {
                         while ((s = sr.ReadLine()) != null)
                         {
                             string[] split = s.Split(',');
@@ -234,7 +250,8 @@ namespace UAV_Info
                             }
                         }
                     }
-                    catch {
+                    catch
+                    {
                         MessageBox.Show("姿态文件格式有误", "警告");
                         args.Handled = true;
                         return;
@@ -242,7 +259,8 @@ namespace UAV_Info
                 }
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
                 // 绘制无人机姿态角数据图
-                if (isReopenAngleFile) {
+                if (isReopenAngleFile)
+                {
                     clearWhenReopenAngleFile();
                 }
                 plotAngle("pitch");
@@ -253,8 +271,8 @@ namespace UAV_Info
                 animationTimer.Tick += animationTimer_Tick;
                 animationTimer.Start();
             }
-       }
-        
+        }
+
         //点击轨迹按钮
         private void importTraceData(object sender, RoutedEventArgs args)
         {
@@ -267,11 +285,11 @@ namespace UAV_Info
                 //若选择的不是gpx文件，则报错
                 if (fileName == null || !fileName.EndsWith(".gpx"))
                 {
-                    MessageBox.Show("轨迹文件格式错误，请选择.gpx文件","警告");
+                    MessageBox.Show("轨迹文件格式错误，请选择.gpx文件", "警告");
                     return;
                 }
                 //定义gpx_trans类对象，用来读GPX文件
-                gpx_trans gpx = new gpx_trans(indexDict,flightBeanList);
+                gpx_trans gpx = new gpx_trans(indexDict, flightBeanList);
                 //开始读
                 gpx.start(fileName);
                 //等待读完再进行下一步操作
@@ -301,10 +319,10 @@ namespace UAV_Info
             List<double> lngList = new List<double>();
 
             //获取轨迹数据
-            foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].lat != FlightBean.NoneCoordinate) )
+            foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].lat != FlightBean.NoneCoordinate))
             {
-                    latList.Add(flightBeanList[indexDict[key]].lat);
-                    lngList.Add(flightBeanList[indexDict[key]].lng);
+                latList.Add(flightBeanList[indexDict[key]].lat);
+                lngList.Add(flightBeanList[indexDict[key]].lng);
             }
 
             if (latList.Count != lngList.Count || latList.Count == 0)
@@ -349,17 +367,19 @@ namespace UAV_Info
         /// </summary>
         /// <param name="whichAngle">当前绘制的姿态角，可选姿态角：pitch,yaw,roll</param>
         /// <example>plotAngle(pitch);// 绘制俯仰角姿态的数据图</example>
-        private void plotAngle(string whichAngle) {
+        private void plotAngle(string whichAngle)
+        {
 
             normalizeSpan.Reset();
             analyzeSpan.Reset();
 
             List<DateTime> dateTimeList = new List<DateTime>();
             List<double> angleList = new List<double>();
-            if (whichAngle == "pitch") {
-                foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
+            if (whichAngle == "pitch")
+            {
+                foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle))
                 {
-                    dateTimeList.Add(TimeUtils.strToDateTime(key)); 
+                    dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(flightBeanList[indexDict[key]].pitch);
                 }
 
@@ -374,7 +394,9 @@ namespace UAV_Info
                 plotPitch.Children.RemoveAll(lineG.GetType());
                 plotPitch.Viewport.FitToView();
                 plotPitch.Children.Add(lineG);
-            } else if (whichAngle == "yaw") {
+            }
+            else if (whichAngle == "yaw")
+            {
                 foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle))
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
@@ -393,7 +415,8 @@ namespace UAV_Info
                 plotYaw.Viewport.FitToView();
                 plotYaw.Children.Add(lineG);
             }
-            else {
+            else
+            {
                 foreach (string key in indexDict.Keys.Where(key => flightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle))
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
@@ -427,7 +450,7 @@ namespace UAV_Info
             List<double> angleList = new List<double>();
             if (whichAngle == "pitch")
             {
-                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
+                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle))
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(normalizedFlightBeanList[indexDict[key]].pitch);
@@ -447,7 +470,7 @@ namespace UAV_Info
             }
             else if (whichAngle == "yaw")
             {
-                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
+                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle))
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(normalizedFlightBeanList[indexDict[key]].yaw);
@@ -467,7 +490,7 @@ namespace UAV_Info
             }
             else
             {
-                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle) )
+                foreach (string key in indexDict.Keys.Where(key => normalizedFlightBeanList[indexDict[key]].pitch != FlightBean.NoneAngle))
                 {
                     dateTimeList.Add(TimeUtils.strToDateTime(key));
                     angleList.Add(normalizedFlightBeanList[indexDict[key]].roll);
@@ -494,13 +517,15 @@ namespace UAV_Info
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onClick_NormalizeAngle(object sender = null, EventArgs e = null) {
+        private void onClick_NormalizeAngle(object sender = null, EventArgs e = null)
+        {
             //获取时间区间
             DateTime dateTimeA = dateAxisPitch.ConvertFromDouble(normalizeSpan.valueOfLineA);
             DateTime dateTimeB = dateAxisPitch.ConvertFromDouble(normalizeSpan.valueOfLineB);
 
             List<FlightBean> list = null;
-            if (indexDict.Keys.Count == 0) {
+            if (indexDict.Keys.Count == 0)
+            {
                 return;
             }
 
@@ -552,7 +577,8 @@ namespace UAV_Info
             }
 
             normalizedFlightBeanList = new List<FlightBean>(flightBeanList);
-            foreach (FlightBean fb in normalizedFlightBeanList.Where(fb => fb.pitch != FlightBean.NoneAngle)) {
+            foreach (FlightBean fb in normalizedFlightBeanList.Where(fb => fb.pitch != FlightBean.NoneAngle))
+            {
                 fb.pitch -= meanOfPitch;
                 fb.yaw -= meanOfYaw;
                 fb.roll -= meanOfRoll;
@@ -566,8 +592,9 @@ namespace UAV_Info
         /// 在规范化的姿态数据图中选择时间区域后，将在轨迹图中对应时间区域的部分进行高亮显示，
         /// 并计算零点值，得到该分析区间得到姿态角的最大值最小值并显示
         /// </summary>
-        private void analyseAngleNormalized() {
-            
+        private void analyseAngleNormalized()
+        {
+
             if (null == normalizedFlightBeanList)
                 return;
 
@@ -602,7 +629,7 @@ namespace UAV_Info
                         where (dateTimeA < TimeUtils.strToDateTime(item)
                                 && dateTimeB > TimeUtils.strToDateTime(item)
                                 //normalizedFlightBeanList的个数可能与indexDict不同
-                                && indexDict[item] < normalizedFlightBeanList.Count 
+                                && indexDict[item] < normalizedFlightBeanList.Count
                                 && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle)
                         select normalizedFlightBeanList[indexDict[item]]
                         ).ToList();
@@ -612,33 +639,64 @@ namespace UAV_Info
                 list = (from item in indexDict.Keys
                         where (dateTimeA > TimeUtils.strToDateTime(item)
                                 && dateTimeB < TimeUtils.strToDateTime(item)
-                                && indexDict[item] < normalizedFlightBeanList.Count  
+                                && indexDict[item] < normalizedFlightBeanList.Count
                                 && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle)
                         select normalizedFlightBeanList[indexDict[item]]
                         ).ToList();
             }
 
             //无符合标准的点，则不分析
-            if(null == list || 0 == list.Count)
+            if (null == list || 0 == list.Count)
             {
                 clearHLight();
                 clearanalysisTextBox();
                 return;
             }
 
-            double maxOfPitch = (from l in list select l.pitch).Max();
-            double minOfPitch = (from l in list select l.pitch).Min();
-            double maxOfYaw = (from l in list select l.yaw).Max();
-            double minOfYaw = (from l in list select l.yaw).Min();
-            double maxOfRoll = (from l in list select l.roll).Max();
-            double minOfRoll = (from l in list select l.roll).Min();
-            
-            pitchMaxTextBox.Text = maxOfPitch.ToString("f2");
-            yawMaxTextBox.Text = maxOfYaw.ToString("f2");
-            rollMaxTextBox.Text = maxOfRoll.ToString("f2");
-            pitchMinTextBox.Text = minOfPitch.ToString("f2");
-            yawMinTextBox.Text = minOfYaw.ToString("f2");
-            rollMinTextBox.Text = minOfRoll.ToString("f2");
+            maxOfPitch = list[0];
+            maxOfYaw = list[0];
+            maxOfRoll = list[0];
+            minOfPitch = list[0];
+            minOfYaw = list[0];
+            minOfRoll = list[0];
+
+            foreach (FlightBean bean in list)
+            {
+                maxOfPitch = bean.pitch > maxOfPitch.pitch ? bean : maxOfPitch;
+                maxOfYaw = bean.yaw > maxOfYaw.yaw ? bean : maxOfYaw;
+                maxOfRoll = bean.roll > maxOfRoll.roll ? bean : maxOfRoll;
+                minOfPitch = bean.pitch > minOfPitch.pitch ? minOfPitch : bean;
+                minOfYaw = bean.yaw > minOfYaw.yaw ? minOfYaw : bean;
+                minOfRoll = bean.roll > minOfRoll.roll ? minOfRoll : bean;
+            }
+
+            // double maxOfPitch = (from l in list select l.pi).Max();
+            // double minOfPitch = (from l in list select l.pitch).Min();
+            // double maxOfYaw = (from l in list select l.yaw).Max();
+            // double minOfYaw = (from l in list select l.yaw).Min();
+            // double maxOfRoll = (from l in list select l.roll).Max();
+            // double minOfRoll = (from l in list select l.roll).Min();
+
+            pitchMaxTextBox.Text = maxOfPitch.pitch.ToString("f2");
+            yawMaxTextBox.Text = maxOfYaw.yaw.ToString("f2");
+            rollMaxTextBox.Text = maxOfRoll.roll.ToString("f2");
+            pitchMinTextBox.Text = minOfPitch.pitch.ToString("f2");
+            yawMinTextBox.Text = minOfYaw.yaw.ToString("f2");
+            rollMinTextBox.Text = minOfRoll.roll.ToString("f2");
+
+            addMarkerOnPlotter(plotPitchNormal, maxOfPitch.time, maxOfPitch.pitch, "maxOfPitch", Brushes.Green);
+            addMarkerOnPlotter(plotPitchNormal, minOfPitch.time, minOfPitch.pitch, "minOfPitch", Brushes.GreenYellow);
+            addMarkerOnPlotter(plotYawNormal, maxOfYaw.time, maxOfYaw.yaw, "maxOfYaw", Brushes.HotPink);
+            addMarkerOnPlotter(plotYawNormal, minOfYaw.time, minOfYaw.yaw, "minOfYaw", Brushes.Firebrick);
+            addMarkerOnPlotter(plotRollNormal, maxOfRoll.time, maxOfRoll.roll, "maxOfRoll", Brushes.Black);
+            addMarkerOnPlotter(plotRollNormal, minOfRoll.time, minOfRoll.roll, "minOfRoll", Brushes.Purple);
+
+            addMarkerOnTrace(maxOfPitch, "maxOfPitch", Brushes.Green);
+            addMarkerOnTrace(minOfPitch, "minOfPitch", Brushes.GreenYellow);
+            addMarkerOnTrace(maxOfYaw, "maxOfYaw", Brushes.HotPink);
+            addMarkerOnTrace(minOfYaw, "minOfYaw", Brushes.Firebrick);
+            addMarkerOnTrace(maxOfRoll, "maxOfRoll", Brushes.Black);
+            addMarkerOnTrace(minOfRoll, "minOfRoll", Brushes.Purple);
 
             //HighLight The Trace
             List<double> latListHLight = (from item in list where item.lat != FlightBean.NoneCoordinate select item.lat).ToList();
@@ -646,7 +704,7 @@ namespace UAV_Info
             //无可以高亮的轨迹，则不高亮
             if (latListHLight.Count != lngListHLight.Count || latListHLight.Count == 0)
             {
-                clearHLight(); 
+                clearGraph(traceChartPlotter, "traceHLight");
                 return;
             }
 
@@ -672,6 +730,63 @@ namespace UAV_Info
             traceChartPlotter.LegendVisible = false;
         }
 
+        private void addMarkerOnPlotter(ChartPlotter plotter, string valueX, double valueY, string description, Brush brush)
+        {
+            List<DateTime> dateTimeList = new List<DateTime>();
+            List<double> angleList = new List<double>();
+            dateTimeList.Add(TimeUtils.strToDateTime(valueX));
+            angleList.Add(valueY);
+
+            EnumerableDataSource<DateTime> datesDataSource = new EnumerableDataSource<DateTime>(dateTimeList);
+            datesDataSource.SetXMapping(x => dateAxisPitchNormal.ConvertToDouble(x));
+            EnumerableDataSource<double> angleDataSource = new EnumerableDataSource<double>(angleList);
+            angleDataSource.SetYMapping(y => y);
+            CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
+
+            MarkerPointsGraph markerGraph = new MarkerPointsGraph
+            {
+                Name = null,
+                Marker = new CirclePointMarker { Size = 5, Fill = brush },
+                DataSource = compositeDataSource
+            };
+
+            if (((LineGraph)traceChartPlotter.FindName(description)) == null)
+            {
+                traceChartPlotter.RegisterName(description, markerGraph);
+            }
+            plotter.Children.Add(markerGraph);
+        }
+
+        private void addMarkerOnTrace(FlightBean bean, string description, Brush brush)
+        {
+            List<double> latList = new List<double>();
+            List<double> lngList = new List<double>();
+            if (FlightBean.NoneCoordinate == bean.lat)
+            {
+                return;
+            }
+            latList.Add(bean.lat);
+            lngList.Add(bean.lng);
+
+            EnumerableDataSource<double> latDataSource = new EnumerableDataSource<double>(latList);
+            latDataSource.SetXMapping(y => y);
+            EnumerableDataSource<double> lngDataSource = new EnumerableDataSource<double>(lngList);
+            lngDataSource.SetYMapping(x => x);
+            CompositeDataSource compositeDataSource = new CompositeDataSource(latDataSource, lngDataSource);
+
+            MarkerPointsGraph markerGraph = new MarkerPointsGraph
+            {
+                Name = null,
+                Marker = new CirclePointMarker { Size = 10, Fill = brush },
+                DataSource = compositeDataSource
+            };
+
+            if (((MarkerPointsGraph)traceChartPlotter.FindName(description)) == null)
+            {
+                traceChartPlotter.RegisterName(description, markerGraph);
+            }
+            traceChartPlotter.Children.Add(markerGraph);
+        }
         /// <summary>
         /// 将姿态数据图zoom到合适的范围
         /// </summary>
@@ -704,7 +819,8 @@ namespace UAV_Info
         /// <summary>
         /// 重置之后，或重新导入姿态数据文件，需清空三个姿态角，共6个文本框的文本
         /// </summary>
-        private void clearanalysisTextBox() {
+        private void clearanalysisTextBox()
+        {
             pitchMaxTextBox.Text = "";
             yawMaxTextBox.Text = "";
             rollMaxTextBox.Text = "";
@@ -718,17 +834,31 @@ namespace UAV_Info
         /// </summary>
         private void clearHLight()
         {
-            if (((LineGraph)traceChartPlotter.FindName("traceHLight")) != null)
+            clearGraph(traceChartPlotter, "traceHLight");
+            clearGraph(plotPitchNormal, "maxOfPitch");
+            clearGraph(plotYawNormal, "maxOfYaw");
+            clearGraph(plotRollNormal, "maxOfRoll");
+            clearGraph(plotPitchNormal, "minOfPitch");
+            clearGraph(plotYawNormal, "minOfYaw");
+            clearGraph(plotRollNormal, "minOfRoll");
+        }
+
+        private void clearGraph(ChartPlotter plotter, string description)
+        {
+            if (plotter.FindName(description) != null)
             {
-                traceChartPlotter.Children.Remove((LineGraph)FindName("traceHLight"));
-                traceChartPlotter.UnregisterName("traceHLight");
-                traceChartPlotter.LegendVisible = false;
+                if (description == "traceHLight")
+                    plotter.Children.Remove((LineGraph)FindName(description));
+                else
+                    plotter.Children.Remove((MarkerPointsGraph)FindName(description));
+                plotter.UnregisterName(description);
+                plotter.LegendVisible = false;
             }
         }
 
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            double step = (e.NewValue - e.OldValue) /50;
+            double step = (e.NewValue - e.OldValue) / 50;
             double unitX = traceChartPlotter.Viewport.Visible.Width * step;
             double unitY = traceChartPlotter.Viewport.Visible.Height * step;
             traceChartPlotter.Viewport.Visible = new Rect(traceChartPlotter.Viewport.Visible.X + unitX, traceChartPlotter.Viewport.Visible.Y + unitY, traceChartPlotter.Viewport.Visible.Width - 2 * unitX, traceChartPlotter.Viewport.Visible.Height - 2 * unitY);
@@ -748,19 +878,21 @@ namespace UAV_Info
             }
         }
 
-        
-        private void scaleMap(object sender, MouseEventArgs e) {
+
+        private void scaleMap(object sender, MouseEventArgs e)
+        {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 if (sliderTraceZoom.Visibility == Visibility.Visible)
                 {
                     sliderTraceZoom.Visibility = Visibility.Hidden;
                 }
-                else {
+                else
+                {
                     sliderTraceZoom.Visibility = Visibility.Visible;
                 }
             }
-            
+
         }
 
     }
