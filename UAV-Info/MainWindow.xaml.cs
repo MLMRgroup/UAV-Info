@@ -46,6 +46,7 @@ namespace UAV_Info
             indexDict = new Dictionary<string, int>();
             Loaded += new RoutedEventHandler(MainWindow_Loaded);
             isReopenAngleFile = false;
+            
 
         }
 
@@ -106,17 +107,17 @@ namespace UAV_Info
           cordPitchNormal.XTextMapping = x => dateAxisPitchNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
           cordYawNormal.XTextMapping = x => dateAxisYawNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
           cordRollNormal.XTextMapping = x => dateAxisRollNormal.ConvertFromDouble(x).ToString("HH:mm:ss");
+          traceChartPlotter.PreviewKeyDown += Zoom;
+            // Add handler
+            /*
+            plotPitch.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
+            plotYaw.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
+            plotRoll.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
 
-          // Add handler
-          /*
-          plotPitch.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
-          plotYaw.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
-          plotRoll.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
-
-          plotPitchNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
-          plotYawNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
-          plotRollNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
-          */
+            plotPitchNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
+            plotYawNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
+            plotRollNormal.Viewport.PropertyChanged += new EventHandler<ExtendedPropertyChangedEventArgs>(Viewport_PropertyChanged);
+            */
         }
 
         //重置按钮响应函数
@@ -733,6 +734,21 @@ namespace UAV_Info
             traceChartPlotter.Viewport.Visible = new Rect(traceChartPlotter.Viewport.Visible.X + unitX, traceChartPlotter.Viewport.Visible.Y + unitY, traceChartPlotter.Viewport.Visible.Width - 2 * unitX, traceChartPlotter.Viewport.Visible.Height - 2 * unitY);
         }
 
+        private void Zoom(object sender, KeyEventArgs e)
+        {
+            double unitX = traceChartPlotter.Viewport.Visible.Width * 0.02;
+            double unitY = traceChartPlotter.Viewport.Visible.Height * 0.02;
+            if (System.Windows.Input.Key.Add == e.Key)
+            {
+                traceChartPlotter.Viewport.Visible = new Rect(traceChartPlotter.Viewport.Visible.X + unitX, traceChartPlotter.Viewport.Visible.Y + unitY, traceChartPlotter.Viewport.Visible.Width - 2 * unitX, traceChartPlotter.Viewport.Visible.Height - 2 * unitY);
+            }
+            else if (System.Windows.Input.Key.Subtract == e.Key)
+            {
+                traceChartPlotter.Viewport.Visible = new Rect(traceChartPlotter.Viewport.Visible.X - unitX, traceChartPlotter.Viewport.Visible.Y - unitY, traceChartPlotter.Viewport.Visible.Width + 2 * unitX, traceChartPlotter.Viewport.Visible.Height + 2 * unitY);
+            }
+        }
+
+        
         private void scaleMap(object sender, MouseEventArgs e) {
             if (e.LeftButton == MouseButtonState.Pressed)
             {

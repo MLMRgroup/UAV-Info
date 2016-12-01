@@ -26,14 +26,21 @@ namespace UAV_Info
         /// <returns>标准化后的时间字符串</returns>
         /// </summary>
         /// <example>
-        /// gpx文件中时间格式2016-05-29T16:36:09Z，GYT文件中的时间格式160529174133, 统一化为yyyy-MM-dd hh:mm:ss
+        /// gpx文件中时间格式2016-05-29T16:36:09Z或2016-11-30T05:52:40.040Z，GYT文件中的时间格式160529174133, 统一化为yyyy-MM-dd hh:mm:ss
         /// </example>
         ///
         public static string toformatTime(string time) {
             string formatTime;
             if (time.Contains('T'))
             {
-                formatTime = time.Replace('T', ' ').Substring(0, time.Length - 1);
+                if (time.Contains('.'))
+                {
+                    string splits = time.Split('.')[0];
+                    formatTime = splits.Replace('T', ' ');
+                }
+                else {
+                    formatTime = time.Replace('T', ' ').Substring(0, time.Length - 1);
+                }
             }
             else {
                 formatTime = "20" + time.Substring(0, 2) + "-" + time.Substring(2, 2) + "-" + time.Substring(4, 2) + " " + time.Substring(6, 2) + ":" + time.Substring(8, 2) + ":" + time.Substring(10, 2);
