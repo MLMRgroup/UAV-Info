@@ -6,20 +6,20 @@
         xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0" 
         xmlns:local="clr-namespace:UAV_Info"
         mc:Ignorable="d"
-        Title="无人机数据分析" Height="680.5" Width="1079" WindowStartupLocation="CenterScreen" MaxHeight="680.5" MinHeight="680.5" MaxWidth="1079" MinWidth="1079">
-    <Grid Margin="0,0,2,-3">
+        Title="无人机数据分析" Height="700" Width="1100" WindowStartupLocation="CenterScreen" SizeChanged="Window_SizeChanged">
+    <Grid Margin="8,0,-6,-3">
         <Grid.Background>
             <ImageBrush Stretch="Uniform" ImageSource="iconss.bmp"   Opacity="0.3"/>
         </Grid.Background>
-        <TabPanel x:Name="tabPanel" Height="30" Margin="10,10,706,0" VerticalAlignment="Top" Background="#6ECCD2">
+        <TabPanel x:Name="tabPanel" Height="30" Margin="10,10,814,0" VerticalAlignment="Top" Background="#6ECCD2">
             <Menu x:Name="menu_1" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="110" Background="#6ECCD2">
-                <MenuItem Header="导入姿态文件" Height="30" Width="110" Click="importAngleData"></MenuItem>
+                <MenuItem Header="导入姿态文件" Height="30" Width="110" Click="importAngleData" FontFamily="Microsoft YaHei UI Light" FontSize="16"></MenuItem>
             </Menu>
-            <Menu x:Name="menu_2" Margin="0,0,-100,0" d:LayoutOverrides="HorizontalAlignment" Background="#6ECCD2">
-                <MenuItem Header="导入轨迹文件" Height="30" Width="110" Click="importTraceData"></MenuItem>
+            <Menu x:Name="menu_2" Margin="0,0,-19,0" Background="#6ECCD2">
+                <MenuItem Header="导入轨迹文件" Height="30" Width="110" Click="importTraceData" FontFamily="Microsoft YaHei UI Light" FontSize="16"></MenuItem>
             </Menu>
         </TabPanel>
-        <d3:ChartPlotter Name ="plotPitch" Width="379"  HorizontalAlignment="Left" Margin="33,49,0,490">
+        <d3:ChartPlotter Name ="plotPitch" Width="379"  HorizontalAlignment="Left" Margin="33,49,0,510" >
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis Name="axisPitch"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -28,7 +28,7 @@
             </d3:ChartPlotter.HorizontalAxis>
             <d3:CursorCoordinateGraph Name="cordPitch"/>
         </d3:ChartPlotter>
-        <d3:ChartPlotter Name ="plotYaw" Width="379"  HorizontalAlignment="Left" Margin="33,167,0,371">
+        <d3:ChartPlotter Name ="plotYaw" Width="379"  HorizontalAlignment="Left" Margin="33,167,0,391">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis Name="axisYaw"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -38,7 +38,7 @@
             <d3:CursorCoordinateGraph Name="cordYaw" Margin="0,0,-4,0"/>
         </d3:ChartPlotter>
 
-        <d3:ChartPlotter Name ="plotRoll"  Width="379"  HorizontalAlignment="Left" Margin="33,286,0,248">
+        <d3:ChartPlotter Name ="plotRoll"  Width="379"  HorizontalAlignment="Left" Margin="33,286,0,268">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis Name="axisRoll"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -82,28 +82,28 @@
 
             <d3:Header FontFamily="Arial" Content=""/>
             <d3:VerticalAxisTitle FontFamily="Arial" Content=""/>
-            <d3:HorizontalAxisTitle FontFamily="Arial" Content="二维地图轨迹"/>
-            <d3:CursorCoordinateGraph Name="cordMap" Height="152" VerticalAlignment="Bottom" Margin="0,-5,3,0" RenderTransformOrigin="0.504,0.527"/>
+            <d3:HorizontalAxisTitle Content="二维地图轨迹" FontSize="18"/>
+            <d3:CursorCoordinateGraph Name="cordMap" Height="152" VerticalAlignment="Bottom" Margin="0,0,1,-5" RenderTransformOrigin="0.507,0.553"/>
         </d3:ChartPlotter>
-        <Label x:Name="label" Content="俯仰角" HorizontalAlignment="Right" Height="30" Margin="0,0,364,156" VerticalAlignment="Bottom" Width="60"/>
-        <Label x:Name="label_Copy" Content="滚转角" HorizontalAlignment="Right" Height="30" Margin="0,0,364,108" VerticalAlignment="Bottom" Width="60"/>
-        <Label x:Name="label_Copy1" Content="偏航角" HorizontalAlignment="Right" Height="30" Margin="0,0,364,52" VerticalAlignment="Bottom" Width="60"/>
-        <Label x:Name="label_Copy2" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,279,156" VerticalAlignment="Bottom" Width="50"/>
-        <Label x:Name="label_Copy3" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,279,108" VerticalAlignment="Bottom" Width="50"/>
-        <Label x:Name="label_Copy4" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,279,52" VerticalAlignment="Bottom" Width="50"/>
-        <Label x:Name="label_Copy5" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,121,156" VerticalAlignment="Bottom" Width="50"/>
-        <TextBox x:Name="pitchMaxTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,203,161" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <TextBox x:Name="rollMaxTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,203,113" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <TextBox x:Name="yawMaxTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,203,57" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <TextBox x:Name="pitchMinTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,46,161" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <TextBox x:Name="rollMinTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,46,113" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55" RenderTransformOrigin="0.827,0.84"/>
-        <TextBox x:Name="yawMinTextBox" HorizontalAlignment="Right" Height="25" Margin="0,0,46,57" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55"/>
-        <Label x:Name="label_Copy6" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,121,108" VerticalAlignment="Bottom" Width="50"/>
-        <Label x:Name="label_Copy7" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,121,52" VerticalAlignment="Bottom" Width="50"/>
+        <Label x:Name="label" Content="俯仰角" HorizontalAlignment="Right" Height="30" Margin="0,0,364,148" VerticalAlignment="Bottom" Width="60" FontSize="18" FontWeight="Bold"/>
+        <Label x:Name="label_Copy" Content="滚转角" HorizontalAlignment="Right" Height="30" Margin="0,0,364,90" VerticalAlignment="Bottom" Width="60" FontSize="18" FontWeight="Bold"/>
+        <Label x:Name="label_Copy1" Content="偏航角" HorizontalAlignment="Right" Height="30" Margin="0,0,364,30" VerticalAlignment="Bottom" Width="60" FontSize="18" FontWeight="Bold"/>
+        <Label x:Name="label_Copy2" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,263,148" VerticalAlignment="Bottom" Width="66" FontSize="18"/>
+        <Label x:Name="label_Copy3" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,263,90" VerticalAlignment="Bottom" Width="66" FontSize="18"/>
+        <Label x:Name="label_Copy4" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,263,30" VerticalAlignment="Bottom" Width="66" FontSize="18"/>
+        <Label x:Name="label_Copy5" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,106,148" VerticalAlignment="Bottom" Width="65" FontSize="18"/>
+        <TextBox x:Name="pitchMaxTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,196,153" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="62"  FontSize="20"/>
+        <TextBox x:Name="rollMaxTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,196,95" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="62" FontSize="20"/>
+        <TextBox x:Name="yawMaxTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,196,35" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="62" FontSize="20"/>
+        <TextBox x:Name="pitchMinTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,46,153" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55" FontSize="20"/>
+        <TextBox x:Name="rollMinTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,46,90" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55" RenderTransformOrigin="0.827,0.84" FontSize="20"/>
+        <TextBox x:Name="yawMinTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,46,30" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55" FontSize="20"/>
+        <Label x:Name="label_Copy6" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,106,90" VerticalAlignment="Bottom" Width="65" FontSize="18"/>
+        <Label x:Name="label_Copy7" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,106,25" VerticalAlignment="Bottom" Width="65" FontSize="18"/>
 
-        <Button x:Name="btnNormlizeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="52,414,0,0" VerticalAlignment="Top" Width="62" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
-        <Button x:Name="btnAnalyzeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="848,414,0,0" VerticalAlignment="Top" Width="62" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset"/>
-        <Button Name="btnNormlize" Content="规范化" HorizontalAlignment="Left" Margin="289,414,0,0" VerticalAlignment="Top" Width="74" Click="onClick_NormalizeAngle" IsEnabled="False"/>
+        <Button x:Name="btnNormlizeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="68,428,0,0" VerticalAlignment="Top" Width="80" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset" FontSize="18"/>
+        <Button x:Name="btnAnalyzeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="852,428,0,0" VerticalAlignment="Top" Width="71" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset" FontSize="18"/>
+        <Button Name="btnNormlize" Content="规范化" HorizontalAlignment="Left" Margin="296,428,0,0" VerticalAlignment="Top" Width="92" Click="onClick_NormalizeAngle" IsEnabled="False" FontSize="18"/>
         <Slider x:Name="sliderTraceZoom" IsSelectionRangeEnabled="True" HorizontalAlignment="Left" Height="140" Margin="440,0,0,37.5" VerticalAlignment="Bottom" Width="30" Orientation="Vertical" ValueChanged="slider_ValueChanged" Maximum="100" Visibility="Hidden"/>
     </Grid>
 </Window>

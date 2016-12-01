@@ -34,6 +34,7 @@ namespace UAV_Info
         private List<FlightBean> normalizedFlightBeanList;
 
         private bool isReopenAngleFile;
+        private bool firstchange;
         public MainWindow()
         {
             InitializeComponent();
@@ -46,7 +47,7 @@ namespace UAV_Info
             indexDict = new Dictionary<string, int>();
             Loaded += new RoutedEventHandler(MainWindow_Loaded);
             isReopenAngleFile = false;
-
+            firstchange = true;
         }
 
         //normalizeSpan：规范化选取区间  analyzeSpan：分析选取区间
@@ -745,6 +746,136 @@ namespace UAV_Info
                 }
             }
             
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (firstchange)
+            {
+                firstchange = false;
+                return;
+            }
+            //窗口缩放比例
+            double Hscale=0,Wscale=0;
+            Hscale = e.NewSize.Height / e.PreviousSize.Height;
+            Wscale = e.NewSize.Width / e.PreviousSize.Width;
+
+            //设置图的大小和位置
+            traceChartPlotter.Height = Hscale * traceChartPlotter.Height;
+            traceChartPlotter.Width = Wscale * traceChartPlotter.Width;
+            traceChartPlotter.Margin = setMargin(traceChartPlotter.Margin,Hscale,Wscale);
+
+            plotRoll.Height = Hscale * plotRoll.Height;
+            plotRoll.Width = Wscale * plotRoll.Width;
+            plotRoll.Margin = setMargin(plotRoll.Margin, Hscale, Wscale);
+
+            plotYaw.Height = Hscale * plotYaw.Height;
+            plotYaw.Width = Wscale * plotYaw.Width;
+            plotYaw.Margin = setMargin(plotYaw.Margin, Hscale, Wscale);
+
+            plotPitch.Height = Hscale * plotPitch.Height;
+            plotPitch.Width = Wscale * plotPitch.Width;
+            plotPitch.Margin = setMargin(plotPitch.Margin, Hscale, Wscale);
+
+            plotRollNormal.Height = Hscale * plotRollNormal.Height;
+            plotRollNormal.Width = Wscale * plotRollNormal.Width;
+            plotRollNormal.Margin = setMargin(plotRollNormal.Margin, Hscale, Wscale);
+
+            plotYawNormal.Height = Hscale * plotYawNormal.Height;
+            plotYawNormal.Width = Wscale * plotYawNormal.Width;
+            plotYawNormal.Margin = setMargin(plotYawNormal.Margin, Hscale, Wscale);
+
+            plotPitchNormal.Height = Hscale * plotPitchNormal.Height;
+            plotPitchNormal.Width = Wscale * plotPitchNormal.Width;
+            plotPitchNormal.Margin = setMargin(plotPitchNormal.Margin, Hscale, Wscale);
+            //设置按钮的大小和位置
+            btnNormlizeSpanReset.Height = Hscale*btnNormlizeSpanReset.Height;
+            btnNormlizeSpanReset.Width = Wscale * btnNormlizeSpanReset.Width;
+            btnNormlizeSpanReset.Margin = setMargin(btnNormlizeSpanReset.Margin, Hscale, Wscale);
+
+            btnAnalyzeSpanReset.Height = Hscale*btnAnalyzeSpanReset.Height;
+            btnAnalyzeSpanReset.Width = Wscale * btnAnalyzeSpanReset.Width;
+            btnAnalyzeSpanReset.Margin = setMargin(btnAnalyzeSpanReset.Margin, Hscale, Wscale);
+
+            btnNormlize.Height = Hscale*btnNormlize.Height;
+            btnNormlize.Width = Wscale * btnNormlize.Width;
+            btnNormlize.Margin = setMargin(btnNormlize.Margin, Hscale, Wscale);
+
+            //设置文本的位置和大小
+            label.Height = Hscale * label.Height;
+            label.Width = Wscale * label.Width;
+            label.Margin = setMargin(label.Margin, Hscale, Wscale);
+
+            label_Copy.Height = Hscale * label_Copy.Height;
+            label_Copy.Width = Wscale * label_Copy.Width;
+            label_Copy.Margin = setMargin(label_Copy.Margin, Hscale, Wscale);
+
+            label_Copy1.Height = Hscale * label_Copy1.Height;
+            label_Copy1.Width = Wscale * label_Copy1.Width;
+            label_Copy1.Margin = setMargin(label_Copy1.Margin, Hscale, Wscale);
+
+            label_Copy2.Height = Hscale * label_Copy2.Height;
+            label_Copy2.Width = Wscale * label_Copy2.Width;
+            label_Copy2.Margin = setMargin(label_Copy2.Margin, Hscale, Wscale);
+
+            label_Copy3.Height = Hscale * label_Copy3.Height;
+            label_Copy3.Width = Wscale * label_Copy3.Width;
+            label_Copy3.Margin = setMargin(label_Copy3.Margin, Hscale, Wscale);
+
+            label_Copy4.Height = Hscale * label_Copy4.Height;
+            label_Copy4.Width = Wscale * label_Copy4.Width;
+            label_Copy4.Margin = setMargin(label_Copy4.Margin, Hscale, Wscale);
+
+            label_Copy5.Height = Hscale * label_Copy5.Height;
+            label_Copy5.Width = Wscale * label_Copy5.Width;
+            label_Copy5.Margin = setMargin(label_Copy5.Margin, Hscale, Wscale);
+
+            label_Copy6.Height = Hscale * label_Copy6.Height;
+            label_Copy6.Width = Wscale * label_Copy6.Width;
+            label_Copy6.Margin = setMargin(label_Copy6.Margin, Hscale, Wscale);
+
+            label_Copy7.Height = Hscale * label_Copy7.Height;
+            label_Copy7.Width = Wscale * label_Copy7.Width;
+            label_Copy7.Margin = setMargin(label_Copy7.Margin, Hscale, Wscale);
+
+            pitchMaxTextBox.Height = Hscale * pitchMaxTextBox.Height;
+            pitchMaxTextBox.Width = Wscale * pitchMaxTextBox.Width;
+            pitchMaxTextBox.Margin = setMargin(pitchMaxTextBox.Margin, Hscale, Wscale);
+
+            pitchMinTextBox.Height = Hscale * pitchMinTextBox.Height;
+            pitchMinTextBox.Width = Wscale * pitchMinTextBox.Width;
+            pitchMinTextBox.Margin = setMargin(pitchMinTextBox.Margin, Hscale, Wscale);
+
+            yawMaxTextBox.Height = Hscale * yawMaxTextBox.Height;
+            yawMaxTextBox.Width = Wscale * yawMaxTextBox.Width;
+            yawMaxTextBox.Margin = setMargin(yawMaxTextBox.Margin, Hscale, Wscale);
+
+            yawMinTextBox.Height = Hscale * yawMinTextBox.Height;
+            yawMinTextBox.Width = Wscale * yawMinTextBox.Width;
+            yawMinTextBox.Margin = setMargin(yawMinTextBox.Margin, Hscale, Wscale);
+
+            rollMaxTextBox.Height = Hscale * rollMaxTextBox.Height;
+            rollMaxTextBox.Width = Wscale * rollMaxTextBox.Width;
+            rollMaxTextBox.Margin = setMargin(rollMaxTextBox.Margin, Hscale, Wscale);
+
+            rollMinTextBox.Height = Hscale * rollMinTextBox.Height;
+            rollMinTextBox.Width = Wscale * rollMinTextBox.Width;
+            rollMinTextBox.Margin = setMargin(rollMinTextBox.Margin, Hscale, Wscale);
+
+            tabPanel.Height = Hscale * tabPanel.Height;
+            tabPanel.Width = Wscale * tabPanel.Width;
+            tabPanel.Margin = setMargin(tabPanel.Margin, Hscale, Wscale);
+
+        }
+
+        private Thickness setMargin(Thickness s,double Hscale,double Wscale)
+        {
+            Thickness result=new Thickness();
+            result.Left = s.Left * Wscale;
+            result.Right = s.Right * Wscale;
+            result.Bottom = s.Bottom * Hscale;
+            result.Top = s.Top * Hscale;
+            return result;
         }
 
     }
