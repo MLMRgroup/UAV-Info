@@ -9,7 +9,7 @@
         Title="无人机数据分析" Height="700" Width="1100" WindowStartupLocation="CenterScreen" SizeChanged="Window_SizeChanged">
     <Grid Margin="8,0,-6,-3">
         <Grid.Background>
-            <ImageBrush Stretch="Uniform" ImageSource="iconss.bmp"   Opacity="0.3"/>
+            <ImageBrush Stretch="Uniform" ImageSource="iconss.bmp"   Opacity="0.5"/>
         </Grid.Background>
         <TabPanel x:Name="tabPanel" Height="30" Margin="10,10,814,0" VerticalAlignment="Top" Background="#6ECCD2">
             <Menu x:Name="menu_1" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="110" Background="#6ECCD2">
@@ -20,6 +20,7 @@
             </Menu>
         </TabPanel>
         <d3:ChartPlotter Name ="plotPitch" Width="379"  HorizontalAlignment="Left" Margin="33,49,0,510" >
+
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis Name="axisPitch"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -28,7 +29,8 @@
             </d3:ChartPlotter.HorizontalAxis>
             <d3:CursorCoordinateGraph Name="cordPitch"/>
         </d3:ChartPlotter>
-        <d3:ChartPlotter Name ="plotYaw" Width="379"  HorizontalAlignment="Left" Margin="33,167,0,391">
+
+        <d3:ChartPlotter Name ="plotYaw" Width="379"  HorizontalAlignment="Left" Margin="33,167,0,371" Background="#E5C6F9FB">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis Name="axisYaw"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -38,7 +40,8 @@
             <d3:CursorCoordinateGraph Name="cordYaw" Margin="0,0,-4,0"/>
         </d3:ChartPlotter>
 
-        <d3:ChartPlotter Name ="plotRoll"  Width="379"  HorizontalAlignment="Left" Margin="33,286,0,268">
+        <d3:ChartPlotter Name ="plotRoll"  Width="379"  HorizontalAlignment="Left" Margin="33,286,0,248" Background="#E5C6F9FB">
+
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis Name="axisRoll"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -48,7 +51,7 @@
             </d3:ChartPlotter.HorizontalAxis>
         </d3:ChartPlotter>
 
-        <d3:ChartPlotter Name ="plotPitchNormal" Height="113" Margin="0,49,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="378">
+        <d3:ChartPlotter Name ="plotPitchNormal" Height="113" Margin="0,49,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="378" Background="#E5C6F9FB">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis x:Name="axisPitchNormal"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -57,7 +60,7 @@
             </d3:ChartPlotter.HorizontalAxis>
             <d3:CursorCoordinateGraph Name="cordPitchNormal"/>
         </d3:ChartPlotter>
-        <d3:ChartPlotter Name ="plotYawNormal" Height="114" Margin="0,167,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="378">
+        <d3:ChartPlotter Name ="plotYawNormal" Height="114" Margin="0,167,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="378" Background="#E5C6F9FB">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis x:Name="axisYawNormal"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -66,7 +69,7 @@
             </d3:ChartPlotter.HorizontalAxis>
             <d3:CursorCoordinateGraph Name="cordYawNormal"/>
         </d3:ChartPlotter>
-        <d3:ChartPlotter Name ="plotRollNormal" Height="118" Margin="0,286,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="378">
+        <d3:ChartPlotter Name ="plotRollNormal" Height="118" Margin="0,286,46,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="378" Background="#E5C6F9FB">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis x:Name="axisRollNormal"/>
             </d3:ChartPlotter.VerticalAxis>
@@ -75,7 +78,7 @@
                 <d3:HorizontalDateTimeAxis x:Name="dateAxisRollNormal"/>
             </d3:ChartPlotter.HorizontalAxis>
         </d3:ChartPlotter>
-        <d3:ChartPlotter Name="traceChartPlotter" Margin="33,0,0,10" HorizontalAlignment="Left" Width="379" Height="189" VerticalAlignment="Bottom" MouseDoubleClick="scaleMap">
+        <d3:ChartPlotter Name="traceChartPlotter" Background="#E5C6F9FB" Margin="33,0,0,10" HorizontalAlignment="Left" Width="379" Height="189" VerticalAlignment="Bottom" MouseDoubleClick="scaleMap">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis x:Name="axisAlt" Margin="0,10,0,0"/>
             </d3:ChartPlotter.VerticalAxis>
