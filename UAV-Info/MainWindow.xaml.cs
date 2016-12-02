@@ -968,6 +968,11 @@ namespace UAV_Info
             label.FontSize = label.FontSize * Hscale;
             label.Margin = setMargin(label.Margin, Hscale, Wscale);
 
+            label1.Height = Hscale * label1.Height;
+            label1.Width = Wscale * label1.Width;
+            label1.FontSize = label1.FontSize * Hscale;
+            label1.Margin = setMargin(label1.Margin, Hscale, Wscale);
+
             label_Copy.Height = Hscale * label_Copy.Height;
             label_Copy.Width = Wscale * label_Copy.Width;
             label_Copy.FontSize = label_Copy.FontSize*Hscale;

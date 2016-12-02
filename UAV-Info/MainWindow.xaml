@@ -114,6 +114,6 @@
         <Button x:Name="btnAnalyzeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="865,432.5,0,0" VerticalAlignment="Top" Width="71" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset" FontSize="18"/>
         <Button Name="btnNormlize" Content="规范化" HorizontalAlignment="Left" Margin="300,432.5,0,0" VerticalAlignment="Top" Width="92" Click="onClick_NormalizeAngle" IsEnabled="False" FontSize="18"/>
         <Slider x:Name="sliderTraceZoom" IsSelectionRangeEnabled="True" HorizontalAlignment="Left" Height="140" Margin="440,0,0,37.5" VerticalAlignment="Bottom" Width="30" Orientation="Vertical" ValueChanged="slider_ValueChanged" Maximum="100" Visibility="Hidden"/>
-        <Label x:Name="label1" Content="中华人民共和国公安部检测中心（北京）&#xD;&#xA;" Height="27" Margin="440,0,430,10" VerticalAlignment="Bottom"/>
+        <Label x:Name="label1" Content="中华人民共和国公安部检测中心（北京）&#xD;&#xA;" Height="27" Margin="417,0,387,10" VerticalAlignment="Bottom" FontSize="16"/>
     </Grid>
 </Window>
