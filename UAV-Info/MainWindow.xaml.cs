@@ -957,66 +957,83 @@ namespace UAV_Info
             //设置文本的位置和大小
             label.Height = Hscale * label.Height;
             label.Width = Wscale * label.Width;
+            label.FontSize = label.FontSize * Hscale;
             label.Margin = setMargin(label.Margin, Hscale, Wscale);
 
             label_Copy.Height = Hscale * label_Copy.Height;
             label_Copy.Width = Wscale * label_Copy.Width;
+            label_Copy.FontSize = label_Copy.FontSize*Hscale;
             label_Copy.Margin = setMargin(label_Copy.Margin, Hscale, Wscale);
 
             label_Copy1.Height = Hscale * label_Copy1.Height;
             label_Copy1.Width = Wscale * label_Copy1.Width;
+            label_Copy1.FontSize = label_Copy1.FontSize * Hscale;
             label_Copy1.Margin = setMargin(label_Copy1.Margin, Hscale, Wscale);
 
             label_Copy2.Height = Hscale * label_Copy2.Height;
             label_Copy2.Width = Wscale * label_Copy2.Width;
+            label_Copy2.FontSize = label_Copy2.FontSize * Hscale;
             label_Copy2.Margin = setMargin(label_Copy2.Margin, Hscale, Wscale);
 
             label_Copy3.Height = Hscale * label_Copy3.Height;
             label_Copy3.Width = Wscale * label_Copy3.Width;
+            label_Copy3.FontSize = label_Copy3.FontSize * Hscale;
             label_Copy3.Margin = setMargin(label_Copy3.Margin, Hscale, Wscale);
 
             label_Copy4.Height = Hscale * label_Copy4.Height;
             label_Copy4.Width = Wscale * label_Copy4.Width;
+            label_Copy4.FontSize = label_Copy4.FontSize * Hscale;
             label_Copy4.Margin = setMargin(label_Copy4.Margin, Hscale, Wscale);
 
             label_Copy5.Height = Hscale * label_Copy5.Height;
             label_Copy5.Width = Wscale * label_Copy5.Width;
+            label_Copy5.FontSize = label_Copy5.FontSize * Hscale;
             label_Copy5.Margin = setMargin(label_Copy5.Margin, Hscale, Wscale);
 
             label_Copy6.Height = Hscale * label_Copy6.Height;
             label_Copy6.Width = Wscale * label_Copy6.Width;
+            label_Copy6.FontSize = label_Copy6.FontSize * Hscale;
             label_Copy6.Margin = setMargin(label_Copy6.Margin, Hscale, Wscale);
 
             label_Copy7.Height = Hscale * label_Copy7.Height;
             label_Copy7.Width = Wscale * label_Copy7.Width;
+            label_Copy7.FontSize = label_Copy7.FontSize * Hscale;
             label_Copy7.Margin = setMargin(label_Copy7.Margin, Hscale, Wscale);
 
             pitchMaxTextBox.Height = Hscale * pitchMaxTextBox.Height;
             pitchMaxTextBox.Width = Wscale * pitchMaxTextBox.Width;
+            pitchMaxTextBox.FontSize = pitchMaxTextBox.FontSize * Hscale;
             pitchMaxTextBox.Margin = setMargin(pitchMaxTextBox.Margin, Hscale, Wscale);
 
             pitchMinTextBox.Height = Hscale * pitchMinTextBox.Height;
             pitchMinTextBox.Width = Wscale * pitchMinTextBox.Width;
+            pitchMinTextBox.FontSize = pitchMinTextBox.FontSize * Hscale;
             pitchMinTextBox.Margin = setMargin(pitchMinTextBox.Margin, Hscale, Wscale);
 
             yawMaxTextBox.Height = Hscale * yawMaxTextBox.Height;
             yawMaxTextBox.Width = Wscale * yawMaxTextBox.Width;
+            yawMaxTextBox.FontSize = yawMaxTextBox.FontSize * Hscale;
             yawMaxTextBox.Margin = setMargin(yawMaxTextBox.Margin, Hscale, Wscale);
 
             yawMinTextBox.Height = Hscale * yawMinTextBox.Height;
             yawMinTextBox.Width = Wscale * yawMinTextBox.Width;
+            yawMinTextBox.FontSize = yawMinTextBox.FontSize * Hscale;
             yawMinTextBox.Margin = setMargin(yawMinTextBox.Margin, Hscale, Wscale);
 
             rollMaxTextBox.Height = Hscale * rollMaxTextBox.Height;
             rollMaxTextBox.Width = Wscale * rollMaxTextBox.Width;
+            rollMaxTextBox.FontSize = rollMaxTextBox.FontSize * Hscale;
             rollMaxTextBox.Margin = setMargin(rollMaxTextBox.Margin, Hscale, Wscale);
 
             rollMinTextBox.Height = Hscale * rollMinTextBox.Height;
             rollMinTextBox.Width = Wscale * rollMinTextBox.Width;
+            rollMinTextBox.FontSize = rollMinTextBox.FontSize * Hscale;
             rollMinTextBox.Margin = setMargin(rollMinTextBox.Margin, Hscale, Wscale);
 
             tabPanel.Height = Hscale * tabPanel.Height;
             tabPanel.Width = Wscale * tabPanel.Width;
+            menu_1.FontSize = menu_1.FontSize * Hscale;
+            menu_2.FontSize = menu_2.FontSize * Hscale;
             tabPanel.Margin = setMargin(tabPanel.Margin, Hscale, Wscale);
 
         }
