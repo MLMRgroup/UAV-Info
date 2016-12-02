@@ -56,6 +56,13 @@ namespace UAV_Info
             Loaded += new RoutedEventHandler(MainWindow_Loaded);
             isReopenAngleFile = false;
             firstchange = true;
+            traceChartPlotter.MainGrid.Margin = new Thickness(0, 10, 10, 0);
+            plotPitch.MainGrid.Margin = new Thickness(0, 10, 10, 0);
+            plotYaw.MainGrid.Margin = new Thickness(0, 10, 10, 0);
+            plotRoll.MainGrid.Margin = new Thickness(0, 10, 10, 0);
+            plotPitchNormal.MainGrid.Margin = new Thickness(0, 10, 10, 0);
+            plotYawNormal.MainGrid.Margin = new Thickness(0, 10, 10, 0);
+            plotRollNormal.MainGrid.Margin = new Thickness(0, 10, 10, 0);
         }
 
         //normalizeSpan：规范化选取区间  analyzeSpan：分析选取区间
@@ -344,6 +351,7 @@ namespace UAV_Info
             EnumerableDataSource<double> logDataSource = new EnumerableDataSource<double>(lngList);
             logDataSource.SetYMapping(x => x);
             CompositeDataSource compositeDataSource = new CompositeDataSource(logDataSource, latDataSource);
+            
             LineGraph lineG = new LineGraph()
             {
                 Name = "traceOrdinary",
@@ -684,18 +692,18 @@ namespace UAV_Info
             rollMinTextBox.Text = minOfRoll.roll.ToString("f2");
 
             addMarkerOnPlotter(plotPitchNormal, maxOfPitch.time, maxOfPitch.pitch, "maxOfPitch", Brushes.Green);
-            addMarkerOnPlotter(plotPitchNormal, minOfPitch.time, minOfPitch.pitch, "minOfPitch", Brushes.GreenYellow);
-            addMarkerOnPlotter(plotYawNormal, maxOfYaw.time, maxOfYaw.yaw, "maxOfYaw", Brushes.HotPink);
-            addMarkerOnPlotter(plotYawNormal, minOfYaw.time, minOfYaw.yaw, "minOfYaw", Brushes.Firebrick);
-            addMarkerOnPlotter(plotRollNormal, maxOfRoll.time, maxOfRoll.roll, "maxOfRoll", Brushes.Black);
-            addMarkerOnPlotter(plotRollNormal, minOfRoll.time, minOfRoll.roll, "minOfRoll", Brushes.Purple);
+            addMarkerOnPlotter(plotPitchNormal, minOfPitch.time, minOfPitch.pitch, "minOfPitch", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF48FF04")));
+            addMarkerOnPlotter(plotYawNormal, maxOfYaw.time, maxOfYaw.yaw, "maxOfYaw", Brushes.Black);
+            addMarkerOnPlotter(plotYawNormal, minOfYaw.time, minOfYaw.yaw, "minOfYaw", Brushes.Purple);
+            addMarkerOnPlotter(plotRollNormal, maxOfRoll.time, maxOfRoll.roll, "maxOfRoll", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFF509AA")));
+            addMarkerOnPlotter(plotRollNormal, minOfRoll.time, minOfRoll.roll, "minOfRoll", Brushes.Firebrick); 
 
-            addMarkerOnTrace(maxOfPitch, "maxOfPitch_trace", Brushes.Green);
-            addMarkerOnTrace(minOfPitch, "minOfPitch_trace", Brushes.GreenYellow);
-            addMarkerOnTrace(maxOfYaw, "maxOfYaw_trace", Brushes.HotPink);
-            addMarkerOnTrace(minOfYaw, "minOfYaw_trace", Brushes.Firebrick);
-            addMarkerOnTrace(maxOfRoll, "maxOfRoll_trace", Brushes.Black);
-            addMarkerOnTrace(minOfRoll, "minOfRoll_trace", Brushes.Purple);
+             addMarkerOnTrace(maxOfPitch, "maxOfPitch_trace", Brushes.Green);
+            addMarkerOnTrace(minOfPitch, "minOfPitch_trace", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF48FF04")));
+            addMarkerOnTrace(maxOfYaw, "maxOfYaw_trace", Brushes.Black);
+            addMarkerOnTrace(minOfYaw, "minOfYaw_trace", Brushes.Purple);
+            addMarkerOnTrace(maxOfRoll, "maxOfRoll_trace", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFF509AA")));
+            addMarkerOnTrace(minOfRoll, "minOfRoll_trace", Brushes.Firebrick);
 
             //HighLight The Trace
             List<double> latListHLight = (from item in list where item.lat != FlightBean.NoneCoordinate select item.lat).ToList();
