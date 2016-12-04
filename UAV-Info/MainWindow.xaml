@@ -115,5 +115,6 @@
         <Button Name="btnNormlize" Content="规范化" HorizontalAlignment="Left" Margin="300,432.5,0,0" VerticalAlignment="Top" Width="92" Click="onClick_NormalizeAngle" IsEnabled="False" FontSize="18"/>
         <Slider x:Name="sliderTraceZoom" IsSelectionRangeEnabled="True" HorizontalAlignment="Left" Height="140" Margin="440,0,0,37.5" VerticalAlignment="Bottom" Width="30" Orientation="Vertical" ValueChanged="slider_ValueChanged" Maximum="100" Visibility="Hidden"/>
         <Label x:Name="label1" Content="中华人民共和国公安部检测中心（北京）&#xD;&#xA;" Height="44" Margin="253,0,191,612" VerticalAlignment="Bottom" FontSize="36"/>
+        <Button x:Name="button" Content="清空工作站" HorizontalAlignment="Left" Margin="482,127,0,0" VerticalAlignment="Top" Width="111" Click="OnClick_ClearWorkSpace"/>
     </Grid>
 </Window>

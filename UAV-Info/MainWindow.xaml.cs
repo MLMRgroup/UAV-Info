@@ -346,6 +346,7 @@ namespace UAV_Info
 
             //清空之前的图
             clearHLight();
+
             if (((LineGraph)traceChartPlotter.FindName("traceOrdinary")) != null)
             {
                 traceChartPlotter.Children.Remove((LineGraph)FindName("traceOrdinary"));
@@ -1074,5 +1075,23 @@ namespace UAV_Info
             return result;
         }
 
+        private void OnClick_ClearWorkSpace(object sender, RoutedEventArgs e)
+        {
+            flightBeanList.Clear();
+            indexDict.Clear();
+            normalizedFlightBeanList = null;
+            analyzeSpan.Reset();
+            normalizeSpan.Reset();
+            clearHLight();
+            clearanalysisTextBox();
+            plotPitch.Children.RemoveAll(typeof(LineGraph));
+            plotYaw.Children.RemoveAll(typeof(LineGraph));
+            plotRoll.Children.RemoveAll(typeof(LineGraph));
+            plotPitchNormal.Children.RemoveAll(typeof(LineGraph));
+            plotYawNormal.Children.RemoveAll(typeof(LineGraph));
+            plotRollNormal.Children.RemoveAll(typeof(LineGraph));
+            traceChartPlotter.Children.RemoveAll(typeof(LineGraph));
+            btnNormlize.IsEnabled = false;
+        }
     }
 }
