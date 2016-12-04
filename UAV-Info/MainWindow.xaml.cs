@@ -63,6 +63,20 @@ namespace UAV_Info
             plotPitchNormal.MainGrid.Margin = new Thickness(0, 10, 10, 0);
             plotYawNormal.MainGrid.Margin = new Thickness(0, 10, 10, 0);
             plotRollNormal.MainGrid.Margin = new Thickness(0, 10, 10, 0);
+            traceChartPlotter.AxisGrid.DrawHorizontalTicks = false;
+            traceChartPlotter.AxisGrid.DrawVerticalTicks = false;
+            plotPitch.AxisGrid.DrawHorizontalTicks = false;
+            plotPitch.AxisGrid.DrawVerticalTicks = false;
+            plotYaw.AxisGrid.DrawHorizontalTicks = false;
+            plotYaw.AxisGrid.DrawVerticalTicks = false;
+            plotRoll.AxisGrid.DrawHorizontalTicks = false;
+            plotRoll.AxisGrid.DrawVerticalTicks = false;
+            plotPitchNormal.AxisGrid.DrawHorizontalTicks = false;
+            plotPitchNormal.AxisGrid.DrawVerticalTicks = false;
+            plotYawNormal.AxisGrid.DrawHorizontalTicks = false;
+            plotYawNormal.AxisGrid.DrawVerticalTicks = false;
+            plotRollNormal.AxisGrid.DrawHorizontalTicks = false;
+            plotRollNormal.AxisGrid.DrawVerticalTicks = false;
         }
 
         //normalizeSpan：规范化选取区间  analyzeSpan：分析选取区间
@@ -361,6 +375,7 @@ namespace UAV_Info
             };
             if (((LineGraph)traceChartPlotter.FindName("traceOrdinary")) == null)
             {
+                lineG.ZIndex = -1;
                 traceChartPlotter.RegisterName("traceOrdinary", lineG);
             }
             traceChartPlotter.Viewport.FitToView();
@@ -398,6 +413,7 @@ namespace UAV_Info
                 LineGraph lineG = new LineGraph();
                 lineG.Description = new PenDescription("俯仰");
                 lineG.DataSource = compositeDataSource;
+                lineG.ZIndex = -1;
                 plotPitch.Children.RemoveAll(lineG.GetType());
                 plotPitch.Viewport.FitToView();
                 plotPitch.Children.Add(lineG);
@@ -416,6 +432,7 @@ namespace UAV_Info
                 angleDataSource.SetYMapping(y => y);
                 CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
                 LineGraph lineG = new LineGraph();
+                lineG.ZIndex = -1;
                 lineG.Description = new PenDescription("偏航");
                 lineG.DataSource = compositeDataSource;
                 plotYaw.Children.RemoveAll(lineG.GetType());
@@ -436,6 +453,7 @@ namespace UAV_Info
                 angleDataSource.SetYMapping(y => y);
                 CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
                 LineGraph lineG = new LineGraph();
+                lineG.ZIndex = -1;
                 lineG.Description = new PenDescription("滚转");
                 lineG.DataSource = compositeDataSource;
                 plotRoll.Children.RemoveAll(lineG.GetType());
@@ -469,6 +487,7 @@ namespace UAV_Info
                 angleDataSource.SetYMapping(y => y);
                 CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
                 LineGraph lineG = new LineGraph();
+                lineG.ZIndex = -1;
                 lineG.Description = new PenDescription("俯仰");
                 lineG.DataSource = compositeDataSource;
                 plotPitchNormal.Children.RemoveAll(lineG.GetType());
@@ -489,6 +508,7 @@ namespace UAV_Info
                 angleDataSource.SetYMapping(y => y);
                 CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
                 LineGraph lineG = new LineGraph();
+                lineG.ZIndex = -1;
                 lineG.Description = new PenDescription("偏航");
                 lineG.DataSource = compositeDataSource;
                 plotYawNormal.Children.RemoveAll(lineG.GetType());
@@ -509,6 +529,7 @@ namespace UAV_Info
                 angleDataSource.SetYMapping(y => y);
                 CompositeDataSource compositeDataSource = new CompositeDataSource(datesDataSource, angleDataSource);
                 LineGraph lineG = new LineGraph();
+                lineG.ZIndex = -1;
                 lineG.Description = new PenDescription("滚转");
                 lineG.DataSource = compositeDataSource;
                 plotRollNormal.Children.RemoveAll(lineG.GetType());
@@ -698,7 +719,7 @@ namespace UAV_Info
             addMarkerOnPlotter(plotRollNormal, maxOfRoll.time, maxOfRoll.roll, "maxOfRoll", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFF509AA")));
             addMarkerOnPlotter(plotRollNormal, minOfRoll.time, minOfRoll.roll, "minOfRoll", Brushes.Firebrick); 
 
-             addMarkerOnTrace(maxOfPitch, "maxOfPitch_trace", Brushes.Green);
+            addMarkerOnTrace(maxOfPitch, "maxOfPitch_trace", Brushes.Green);
             addMarkerOnTrace(minOfPitch, "minOfPitch_trace", new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF48FF04")));
             addMarkerOnTrace(maxOfYaw, "maxOfYaw_trace", Brushes.Black);
             addMarkerOnTrace(minOfYaw, "minOfYaw_trace", Brushes.Purple);
@@ -733,6 +754,7 @@ namespace UAV_Info
             {
                 traceChartPlotter.RegisterName("traceHLight", lineGHLight);
             }
+            lineGHLight.ZIndex = -1;
             traceChartPlotter.Children.Add(lineGHLight);
             traceChartPlotter.LegendVisible = false;
         }
@@ -756,7 +778,7 @@ namespace UAV_Info
                 Marker = new CirclePointMarker { Size = 10, Fill = brush },
                 DataSource = compositeDataSource
             };
-
+            markerGraph.ZIndex = -1;
             if (((MarkerPointsGraph)plotter.FindName(description)) == null)
             {
                 plotter.RegisterName(description, markerGraph);
@@ -787,7 +809,7 @@ namespace UAV_Info
                 Marker = new CirclePointMarker { Size = 15, Fill = brush },
                 DataSource = compositeDataSource
             };
-
+            markerGraph.ZIndex = -1;
             if (((MarkerPointsGraph)traceChartPlotter.FindName(description)) == null)
             {
                 traceChartPlotter.RegisterName(description, markerGraph);
