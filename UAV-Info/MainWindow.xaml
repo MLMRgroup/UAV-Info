@@ -19,7 +19,7 @@
                 <MenuItem Header="导入轨迹文件" Height="30" Width="110" Click="importTraceData" FontFamily="Microsoft YaHei UI Light" FontSize="16"></MenuItem>
             </Menu>
         </TabPanel>
-        <d3:ChartPlotter Name ="plotPitch" Width="380" Height="120" HorizontalAlignment="Left" Margin="33,55.5,0,476.5" Background="#E5C6F9FB" >
+        <d3:ChartPlotter Name ="plotPitch" Width="380" Height="120" HorizontalAlignment="Left" Margin="33,55.5,0,476.5" Background="#E5C6F9FB">
 
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis Name="axisPitch"/>
@@ -39,7 +39,7 @@
             <d3:ChartPlotter.HorizontalAxis>
                 <d3:HorizontalDateTimeAxis Name="dateAxisYaw"/>
             </d3:ChartPlotter.HorizontalAxis>
-            <d3:CursorCoordinateGraph Name="cordYaw"/>
+            <d3:CursorCoordinateGraph Name="cordYaw" />
             <d3:VerticalAxisTitle FontFamily="Arial" Content="度/º"/>
         </d3:ChartPlotter>
 
@@ -78,7 +78,7 @@
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis x:Name="axisRollNormal"/>
             </d3:ChartPlotter.VerticalAxis>
-            <d3:CursorCoordinateGraph Name="cordRollNormal"/>
+            <d3:CursorCoordinateGraph Name="cordRollNormal" />
             <d3:VerticalAxisTitle FontFamily="Arial" Content="度/º"/>
             <d3:ChartPlotter.HorizontalAxis >
                 <d3:HorizontalDateTimeAxis x:Name="dateAxisRollNormal"/>
