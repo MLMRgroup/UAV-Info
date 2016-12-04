@@ -200,20 +200,27 @@ namespace UAV_Info
             //添加基准线
             if (sender.Equals(plotPitch) || sender.Equals(plotYaw) || sender.Equals(plotRoll))
             {
+                if (normalizeSpan.IsSet)
+                {
+                    return;
+                }
                 normalizeSpan.AddLine(mousePositionInData.X);
+                if (normalizeSpan.IsSet)
+                {
+                    btnNormlize.IsEnabled = true;
+                }
             }
             else if (sender.Equals(plotPitchNormal) || sender.Equals(plotYawNormal) || sender.Equals(plotRollNormal))
             {
+                if(analyzeSpan.IsSet)
+                {
+                    return;
+                }
                 analyzeSpan.AddLine(mousePositionInData.X);
-            }
-
-            if (normalizeSpan.IsSet)
-            {
-                btnNormlize.IsEnabled = true;
-            }
-            if (analyzeSpan.IsSet)
-            {
-                analyseAngleNormalized();
+                if (analyzeSpan.IsSet)
+                {
+                    analyseAngleNormalized();
+                }
             }
         }
 
@@ -353,6 +360,7 @@ namespace UAV_Info
 
             //清空之前的图
             clearHLight();
+
             if (((LineGraph)traceChartPlotter.FindName("traceOrdinary")) != null)
             {
                 traceChartPlotter.Children.Remove((LineGraph)FindName("traceOrdinary"));
@@ -611,6 +619,12 @@ namespace UAV_Info
                 fb.yaw -= meanOfYaw;
                 fb.roll -= meanOfRoll;
             }
+
+            //重新绘制规范化图形，则清空之前所有依据规范化图形得到的值
+            analyzeSpan.Reset();
+            clearanalysisTextBox();
+            clearHLight();
+
             plotNormalizedAngle("pitch");
             plotNormalizedAngle("yaw");
             plotNormalizedAngle("roll");
@@ -1083,5 +1097,23 @@ namespace UAV_Info
             return result;
         }
 
+        private void OnClick_ClearWorkSpace(object sender, RoutedEventArgs e)
+        {
+            flightBeanList.Clear();
+            indexDict.Clear();
+            normalizedFlightBeanList = null;
+            analyzeSpan.Reset();
+            normalizeSpan.Reset();
+            clearHLight();
+            clearanalysisTextBox();
+            plotPitch.Children.RemoveAll(typeof(LineGraph));
+            plotYaw.Children.RemoveAll(typeof(LineGraph));
+            plotRoll.Children.RemoveAll(typeof(LineGraph));
+            plotPitchNormal.Children.RemoveAll(typeof(LineGraph));
+            plotYawNormal.Children.RemoveAll(typeof(LineGraph));
+            plotRollNormal.Children.RemoveAll(typeof(LineGraph));
+            traceChartPlotter.Children.RemoveAll(typeof(LineGraph));
+            btnNormlize.IsEnabled = false;
+        }
     }
 }
