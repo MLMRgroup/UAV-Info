@@ -35,6 +35,7 @@ namespace UAV_Info
         private List<FlightBean> normalizedFlightBeanList;
 
         private bool isReopenAngleFile;
+        private bool isReopenTraceFile;
 
         FlightBean maxOfPitch = null;
         FlightBean maxOfYaw = null;
@@ -55,6 +56,7 @@ namespace UAV_Info
             indexDict = new Dictionary<string, int>();
             Loaded += new RoutedEventHandler(MainWindow_Loaded);
             isReopenAngleFile = false;
+            isReopenTraceFile = false;
             firstchange = true;
             traceChartPlotter.MainGrid.Margin = new Thickness(0, 10, 10, 0);
             plotPitch.MainGrid.Margin = new Thickness(0, 10, 10, 0);
@@ -233,9 +235,19 @@ namespace UAV_Info
         /// <param name="args">事件参数</param>
         private void importAngleData(object sender, RoutedEventArgs args)
         {
+            
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
+                if (isReopenAngleFile)
+                {
+                    clearWhenReopenAngleFile();
+                    ClearWorkSpace();
+                    isReopenTraceFile = false;
+                }
+                else {
+                    isReopenAngleFile = true;
+                }
                 string fileName = openFileDialog.FileName;
                 using (FileStream fs = File.Open(fileName, FileMode.Open))
                 {
@@ -286,14 +298,11 @@ namespace UAV_Info
                 }
                 indexDict = (from entry in indexDict orderby entry.Key ascending select entry).ToDictionary(pair => pair.Key, pair => pair.Value);
                 // 绘制无人机姿态角数据图
-                if (isReopenAngleFile)
-                {
-                    clearWhenReopenAngleFile();
-                }
+                
                 plotAngle("pitch");
                 plotAngle("yaw");
                 plotAngle("roll");
-                isReopenAngleFile = true;
+                //isReopenAngleFile = true;
                 DispatcherTimer animationTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(100) };
                 animationTimer.Tick += animationTimer_Tick;
                 animationTimer.Start();
@@ -307,6 +316,17 @@ namespace UAV_Info
             OpenFileDialog openFileDialog = new OpenFileDialog();
             if (openFileDialog.ShowDialog() == true)
             {
+                if (isReopenTraceFile)
+                {
+                    //clearWhenReopenAngleFile();
+                    ClearWorkSpace();
+                    isReopenAngleFile = false;
+                }
+                else
+                {
+                    isReopenTraceFile = true;
+                }
+                //isReopenTraceFile = true;
                 // 轨迹数据读入
                 string fileName = openFileDialog.FileName;
                 //若选择的不是gpx文件，则报错
@@ -1097,7 +1117,7 @@ namespace UAV_Info
             return result;
         }
 
-        private void OnClick_ClearWorkSpace(object sender, RoutedEventArgs e)
+        private void ClearWorkSpace()
         {
             flightBeanList.Clear();
             indexDict.Clear();
