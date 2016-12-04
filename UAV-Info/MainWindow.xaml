@@ -27,7 +27,7 @@
             <d3:ChartPlotter.HorizontalAxis>
                 <d3:HorizontalDateTimeAxis Name="dateAxisPitch"/>
             </d3:ChartPlotter.HorizontalAxis>
-            <d3:VerticalAxisTitle FontFamily="Arial" Content="度"/>
+            <d3:VerticalAxisTitle FontFamily="Arial" Content="度/º"/>
 
             <d3:CursorCoordinateGraph Name="cordPitch"/>
         </d3:ChartPlotter>
@@ -40,7 +40,7 @@
                 <d3:HorizontalDateTimeAxis Name="dateAxisYaw"/>
             </d3:ChartPlotter.HorizontalAxis>
             <d3:CursorCoordinateGraph Name="cordYaw"/>
-            <d3:VerticalAxisTitle FontFamily="Arial" Content="度"/>
+            <d3:VerticalAxisTitle FontFamily="Arial" Content="度/º"/>
         </d3:ChartPlotter>
 
         <d3:ChartPlotter Name ="plotRoll"  Width="380" Height="120" HorizontalAlignment="Left" Margin="33,291.5,0,226.5" Background="#E5C6F9FB">
@@ -49,7 +49,7 @@
                 <d3:VerticalAxis Name="axisRoll"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:CursorCoordinateGraph Name="cordRoll"/>
-            <d3:VerticalAxisTitle FontFamily="Arial" Content="度"/>
+            <d3:VerticalAxisTitle FontFamily="Arial" Content="度/º"/>
             <d3:ChartPlotter.HorizontalAxis >
                 <d3:HorizontalDateTimeAxis x:Name="dateAxisRoll"/>
             </d3:ChartPlotter.HorizontalAxis>
@@ -62,7 +62,7 @@
                 <d3:HorizontalDateTimeAxis x:Name="dateAxisPitchNormal"/>
             </d3:ChartPlotter.HorizontalAxis>
             <d3:CursorCoordinateGraph Name="cordPitchNormal"/>
-            <d3:VerticalAxisTitle FontFamily="Arial" Content="度"/>
+            <d3:VerticalAxisTitle FontFamily="Arial" Content="度/º"/>
         </d3:ChartPlotter>
         <d3:ChartPlotter Name ="plotYawNormal" Height="120" Margin="0,186.5,33,356.5" VerticalAlignment="Top" HorizontalAlignment="Right" Width="380" Background="#E5C6F9FB">
             <d3:ChartPlotter.VerticalAxis>
@@ -72,31 +72,31 @@
                 <d3:HorizontalDateTimeAxis x:Name="dateAxisYawNormal"/>
             </d3:ChartPlotter.HorizontalAxis>
             <d3:CursorCoordinateGraph Name="cordYawNormal"/>
-            <d3:VerticalAxisTitle FontFamily="Arial" Content="度"/>
+            <d3:VerticalAxisTitle FontFamily="Arial" Content="度/º"/>
         </d3:ChartPlotter>
         <d3:ChartPlotter Name ="plotRollNormal" Height="120" Margin="0,308.5,33,226.5" VerticalAlignment="Top" HorizontalAlignment="Right" Width="380" Background="#E5C6F9FB">
             <d3:ChartPlotter.VerticalAxis>
                 <d3:VerticalAxis x:Name="axisRollNormal"/>
             </d3:ChartPlotter.VerticalAxis>
             <d3:CursorCoordinateGraph Name="cordRollNormal"/>
-            <d3:VerticalAxisTitle FontFamily="Arial" Content="度"/>
+            <d3:VerticalAxisTitle FontFamily="Arial" Content="度/º"/>
             <d3:ChartPlotter.HorizontalAxis >
                 <d3:HorizontalDateTimeAxis x:Name="dateAxisRollNormal"/>
             </d3:ChartPlotter.HorizontalAxis>
         </d3:ChartPlotter>
-            <d3:ChartPlotter Name="traceChartPlotter" Background="#E5C6F9FB" Margin="33,0,0,10" HorizontalAlignment="Left" Width="379" Height="189" VerticalAlignment="Bottom" MouseDoubleClick="scaleMap" Padding="0, 10, 10, 0" BorderThickness="0">
+        <d3:ChartPlotter Name="traceChartPlotter" Background="#E5C6F9FB" Margin="33,0,0,10" HorizontalAlignment="Left" Width="379" Height="189" VerticalAlignment="Bottom" MouseDoubleClick="scaleMap" Padding="0, 10, 10, 0" BorderThickness="0">
                 <d3:ChartPlotter.VerticalAxis>
                     <d3:VerticalAxis x:Name="axisAlt" Margin="0,0,0,0" Padding="0 10 01 0"/>
                 </d3:ChartPlotter.VerticalAxis>
-                <d3:HorizontalAxisTitle FontFamily="Arial" Content="纬度"/>
+            <d3:HorizontalAxisTitle FontFamily="Arial" Content="纬度/º"/>
                 <d3:HorizontalAxisTitle Content="二维地图轨迹" FontSize="18"/>
-                <d3:VerticalAxisTitle FontFamily="Arial" Content="经度"/>
+            <d3:VerticalAxisTitle FontFamily="Arial" Content="经度/º"/>
                 <d3:CursorCoordinateGraph Name="cordMap" Height="120" VerticalAlignment="Bottom" Margin="0,10,10,0" RenderTransformOrigin="0.507,0.553"/>
             </d3:ChartPlotter>
 
-        <Label x:Name="label" Content="俯仰角" HorizontalAlignment="Right" Height="30" Margin="0,0,364,146.352" VerticalAlignment="Bottom" Width="60" FontSize="18" FontWeight="Bold" Background="{x:Null}"/>
-        <Label x:Name="label_Copy" Content="滚转角" HorizontalAlignment="Right" Height="30" Margin="0,0,364,88.176" VerticalAlignment="Bottom" Width="60" FontSize="18" FontWeight="Bold" Background="{x:Null}"/>
-        <Label x:Name="label_Copy1" Content="偏航角" HorizontalAlignment="Right" Height="30" Margin="0,0,364,31.352" VerticalAlignment="Bottom" Width="60" FontSize="18" FontWeight="Bold" Background="{x:Null}"/>
+        <Label x:Name="label" Content="俯仰角" HorizontalAlignment="Right" Height="30" Margin="0,0,349,146" VerticalAlignment="Bottom" Width="75" FontSize="18" FontWeight="Bold" Background="{x:Null}"/>
+        <Label x:Name="label_Copy" Content="滚转角" HorizontalAlignment="Right" Height="30" Margin="0,0,349,88" VerticalAlignment="Bottom" Width="75" FontSize="18" FontWeight="Bold" Background="{x:Null}"/>
+        <Label x:Name="label_Copy1" Content="偏航角" HorizontalAlignment="Right" Height="30" Margin="0,0,349,31" VerticalAlignment="Bottom" Width="75" FontSize="18" FontWeight="Bold" Background="{x:Null}"/>
         <Label x:Name="label_Copy2" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,258,146.352" VerticalAlignment="Bottom" Width="66" FontSize="18" Background="Green" Foreground="#FFFBF9F9"/>
         <Label x:Name="label_Copy3" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,258,88.176" VerticalAlignment="Bottom" Width="66" FontSize="18" Background="#FFF509AA" Foreground="#FFFFFDFD"/>
         <Label x:Name="label_Copy4" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,258,31.352" VerticalAlignment="Bottom" Width="66" FontSize="18" Background="Black" Foreground="#FFF9F6F6"/>
@@ -114,6 +114,6 @@
         <Button x:Name="btnAnalyzeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="865,432.5,0,0" VerticalAlignment="Top" Width="71" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset" FontSize="18"/>
         <Button Name="btnNormlize" Content="规范化" HorizontalAlignment="Left" Margin="300,432.5,0,0" VerticalAlignment="Top" Width="92" Click="onClick_NormalizeAngle" IsEnabled="False" FontSize="18"/>
         <Slider x:Name="sliderTraceZoom" IsSelectionRangeEnabled="True" HorizontalAlignment="Left" Height="140" Margin="440,0,0,37.5" VerticalAlignment="Bottom" Width="30" Orientation="Vertical" ValueChanged="slider_ValueChanged" Maximum="100" Visibility="Hidden"/>
-        <Label x:Name="label1" Content="中华人民共和国公安部检测中心（北京）&#xD;&#xA;" Height="27" Margin="417,0,387,10" VerticalAlignment="Bottom" FontSize="16"/>
+        <Label x:Name="label1" Content="中华人民共和国公安部检测中心（北京）&#xD;&#xA;" Height="44" Margin="253,0,191,612" VerticalAlignment="Bottom" FontSize="36"/>
     </Grid>
 </Window>
