@@ -922,7 +922,6 @@ namespace UAV_Info
                 else
                     plotter.Children.Remove((MarkerPointsGraph)FindName(description));
                 plotter.UnregisterName(description);
-                plotter.LegendVisible = false;
             }
         }
 
