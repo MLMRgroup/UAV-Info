@@ -97,18 +97,18 @@
         <Label x:Name="label" Content="俯仰角" HorizontalAlignment="Right" Height="30" Margin="0,0,349,146" VerticalAlignment="Bottom" Width="75" FontSize="18" FontWeight="Bold" Background="{x:Null}"/>
         <Label x:Name="label_Copy" Content="滚转角" HorizontalAlignment="Right" Height="30" Margin="0,0,349,88" VerticalAlignment="Bottom" Width="75" FontSize="18" FontWeight="Bold" Background="{x:Null}"/>
         <Label x:Name="label_Copy1" Content="偏航角" HorizontalAlignment="Right" Height="30" Margin="0,0,349,31" VerticalAlignment="Bottom" Width="75" FontSize="18" FontWeight="Bold" Background="{x:Null}"/>
-        <Label x:Name="label_Copy2" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,258,146.352" VerticalAlignment="Bottom" Width="66" FontSize="18" Background="Green" Foreground="#FFFBF9F9"/>
-        <Label x:Name="label_Copy3" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,258,88.176" VerticalAlignment="Bottom" Width="66" FontSize="18" Background="#FFF509AA" Foreground="#FFFFFDFD"/>
-        <Label x:Name="label_Copy4" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,258,31.352" VerticalAlignment="Bottom" Width="66" FontSize="18" Background="Black" Foreground="#FFF9F6F6"/>
-        <Label x:Name="label_Copy5" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,106,146.352" VerticalAlignment="Bottom" Width="65" FontSize="18" Background="#FF48FF04" Foreground="#FF0C0B0B"/>
-        <TextBox x:Name="pitchMaxTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,191,147.5" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="62"  FontSize="20"/>
-        <TextBox x:Name="rollMaxTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,191,88.176" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="62" FontSize="20"/>
-        <TextBox x:Name="yawMaxTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,191,31.352" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="62" FontSize="20"/>
-        <TextBox x:Name="pitchMinTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,46,146.352" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55" FontSize="20"/>
-        <TextBox x:Name="rollMinTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,46,88.176" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55" RenderTransformOrigin="0.827,0.84" FontSize="20"/>
-        <TextBox x:Name="yawMinTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,46,31.352" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="55" FontSize="20"/>
-        <Label x:Name="label_Copy6" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,106,88.176" VerticalAlignment="Bottom" Width="65" FontSize="18" Background="Firebrick"/>
-        <Label x:Name="label_Copy7" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,106,31.352" VerticalAlignment="Bottom" Width="65" FontSize="18" Background="MediumPurple" RenderTransformOrigin="0.554,0.459"/>
+        <Label x:Name="label_Copy2" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,281,146" VerticalAlignment="Bottom" Width="66" FontSize="18" Background="Green" Foreground="#FFFBF9F9"/>
+        <Label x:Name="label_Copy3" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,281,88" VerticalAlignment="Bottom" Width="66" FontSize="18" Background="#FFF509AA" Foreground="#FFFFFDFD"/>
+        <Label x:Name="label_Copy4" Content="最大值" HorizontalAlignment="Right" Height="30" Margin="0,0,281,31" VerticalAlignment="Bottom" Width="66" FontSize="18" Background="Black" Foreground="#FFF9F6F6"/>
+        <Label x:Name="label_Copy5" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,117,148" VerticalAlignment="Bottom" Width="66" FontSize="18" Background="#FF48FF04" Foreground="#FF0C0B0B"/>
+        <TextBox x:Name="pitchMaxTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,196,148" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="76"  FontSize="16" MaxLines="1"/>
+        <TextBox x:Name="rollMaxTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,196,88" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="76" FontSize="16" MaxLines="1"/>
+        <TextBox x:Name="yawMaxTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,196,31" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="76" FontSize="16" MaxLines="1"/>
+        <TextBox x:Name="pitchMinTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,33,148" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="76" FontSize="16" MaxLines="1"/>
+        <TextBox x:Name="rollMinTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,33,88" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="76" RenderTransformOrigin="0.827,0.84" FontSize="16" MaxLines="1"/>
+        <TextBox x:Name="yawMinTextBox" HorizontalAlignment="Right" Height="30" Margin="0,0,33,31" TextWrapping="Wrap" VerticalAlignment="Bottom" Width="76" FontSize="16" MaxLines="1"/>
+        <Label x:Name="label_Copy6" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,117,88" VerticalAlignment="Bottom" Width="66" FontSize="18" Background="Firebrick"/>
+        <Label x:Name="label_Copy7" Content="最小值" HorizontalAlignment="Right" Height="30" Margin="0,0,117,31" VerticalAlignment="Bottom" Width="66" FontSize="18" Background="MediumPurple" RenderTransformOrigin="0.554,0.459"/>
 
         <Button x:Name="btnNormlizeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="68,431,0,0" VerticalAlignment="Top" Width="80" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset" FontSize="18"/>
         <Button x:Name="btnAnalyzeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="865,432.5,0,0" VerticalAlignment="Top" Width="71" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset" FontSize="18"/>
