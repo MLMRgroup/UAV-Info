@@ -186,20 +186,27 @@ namespace UAV_Info
             //添加基准线
             if (sender.Equals(plotPitch) || sender.Equals(plotYaw) || sender.Equals(plotRoll))
             {
+                if (normalizeSpan.IsSet)
+                {
+                    return;
+                }
                 normalizeSpan.AddLine(mousePositionInData.X);
+                if (normalizeSpan.IsSet)
+                {
+                    btnNormlize.IsEnabled = true;
+                }
             }
             else if (sender.Equals(plotPitchNormal) || sender.Equals(plotYawNormal) || sender.Equals(plotRollNormal))
             {
+                if(analyzeSpan.IsSet)
+                {
+                    return;
+                }
                 analyzeSpan.AddLine(mousePositionInData.X);
-            }
-
-            if (normalizeSpan.IsSet)
-            {
-                btnNormlize.IsEnabled = true;
-            }
-            if (analyzeSpan.IsSet)
-            {
-                analyseAngleNormalized();
+                if (analyzeSpan.IsSet)
+                {
+                    analyseAngleNormalized();
+                }
             }
         }
 
@@ -590,6 +597,12 @@ namespace UAV_Info
                 fb.yaw -= meanOfYaw;
                 fb.roll -= meanOfRoll;
             }
+
+            //重新绘制规范化图形，则清空之前所有依据规范化图形得到的值
+            analyzeSpan.Reset();
+            clearanalysisTextBox();
+            clearHLight();
+
             plotNormalizedAngle("pitch");
             plotNormalizedAngle("yaw");
             plotNormalizedAngle("roll");
