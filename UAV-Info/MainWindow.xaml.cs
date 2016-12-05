@@ -1106,8 +1106,14 @@ namespace UAV_Info
 
             tabPanel.Height = Hscale * tabPanel.Height;
             tabPanel.Width = Wscale * tabPanel.Width;
+            menu_1.Height = Hscale * menu_1.Height;
+            menu_2.Height = Hscale * menu_2.Height;
+            menu_1.Width = Hscale * menu_1.Width;
+            menu_2.Width = Hscale * menu_2.Width;
             menu_1.FontSize = menu_1.FontSize * Hscale;
             menu_2.FontSize = menu_2.FontSize * Hscale;
+            menu_1.Margin = setMargin(menu_1.Margin,Hscale,Wscale);
+            menu_2.Margin = setMargin(menu_2.Margin, Hscale, Wscale);
             tabPanel.Margin = setMargin(tabPanel.Margin, Hscale, Wscale);
 
         }
