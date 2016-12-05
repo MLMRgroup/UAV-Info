@@ -11,7 +11,7 @@
         <Grid.Background>
             <ImageBrush Stretch="Uniform" ImageSource="iconss.bmp"   Opacity="0.5"/>
         </Grid.Background>
-        <TabPanel x:Name="tabPanel" Height="30" Margin="10,10,814,0" VerticalAlignment="Top" Background="#6ECCD2">
+        <TabPanel x:Name="tabPanel" Height="30" Margin="10,10,842,0" VerticalAlignment="Top" Background="#6ECCD2">
             <Menu x:Name="menu_1" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="110" Background="#6ECCD2">
                 <MenuItem Header="导入姿态文件" Height="30" Width="110" Click="importAngleData" FontFamily="Microsoft YaHei UI Light" FontSize="16"></MenuItem>
             </Menu>

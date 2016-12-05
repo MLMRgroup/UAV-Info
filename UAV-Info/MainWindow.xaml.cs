@@ -915,6 +915,8 @@ namespace UAV_Info
             clearGraph(traceChartPlotter, "minOfPitch_trace");
             clearGraph(traceChartPlotter, "minOfYaw_trace");
             clearGraph(traceChartPlotter, "minOfRoll_trace");
+
+            traceChartPlotter.LegendVisible = false;
         }
 
         private void clearGraph(ChartPlotter plotter, string description)
