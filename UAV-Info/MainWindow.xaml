@@ -9,9 +9,9 @@
         Title="无人机数据分析" Height="700" Width="1100" WindowStartupLocation="CenterScreen" SizeChanged="Window_SizeChanged">
     <Grid Margin="8,1.824,-6,-4.824">
         <Grid.Background>
-            <ImageBrush Stretch="Uniform" ImageSource="iconss.bmp"   Opacity="0.5"/>
+            <ImageBrush Stretch="Uniform" ImageSource="background.bmp"   Opacity="0.5"/>
         </Grid.Background>
-        <TabPanel x:Name="tabPanel" Height="30" Margin="10,10,854,0" VerticalAlignment="Top" Background="#6ECCD2">
+        <TabPanel x:Name="tabPanel" Height="30" Width="230" Margin="10,10,854,0" VerticalAlignment="Top" Background="#6ECCD2">
             <Menu x:Name="menu_1" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="110" Background="#6ECCD2">
                 <MenuItem Header="导入姿态文件" Height="30" Width="110" Click="importAngleData" FontFamily="Microsoft YaHei UI Light" FontSize="16"></MenuItem>
             </Menu>
@@ -114,6 +114,6 @@
         <Button x:Name="btnAnalyzeSpanReset" Content="重置" HorizontalAlignment="Left" Margin="865,432.5,0,0" VerticalAlignment="Top" Width="71" RenderTransformOrigin="9.59,-1.751" Click="OnClick_Reset" FontSize="18"/>
         <Button Name="btnNormlize" Content="规范化" HorizontalAlignment="Left" Margin="300,432.5,0,0" VerticalAlignment="Top" Width="92" Click="onClick_NormalizeAngle" IsEnabled="False" FontSize="18"/>
         <Slider x:Name="sliderTraceZoom" IsSelectionRangeEnabled="True" HorizontalAlignment="Left" Height="140" Margin="440,0,0,37.5" VerticalAlignment="Bottom" Width="30" Orientation="Vertical" ValueChanged="slider_ValueChanged" Maximum="100" Visibility="Hidden"/>
-        <Label x:Name="label1" Content="中华人民共和国公安部检测中心（北京）&#xD;&#xA;" Height="44" Margin="253,0,191,612" VerticalAlignment="Bottom" FontSize="36"/>
+        <Label x:Name="label1" Content="中华人民共和国公安部检测中心（北京）&#xD;&#xA;" Height="44" Margin="267,0,177,612" VerticalAlignment="Bottom" FontSize="36"/>
     </Grid>
 </Window>
