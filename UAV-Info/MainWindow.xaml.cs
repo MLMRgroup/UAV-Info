@@ -632,7 +632,11 @@ namespace UAV_Info
                 meanOfRoll = (from l in list select l.roll).Sum() / list.Count;
             }
 
-            normalizedFlightBeanList = new List<FlightBean>(flightBeanList);
+            normalizedFlightBeanList = new List<FlightBean>();
+            foreach (FlightBean fb in flightBeanList)
+            {
+                normalizedFlightBeanList.Add(new FlightBean(fb.time, fb.lat, fb.lng, fb.pitch, fb.yaw, fb.roll));
+            }
             foreach (FlightBean fb in normalizedFlightBeanList.Where(fb => fb.pitch != FlightBean.NoneAngle))
             {
                 fb.pitch -= meanOfPitch;
