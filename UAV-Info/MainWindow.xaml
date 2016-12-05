@@ -11,12 +11,12 @@
         <Grid.Background>
             <ImageBrush Stretch="Uniform" ImageSource="iconss.bmp"   Opacity="0.5"/>
         </Grid.Background>
-        <TabPanel x:Name="tabPanel" Height="30" Margin="10,10,814,0" VerticalAlignment="Top" Background="#6ECCD2">
+        <TabPanel x:Name="tabPanel" Height="30" Margin="10,10,854,0" VerticalAlignment="Top" Background="#6ECCD2">
             <Menu x:Name="menu_1" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="110" Background="#6ECCD2">
                 <MenuItem Header="导入姿态文件" Height="30" Width="110" Click="importAngleData" FontFamily="Microsoft YaHei UI Light" FontSize="16"></MenuItem>
             </Menu>
-            <Menu x:Name="menu_2" Margin="0,0,-19,0" Background="#6ECCD2">
-                <MenuItem Header="导入轨迹文件" Height="30" Width="110" Click="importTraceData" FontFamily="Microsoft YaHei UI Light" FontSize="16"></MenuItem>
+            <Menu x:Name="menu_2" Margin="0,0,-105,0" Background="#6ECCD2">
+                <MenuItem Header="导入轨迹文件" Height="30" Width="111" Click="importTraceData" FontFamily="Microsoft YaHei UI Light" FontSize="16"/>
             </Menu>
         </TabPanel>
         <d3:ChartPlotter Name ="plotPitch" Width="380" Height="120" HorizontalAlignment="Left" Margin="33,55.5,0,476.5" Background="#E5C6F9FB">
