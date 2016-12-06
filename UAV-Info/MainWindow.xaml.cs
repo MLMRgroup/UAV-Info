@@ -1113,6 +1113,10 @@ namespace UAV_Info
             menu_2.Width = Hscale * menu_2.Width;
             menu_2.FontSize = menu_2.FontSize * Hscale;
             menu_2.Margin = setMargin(menu_2.Margin, Hscale, Wscale);
+
+            sliderTraceZoom.Height = Hscale * sliderTraceZoom.Height;
+            sliderTraceZoom.Width = Wscale * sliderTraceZoom.Width;
+            sliderTraceZoom.Margin = setMargin(sliderTraceZoom.Margin, Hscale, Wscale);
         }
 
         private Thickness setMargin(Thickness s,double Hscale,double Wscale)
