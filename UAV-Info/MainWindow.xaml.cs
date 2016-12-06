@@ -932,6 +932,10 @@ namespace UAV_Info
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double step = (e.NewValue - e.OldValue) / 50;
+            if(step > 0.3)
+            {
+                step = 0.3;
+            }
             double unitX = traceChartPlotter.Viewport.Visible.Width * step;
             double unitY = traceChartPlotter.Viewport.Visible.Height * step;
             traceChartPlotter.Viewport.Visible = new Rect(traceChartPlotter.Viewport.Visible.X + unitX, traceChartPlotter.Viewport.Visible.Y + unitY, traceChartPlotter.Viewport.Visible.Width - 2 * unitX, traceChartPlotter.Viewport.Visible.Height - 2 * unitY);
