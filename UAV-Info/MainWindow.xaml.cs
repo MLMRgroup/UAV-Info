@@ -44,6 +44,9 @@ namespace UAV_Info
         FlightBean minOfYaw = null;
         FlightBean minOfRoll = null;
         private bool firstchange;
+
+        private Rect initialViewPortVisible;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -79,6 +82,8 @@ namespace UAV_Info
             plotYawNormal.AxisGrid.DrawVerticalTicks = false;
             plotRollNormal.AxisGrid.DrawHorizontalTicks = false;
             plotRollNormal.AxisGrid.DrawVerticalTicks = false;
+
+            initialViewPortVisible = new Rect(traceChartPlotter.Viewport.Visible.X, traceChartPlotter.Viewport.Visible.Y, traceChartPlotter.Viewport.Visible.Width, traceChartPlotter.Viewport.Visible.Height);
         }
 
         //normalizeSpan：规范化选取区间  analyzeSpan：分析选取区间
@@ -120,7 +125,7 @@ namespace UAV_Info
             plotPitchNormal.Children.Remove(plotPitchNormal.KeyboardNavigation);
             plotYawNormal.Children.Remove(plotYawNormal.KeyboardNavigation);
             plotRollNormal.Children.Remove(plotRollNormal.KeyboardNavigation);
-            //traceChartPlotter.Children.Remove(traceChartPlotter.KeyboardNavigation);
+            traceChartPlotter.Children.Remove(traceChartPlotter.KeyboardNavigation);
 
             //添加双击描线事件
             plotPitch.MouseDoubleClick += onDoubleCkick_AngleChart;
@@ -915,8 +920,15 @@ namespace UAV_Info
             clearGraph(traceChartPlotter, "minOfPitch_trace");
             clearGraph(traceChartPlotter, "minOfYaw_trace");
             clearGraph(traceChartPlotter, "minOfRoll_trace");
+
+            traceChartPlotter.LegendVisible = false;
         }
 
+        /// <summary>
+        /// 清除图中高亮轨迹或最大最小标注点
+        /// </summary>
+        /// <param name="plotter"></param>
+        /// <param name="description"></param>
         private void clearGraph(ChartPlotter plotter, string description)
         {
             if (plotter.FindName(description) != null)
@@ -929,18 +941,32 @@ namespace UAV_Info
             }
         }
 
+        /// <summary>
+        /// 滑动缩放条的处理逻辑，向上则zoom in, 向下则zoom out
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            double step = (e.NewValue - e.OldValue) / 50;
+            double step = (e.NewValue - e.OldValue) / 50.0;
             if(step > 0.3)
             {
                 step = 0.3;
+            }
+            if (e.NewValue == sliderTraceZoom.Minimum) {
+                traceChartPlotter.Viewport.Visible = initialViewPortVisible;
+                return;
             }
             double unitX = traceChartPlotter.Viewport.Visible.Width * step;
             double unitY = traceChartPlotter.Viewport.Visible.Height * step;
             traceChartPlotter.Viewport.Visible = new Rect(traceChartPlotter.Viewport.Visible.X + unitX, traceChartPlotter.Viewport.Visible.Y + unitY, traceChartPlotter.Viewport.Visible.Width - 2 * unitX, traceChartPlotter.Viewport.Visible.Height - 2 * unitY);
         }
 
+        /// <summary>
+        /// 键盘的+,-符号键也进行缩放
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Zoom(object sender, KeyEventArgs e)
         {
             double unitX = traceChartPlotter.Viewport.Visible.Width * 0.02;
@@ -967,9 +993,10 @@ namespace UAV_Info
                 else
                 {
                     sliderTraceZoom.Visibility = Visibility.Visible;
+                    initialViewPortVisible = new Rect(traceChartPlotter.Viewport.Visible.X, traceChartPlotter.Viewport.Visible.Y, traceChartPlotter.Viewport.Visible.Width, traceChartPlotter.Viewport.Visible.Height);
                 }
             }
-
+            e.Handled = true;
         }
 
         /// <summary>
