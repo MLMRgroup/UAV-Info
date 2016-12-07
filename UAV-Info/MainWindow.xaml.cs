@@ -379,6 +379,12 @@ namespace UAV_Info
                 if (analyzeSpan.IsSet)
                 {
                     // 如果已经通过双击得到了分析区间，则在绘制完Trace之后，调用analyseAngleNormalized函数
+                    if (normalizedFlightBeanList.Count != 0) {
+                        foreach (FlightBean fb in normalizedFlightBeanList) {
+                            fb.lat = flightBeanList[indexDict[fb.time]].lat;
+                            fb.lng = flightBeanList[indexDict[fb.time]].lng;
+                        }
+                    }
                     analyseAngleNormalized();
                 }
 
@@ -742,7 +748,7 @@ namespace UAV_Info
                 list = (from item in indexDict.Keys
                         where (dateTimeA > TimeUtils.strToDateTime(item)
                                 && dateTimeB < TimeUtils.strToDateTime(item)
-                                && indexDict[item] < normalizedFlightBeanList.Count
+                                && indexDict[item] < flightBeanList.Count
                                 && normalizedFlightBeanList[indexDict[item]].pitch != FlightBean.NoneAngle)
                         select normalizedFlightBeanList[indexDict[item]]
                         ).ToList();
