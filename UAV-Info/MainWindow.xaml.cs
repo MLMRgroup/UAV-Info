@@ -1054,8 +1054,12 @@ namespace UAV_Info
             e.Handled = true;
         }
 
+        /// <summary>
+        /// 响应窗口尺寸变化的事件
+        /// </summary>
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            //若是欢迎页面，则不执行以下操作
             if (firstchange)
             {
                 firstchange = false;
@@ -1188,6 +1192,7 @@ namespace UAV_Info
             rollMinTextBox.FontSize = rollMinTextBox.FontSize * Hscale;
             rollMinTextBox.Margin = setMargin(rollMinTextBox.Margin, Hscale, Wscale);
 
+            //设置进度条和菜单的大小
             tabPanel.Height = Hscale * tabPanel.Height;
             tabPanel.Width = Wscale * tabPanel.Width;
             tabPanel.Margin = setMargin(tabPanel.Margin, Hscale, Wscale);
@@ -1204,7 +1209,9 @@ namespace UAV_Info
             sliderTraceZoom.Width = Wscale * sliderTraceZoom.Width;
             sliderTraceZoom.Margin = setMargin(sliderTraceZoom.Margin, Hscale, Wscale);
         }
-
+        ///<summary>
+        ///根据长度和宽度的变化尺度重新设置Margin参数
+        ///</summary>>
         private Thickness setMargin(Thickness s,double Hscale,double Wscale)
         {
             Thickness result=new Thickness();
