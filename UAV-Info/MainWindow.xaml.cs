@@ -167,7 +167,9 @@ namespace UAV_Info
             */
         }
 
-        //重置按钮响应函数
+        ///<summary>
+        ///重置按钮响应函数
+        ///</summary>
         private void OnClick_Reset(object sender, RoutedEventArgs e)
         {
             //重置规范化区间
@@ -185,7 +187,9 @@ namespace UAV_Info
             }
         }
 
-        //窗口同步，暂时用不到
+        ///<summary>
+        ///窗口同步，暂时用不到
+        ///</summary>
         void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
         {
             /*if (e.PropertyName == "Visible")
@@ -209,7 +213,9 @@ namespace UAV_Info
             }*/
         }
 
-        //窗口双击事件
+        ///<summary>
+        ///窗口双击事件
+        ///</summary>
         private void onDoubleCkick_AngleChart(object sender, MouseEventArgs e)
         {
             ChartPlotter plotter = (ChartPlotter)sender;
@@ -333,7 +339,9 @@ namespace UAV_Info
             }
         }
 
-        //点击轨迹按钮
+        /// <summary>
+        /// 点击轨迹按钮
+        /// </summary>      
         private void importTraceData(object sender, RoutedEventArgs args)
         {
             //打开选择文件窗口
