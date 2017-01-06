@@ -20,6 +20,7 @@ namespace UAV_Info
         //×ÓÏß³Ì
         public Thread thread1;
 
+
         public gpx_trans()
         {
         }
